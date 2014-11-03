@@ -84,7 +84,8 @@ namespace DxPlay
             this.tbFileName.Name = "tbFileName";
             this.tbFileName.Size = new System.Drawing.Size(208, 20);
             this.tbFileName.TabIndex = 9;
-            this.tbFileName.Text = "c:\\test.avi";
+            this.tbFileName.Text = "c:\\testfiles_dma\\csi.avi";
+            this.tbFileName.TextChanged += new System.EventHandler(this.tbFileName_TextChanged);
             // 
             // btnStart
             // 
@@ -133,7 +134,7 @@ namespace DxPlay
             // Form1
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(336, 338);
+            this.ClientSize = new System.Drawing.Size(339, 338);
             this.Controls.Add(this.btnSnap);
             this.Controls.Add(this.btnPause);
             this.Controls.Add(this.panel1);
@@ -143,6 +144,7 @@ namespace DxPlay
             this.Name = "Form1";
             this.Text = "DxPlay";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 		#endregion
@@ -277,6 +279,11 @@ namespace DxPlay
 
             // Rewind clip to beginning to allow DxPlay.Start to work again.
             m_play.Rewind();
+        }
+
+        private void tbFileName_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
