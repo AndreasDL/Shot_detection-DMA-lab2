@@ -481,5 +481,13 @@ namespace DxPlay
             }
             GC.Collect();
         }
+
+        public void cout()
+        {
+            Console.WriteLine("Test");
+        }
+
+
     }
+
 }

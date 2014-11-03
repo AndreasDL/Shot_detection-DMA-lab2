@@ -104,6 +104,7 @@
     <Compile Include="Capture.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ShotDetectionFunctions.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
