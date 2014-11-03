@@ -180,3 +180,8 @@ $RECYCLE.BIN/
  
 # Visual Studio 2014 CTP
 **/*.sln.ide
+
+*.avi
+*.mp4
+*.mkv
+*.xml
