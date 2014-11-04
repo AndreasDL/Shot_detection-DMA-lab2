@@ -120,5 +120,32 @@ namespace ShotDetector
             // Rewind clip to beginning to allow DxPlay.Start to work again.
             m_play.Rewind();
         }
+
+        private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("Selected " + cmbMethod.SelectedIndex + ": " + cmbMethod.Text);
+
+            if (cmbMethod.SelectedIndex == 0)
+            {
+                // Method 1
+            }
+            else if (cmbMethod.SelectedIndex == 1)
+            {
+                // Method 2
+            }
+            else if (cmbMethod.SelectedIndex == 2)
+            {
+                // Method 3
+            }
+            else if (cmbMethod.SelectedIndex == 3)
+            {
+                // Method 4
+            }
+            else if (cmbMethod.SelectedIndex == 4)
+            {
+                // Method 5
+            }
+
+        }
     }
 }
