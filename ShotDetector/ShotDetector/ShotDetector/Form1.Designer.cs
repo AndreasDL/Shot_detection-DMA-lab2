@@ -302,7 +302,6 @@
         private System.ServiceProcess.ServiceController serviceController1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnStart;
-        private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn shotNumber;

@@ -342,8 +342,7 @@ namespace ShotDetector{
         }
 
         // Configure the video window
-        private void ConfigureVideoWindow(IVideoWindow videoWindow, Control hWin)
-        {
+        private void ConfigureVideoWindow(IVideoWindow videoWindow, Control hWin){
             int hr;
 
             // Set the output window

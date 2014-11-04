@@ -69,6 +69,7 @@ namespace ShotDetector
             // If we were stopped, start
             if (m_State == State.Stopped){
                 btnStart.Text = "Stop";
+                playToolStripMenuItem1.Text = "Stop";
                 m_play.Start();
                 btnPause.Enabled = true;
                 txtFileName.Enabled = false;
@@ -80,23 +81,25 @@ namespace ShotDetector
                 btnPause.Enabled = false;
                 txtFileName.Enabled = true;
                 btnStart.Text = "Start";
+                playToolStripMenuItem1.Text = "Start";
                 btnPause.Text = "Pause";
+                pauseToolStripMenuItem.Text = "Pause";
                 m_State = State.Stopped;
             }
         }
-        private void pause_Click(object sender, System.EventArgs e)
-        {
+        private void pause_Click(object sender, System.EventArgs e){
             // If we are playing, pause
-            if (m_State == State.Playing)
-            {
+            if (m_State == State.Playing){
                 m_play.Pause();
                 btnPause.Text = "Resume";
+                pauseToolStripMenuItem.Text = "Resume";
+
                 m_State = State.Paused;
             }
             // If we are paused, start
-            else
-            {
+            else{
                 m_play.Start();
+                pauseToolStripMenuItem.Text = "Pause";
                 btnPause.Text = "Pause";
                 m_State = State.Playing;
             }
