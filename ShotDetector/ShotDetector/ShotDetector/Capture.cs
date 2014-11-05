@@ -502,13 +502,20 @@ namespace ShotDetector{
 
             Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
-            frameBuffer.Enqueue(pBuffer);
+            //IntPtr[] test;
+            //frameBuffer.Enqueue(Marshal.Copy(pBuffer,test,0,BufferLen));
 
             int bufsize = frameBuffer.ToArray().Length;
             if (bufsize > 10)
             {
                 bufsize--;
                 frameBuffer.Dequeue();
+            }
+
+            Console.WriteLine("Contents of framebuffer:");
+            for (int i = 0; i < bufsize; i++)
+            {
+                Console.WriteLine(*(byte*)frameBuffer.ElementAt(i));
             }
 
             // Walk every Red/Green/Blue of every pixel in the image.
