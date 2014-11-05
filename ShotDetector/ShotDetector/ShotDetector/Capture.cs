@@ -17,6 +17,8 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 
 using DirectShowLib;
 
@@ -48,6 +50,8 @@ namespace ShotDetector{
         private int m_videoHeight;
         private int m_stride;
         private int m_ImageSize; // In bytes
+
+        Queue<IntPtr> frameBuffer = new Queue<IntPtr>();
 
         public int m_Count = 0;
 
@@ -494,42 +498,64 @@ namespace ShotDetector{
             // no matter how dark they appear, are *completely* black.  I'm picking an arbitrary number.  
             // If the Red, Green or Blue of any pixel is brighter than this, I'm asserting that the frame 
             // isn't black.  Adjust this number to suit.  Set to zero to look for absolute blacks only.
-            const int iMaxBright = 10;
+            const int iMaxBright = 255;// 10;
 
             Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
+
+            frameBuffer.Enqueue(pBuffer);
+
+            int bufsize = frameBuffer.ToArray().Length;
+            if (bufsize > 10)
+            {
+                bufsize--;
+                frameBuffer.Dequeue();
+            }
 
             // Walk every Red/Green/Blue of every pixel in the image.
             // If any are greater than iMaxBrightness, it's too bright to be a black frame
             Byte* b = (byte*)pBuffer;
-            for (int x = 0; x < m_videoHeight; x++)
-            {
-                for (int y = 0; (y < m_stride) && (*b <= iMaxBright); y++)
+            //frame
+
+            Byte* current = (byte*)frameBuffer.ElementAt(bufsize - 1);
+
+            if(bufsize > 1){
+                Byte* previous = (byte*)frameBuffer.ElementAt(bufsize - 2);
+                for (int x = 0; x < m_videoHeight; x++)
                 {
-                    b++;
+                    for (int y = 0; (y < m_stride) && (*b <= iMaxBright); y++)          // m_stride = 3*framewidth (R/G/B). Loop over this for every row = entire frame.
+                    {
+                        b++;
+                        current++;
+                        previous++;
+                        //Console.WriteLine("b: " + *b + " / current: " + *current + " / previous: " + *previous);
+                    }
+
+                    //Console.WriteLine("bufsize: " + bufsize);
+
+
+                    // Are we done?
+                    if (*b > iMaxBright)
+                    {
+                        break;
+                    }
+
+                    // If the image width isn't evenly divisable by 4, sometimes padding bytes
+                    // are added on the end of the rows.  We need to make sure we skip those
+                    b = (byte*)(pBuffer);
+                    b += (x * m_stride);
                 }
 
-                // Are we done?
-                if (*b > iMaxBright)
+                // If we didn't exit due to brightness
+                if (*b <= iMaxBright)
                 {
-                    break;
+                    //m_Blacks++;
+                    //Debug.WriteLine(string.Format("Frame Number: {0}  Blacks: {1}", m_Count, m_Blacks));
                 }
 
-                // If the image width isn't evenly divisable by 4, sometimes padding bytes
-                // are added on the end of the rows.  We need to make sure we skip those
-                b = (byte*)(pBuffer);
-                b += (x * m_stride);
+                // Increment frame number.  Done this way, frame are zero indexed.
+                Console.WriteLine("Frame: " + m_Count);
+                m_Count++;
             }
-
-            // If we didn't exit due to brightness
-            if (*b <= iMaxBright)
-            {
-                //m_Blacks++;
-                //Debug.WriteLine(string.Format("Frame Number: {0}  Blacks: {1}", m_Count, m_Blacks));
-            }
-
-            // Increment frame number.  Done this way, frame are zero indexed.
-            Console.WriteLine("Frame: " + m_Count);
-            m_Count++;
 
             return 0;
         }
