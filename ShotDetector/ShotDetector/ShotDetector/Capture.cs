@@ -21,7 +21,7 @@ using System.Threading;
 using DirectShowLib;
 
 namespace ShotDetector{
-    internal class DxPlay : IDisposable{
+    internal class DxPlay : ISampleGrabberCB, IDisposable{
         enum GraphState
         {
             Stopped,
@@ -48,6 +48,8 @@ namespace ShotDetector{
         private int m_videoHeight;
         private int m_stride;
         private int m_ImageSize; // In bytes
+
+        public int m_Count = 0;
 
         // Event used by Media Event thread
         private ManualResetEvent m_mre;
@@ -384,6 +386,19 @@ namespace ShotDetector{
             // Configure the samplegrabber
             hr = sampGrabber.SetBufferSamples(true);
             DsError.ThrowExceptionForHR(hr);
+            
+            ////////////////////////////////////////////////////
+            // Choose to call BufferCB instead of SampleCB
+            hr = sampGrabber.SetCallback(this, 1);
+            DsError.ThrowExceptionForHR(hr);
+            ////////////////////////////////////////////////////
+        }
+
+        /// <summary> sample callback, NOT USED. </summary>
+        int ISampleGrabberCB.SampleCB(double SampleTime, IMediaSample pSample)
+        {
+            Marshal.ReleaseComObject(pSample);
+            return 0;
         }
 
         // Save the size parameters for use in SnapShot
@@ -467,6 +482,56 @@ namespace ShotDetector{
                 }
             }
             GC.Collect();
+        }
+
+        /// <summary> buffer callback, COULD BE FROM FOREIGN THREAD. </summary>
+        unsafe int ISampleGrabberCB.BufferCB (double SampleTime, IntPtr pBuffer, int BufferLen)
+        {
+
+            // Performance is essential here.  Use unsafe for fastest possible scanning.
+
+            // If every pixel were absolutely black, *b would always be zero.  However, few frames, 
+            // no matter how dark they appear, are *completely* black.  I'm picking an arbitrary number.  
+            // If the Red, Green or Blue of any pixel is brighter than this, I'm asserting that the frame 
+            // isn't black.  Adjust this number to suit.  Set to zero to look for absolute blacks only.
+            const int iMaxBright = 10;
+
+            Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
+
+            // Walk every Red/Green/Blue of every pixel in the image.
+            // If any are greater than iMaxBrightness, it's too bright to be a black frame
+            Byte* b = (byte*)pBuffer;
+            for (int x = 0; x < m_videoHeight; x++)
+            {
+                for (int y = 0; (y < m_stride) && (*b <= iMaxBright); y++)
+                {
+                    b++;
+                }
+
+                // Are we done?
+                if (*b > iMaxBright)
+                {
+                    break;
+                }
+
+                // If the image width isn't evenly divisable by 4, sometimes padding bytes
+                // are added on the end of the rows.  We need to make sure we skip those
+                b = (byte*)(pBuffer);
+                b += (x * m_stride);
+            }
+
+            // If we didn't exit due to brightness
+            if (*b <= iMaxBright)
+            {
+                //m_Blacks++;
+                //Debug.WriteLine(string.Format("Frame Number: {0}  Blacks: {1}", m_Count, m_Blacks));
+            }
+
+            // Increment frame number.  Done this way, frame are zero indexed.
+            Console.WriteLine("Frame: " + m_Count);
+            m_Count++;
+
+            return 0;
         }
     }
 }

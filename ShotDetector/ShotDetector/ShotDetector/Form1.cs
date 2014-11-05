@@ -39,6 +39,8 @@ namespace ShotDetector
         private void quitToolStripMenuItem_Click(object sender, EventArgs e){
             Application.Exit();
         }
+
+
         private void start_Click(object sender, EventArgs e){
             // If necessary, close the old file
             if (m_State == State.Stopped){
@@ -60,6 +62,27 @@ namespace ShotDetector
                     // Let us know when the file is finished playing
                     m_play.StopPlay += new DxPlay.DxPlayEvent(m_play_StopPlay);
                     m_State = State.Stopped;
+
+                    //method1 = new Method1(txtFileName.Text);
+                    // Start displaying statistics
+                    //method1.Start();
+                    
+                    // Final update
+                    //tbFrameNum.Text = cam.m_Count.ToString();
+                    //tbBlacks.Text = cam.m_Blacks.ToString();
+                     
+
+
+
+                    //method1.WaitUntilDone();
+                    
+
+                    //lock (this)
+                    //{
+                    //    method1.Dispose();
+                    //    method1 = null;
+                    //}
+
                 }
                 catch (COMException ce){
                     MessageBox.Show("Failed to open file: " + ce.Message, "Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
