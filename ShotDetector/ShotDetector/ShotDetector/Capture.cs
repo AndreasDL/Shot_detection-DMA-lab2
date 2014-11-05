@@ -19,6 +19,8 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel;
+using System.IO;
 
 using DirectShowLib;
 
@@ -44,7 +46,6 @@ namespace ShotDetector{
 
         // Used to grab current snapshots
         ISampleGrabber m_sampGrabber = null;
-        ISampleGrabberCB m_sampGrabberCB = null;
 
         // Grab once.  Used to create bitmap
         private int m_videoWidth;
@@ -52,11 +53,9 @@ namespace ShotDetector{
         private int m_stride;
         private int m_ImageSize; // In bytes
 
-        Bitmap previous2;
-        Bitmap current2;
-
-        //Queue<Bitmap> frameBuffer = new Queue<Bitmap>();
         Queue<byte[]> frameBuffer = new Queue<byte[]>();
+        //Queue<Bitmap> frameBuffer = new Queue<Bitmap>();
+        int detectionMethod;
 
         public int m_Count = 0;
 
@@ -512,7 +511,8 @@ namespace ShotDetector{
             Marshal.Copy(pBuffer, _BGRData, 0, _BGRData.Length < BufferLen ? _BGRData.Length : BufferLen);
 
             frameBuffer.Enqueue(_BGRData);
-            
+            //frameBuffer.Enqueue(frame);
+
             int bufsize = frameBuffer.ToArray().Length;
             if (bufsize > 10)
             {
@@ -520,29 +520,33 @@ namespace ShotDetector{
                 frameBuffer.Dequeue();
             }
 
-            previous2 = current2;
-            current2 = IPToBmp(pBuffer);
-
             // Walk every Red/Green/Blue of every pixel in the image.
             // If any are greater than iMaxBrightness, it's too bright to be a black frame
             Byte* b = (byte*)pBuffer;
 
-            Console.WriteLine("bufsize: " + bufsize);
-            //Console.WriteLine("Frame: " + m_Count);
-            //if(bufsize > 1){
-            if(m_Count > 1){
+
+            //////
+            // Set detection method
+            //////
+            detectionMethod = 0;
+
+            if(bufsize > 1){
                 byte[] current = frameBuffer.ElementAt(bufsize - 1);
                 byte[] previous = frameBuffer.ElementAt(bufsize - 2);
-                
+
+                Console.WriteLine("Frame " + m_Count);
                 Console.WriteLine("Previous frame:");
                 for (int i = 0; i < 10; i++)
                 {
                     Console.Write(previous[i] + " ");
+                    //Console.Write(frameBuffer.ElementAt(bufsize-2) + " ");
                 }
+                Console.WriteLine();
                 Console.WriteLine("Current frame:");
                 for (int i = 0; i < 10; i++)
                 {
                     Console.Write(current[i] + " ");
+                    //Console.Write(frameBuffer.ElementAt(bufsize - 1) + " ");
                 }
                 Console.WriteLine();
                 Console.WriteLine();
