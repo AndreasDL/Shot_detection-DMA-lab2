@@ -44,6 +44,7 @@ namespace ShotDetector{
 
         // Used to grab current snapshots
         ISampleGrabber m_sampGrabber = null;
+        ISampleGrabberCB m_sampGrabberCB = null;
 
         // Grab once.  Used to create bitmap
         private int m_videoWidth;
@@ -503,9 +504,32 @@ namespace ShotDetector{
 
             Bitmap bmp;
             bmp = new Bitmap(m_videoWidth, m_videoHeight, m_stride, PixelFormat.Format32bppArgb, pBuffer);
-
             frameBuffer.Enqueue(bmp.Clone(new Rectangle(0,0,bmp.Width,bmp.Height),bmp.PixelFormat));
 
+
+            int hr;
+            IntPtr ip = IntPtr.Zero;
+            int iBuffSize = m_videoHeight*m_videoWidth*3;
+
+            // Read the buffer size
+            //hr = m_sampGrabber.GetCurrentBuffer(ref iBuffSize, ip);
+            //DsError.ThrowExceptionForHR(hr);
+
+            Debug.Assert(iBuffSize == m_ImageSize, "Unexpected buffer size");
+
+            // Allocate the buffer and read it
+            ip = Marshal.AllocCoTaskMem(iBuffSize);
+
+            frameBuffer.Enqueue(IPToBmp(ip));
+
+            //hr = m_sampGrabber.GetCurrentBuffer(ref iBuffSize, ip);
+            //DsError.ThrowExceptionForHR(hr);
+
+
+            //IntPtr snapshot = SnapShot();
+            //frameBuffer.Enqueue(IPToBmp(SnapShot()));
+
+            
             int bufsize = frameBuffer.ToArray().Length;
             if (bufsize > 10)
             {
@@ -513,7 +537,7 @@ namespace ShotDetector{
                 frameBuffer.Dequeue();
             }
 
-            Bitmap current = frameBuffer.ElementAt(bufsize - 1);
+
 
             // Walk every Red/Green/Blue of every pixel in the image.
             // If any are greater than iMaxBrightness, it's too bright to be a black frame
@@ -521,16 +545,27 @@ namespace ShotDetector{
 
             //Console.WriteLine("bufsize: " + bufsize);
             //Console.WriteLine("Frame: " + m_Count);
-            if(bufsize > 1){
-                Bitmap previous = frameBuffer.ElementAt(bufsize - 2);
+            if(bufsize > 2){
+                Bitmap current = frameBuffer.ElementAt(bufsize - 2);
+                Bitmap previous = frameBuffer.ElementAt(bufsize - 4);
 
-                Console.WriteLine("Differences with previous frame:");
+                Console.WriteLine("Previous frame:");
                 for (int i = 0; i < 10; i++)
                 {
-                    Console.Write(previous.GetPixel(i, 0).GetHue()-current.GetPixel(i,0).GetHue());
+                    Console.Write(previous.GetPixel(i, 0).GetHue() + " ");
                 }
                 Console.WriteLine();
                 Console.WriteLine();
+
+                Console.WriteLine("Current frame:");
+                for (int i = 0; i < 10; i++)
+                {
+                    Console.Write(current.GetPixel(i, 0).GetHue() + " ");
+                }
+                Console.WriteLine();
+                Console.WriteLine();
+
+                
 
                     for (int x = 0; x < m_videoHeight; x++)
                     {
@@ -538,7 +573,6 @@ namespace ShotDetector{
                         {
                             b++;
                         }
-
 
                         // Are we done?
                         if (*b > iMaxBright)
