@@ -52,7 +52,11 @@ namespace ShotDetector{
         private int m_stride;
         private int m_ImageSize; // In bytes
 
-        Queue<Bitmap> frameBuffer = new Queue<Bitmap>();
+        Bitmap previous2;
+        Bitmap current2;
+
+        //Queue<Bitmap> frameBuffer = new Queue<Bitmap>();
+        Queue<byte[]> frameBuffer = new Queue<byte[]>();
 
         public int m_Count = 0;
 
@@ -403,6 +407,7 @@ namespace ShotDetector{
         int ISampleGrabberCB.SampleCB(double SampleTime, IMediaSample pSample)
         {
             Marshal.ReleaseComObject(pSample);
+
             return 0;
         }
 
@@ -502,33 +507,11 @@ namespace ShotDetector{
 
             Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
-            Bitmap bmp;
-            bmp = new Bitmap(m_videoWidth, m_videoHeight, m_stride, PixelFormat.Format32bppArgb, pBuffer);
-            frameBuffer.Enqueue(bmp.Clone(new Rectangle(0,0,bmp.Width,bmp.Height),bmp.PixelFormat));
+            byte[] _BGRData;
+            _BGRData = new byte[(m_videoHeight * m_videoWidth) * 3];
+            Marshal.Copy(pBuffer, _BGRData, 0, _BGRData.Length < BufferLen ? _BGRData.Length : BufferLen);
 
-
-            int hr;
-            IntPtr ip = IntPtr.Zero;
-            int iBuffSize = m_videoHeight*m_videoWidth*3;
-
-            // Read the buffer size
-            //hr = m_sampGrabber.GetCurrentBuffer(ref iBuffSize, ip);
-            //DsError.ThrowExceptionForHR(hr);
-
-            Debug.Assert(iBuffSize == m_ImageSize, "Unexpected buffer size");
-
-            // Allocate the buffer and read it
-            ip = Marshal.AllocCoTaskMem(iBuffSize);
-
-            frameBuffer.Enqueue(IPToBmp(ip));
-
-            //hr = m_sampGrabber.GetCurrentBuffer(ref iBuffSize, ip);
-            //DsError.ThrowExceptionForHR(hr);
-
-
-            //IntPtr snapshot = SnapShot();
-            //frameBuffer.Enqueue(IPToBmp(SnapShot()));
-
+            frameBuffer.Enqueue(_BGRData);
             
             int bufsize = frameBuffer.ToArray().Length;
             if (bufsize > 10)
@@ -537,54 +520,52 @@ namespace ShotDetector{
                 frameBuffer.Dequeue();
             }
 
-
+            previous2 = current2;
+            current2 = IPToBmp(pBuffer);
 
             // Walk every Red/Green/Blue of every pixel in the image.
             // If any are greater than iMaxBrightness, it's too bright to be a black frame
             Byte* b = (byte*)pBuffer;
 
-            //Console.WriteLine("bufsize: " + bufsize);
+            Console.WriteLine("bufsize: " + bufsize);
             //Console.WriteLine("Frame: " + m_Count);
-            if(bufsize > 2){
-                Bitmap current = frameBuffer.ElementAt(bufsize - 2);
-                Bitmap previous = frameBuffer.ElementAt(bufsize - 4);
-
+            //if(bufsize > 1){
+            if(m_Count > 1){
+                byte[] current = frameBuffer.ElementAt(bufsize - 1);
+                byte[] previous = frameBuffer.ElementAt(bufsize - 2);
+                
                 Console.WriteLine("Previous frame:");
                 for (int i = 0; i < 10; i++)
                 {
-                    Console.Write(previous.GetPixel(i, 0).GetHue() + " ");
+                    Console.Write(previous[i] + " ");
                 }
-                Console.WriteLine();
-                Console.WriteLine();
-
                 Console.WriteLine("Current frame:");
                 for (int i = 0; i < 10; i++)
                 {
-                    Console.Write(current.GetPixel(i, 0).GetHue() + " ");
+                    Console.Write(current[i] + " ");
                 }
                 Console.WriteLine();
                 Console.WriteLine();
+                                 
 
-                
-
-                    for (int x = 0; x < m_videoHeight; x++)
+                for (int x = 0; x < m_videoHeight; x++)
+                {
+                    for (int y = 0; (y < m_stride) && (*b <= iMaxBright); y++)          // m_stride = 3*framewidth (R/G/B). Loop over this for every row = entire frame.
                     {
-                        for (int y = 0; (y < m_stride) && (*b <= iMaxBright); y++)          // m_stride = 3*framewidth (R/G/B). Loop over this for every row = entire frame.
-                        {
-                            b++;
-                        }
-
-                        // Are we done?
-                        if (*b > iMaxBright)
-                        {
-                            break;
-                        }
-
-                        // If the image width isn't evenly divisable by 4, sometimes padding bytes
-                        // are added on the end of the rows.  We need to make sure we skip those
-                        b = (byte*)(pBuffer);
-                        b += (x * m_stride);
+                        b++;
                     }
+
+                    // Are we done?
+                    if (*b > iMaxBright)
+                    {
+                        break;
+                    }
+
+                    // If the image width isn't evenly divisable by 4, sometimes padding bytes
+                    // are added on the end of the rows.  We need to make sure we skip those
+                    b = (byte*)(pBuffer);
+                    b += (x * m_stride);
+                }
 
                 // If we didn't exit due to brightness
                 if (*b <= iMaxBright)
@@ -593,10 +574,11 @@ namespace ShotDetector{
                     //Debug.WriteLine(string.Format("Frame Number: {0}  Blacks: {1}", m_Count, m_Blacks));
                 }
 
-                // Increment frame number.  Done this way, frame are zero indexed.
-                m_Count++;
-            }
 
+               
+            }
+            // Increment frame number.  Done this way, frame are zero indexed.
+            m_Count++;
             return 0;
         }
     }
