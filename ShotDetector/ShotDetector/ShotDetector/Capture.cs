@@ -51,7 +51,7 @@ namespace ShotDetector{
         private int m_stride;
         private int m_ImageSize; // In bytes
 
-        Queue<IntPtr> frameBuffer = new Queue<IntPtr>();
+        Queue<Bitmap> frameBuffer = new Queue<Bitmap>();
 
         public int m_Count = 0;
 
@@ -491,7 +491,6 @@ namespace ShotDetector{
         /// <summary> buffer callback, COULD BE FROM FOREIGN THREAD. </summary>
         unsafe int ISampleGrabberCB.BufferCB (double SampleTime, IntPtr pBuffer, int BufferLen)
         {
-
             // Performance is essential here.  Use unsafe for fastest possible scanning.
 
             // If every pixel were absolutely black, *b would always be zero.  However, few frames, 
@@ -502,8 +501,10 @@ namespace ShotDetector{
 
             Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
-            //IntPtr[] test;
-            //frameBuffer.Enqueue(Marshal.Copy(pBuffer,test,0,BufferLen));
+            Bitmap bmp;
+            bmp = new Bitmap(m_videoWidth, m_videoHeight, m_stride, PixelFormat.Format32bppArgb, pBuffer);
+
+            frameBuffer.Enqueue(bmp.Clone(new Rectangle(0,0,bmp.Width,bmp.Height),bmp.PixelFormat));
 
             int bufsize = frameBuffer.ToArray().Length;
             if (bufsize > 10)
@@ -512,45 +513,44 @@ namespace ShotDetector{
                 frameBuffer.Dequeue();
             }
 
-            Console.WriteLine("Contents of framebuffer:");
-            for (int i = 0; i < bufsize; i++)
-            {
-                Console.WriteLine(*(byte*)frameBuffer.ElementAt(i));
-            }
+            Bitmap current = frameBuffer.ElementAt(bufsize - 1);
 
             // Walk every Red/Green/Blue of every pixel in the image.
             // If any are greater than iMaxBrightness, it's too bright to be a black frame
             Byte* b = (byte*)pBuffer;
-            //frame
 
-            Byte* current = (byte*)frameBuffer.ElementAt(bufsize - 1);
-
+            //Console.WriteLine("bufsize: " + bufsize);
+            //Console.WriteLine("Frame: " + m_Count);
             if(bufsize > 1){
-                Byte* previous = (byte*)frameBuffer.ElementAt(bufsize - 2);
-                for (int x = 0; x < m_videoHeight; x++)
+                Bitmap previous = frameBuffer.ElementAt(bufsize - 2);
+
+                Console.WriteLine("Differences with previous frame:");
+                for (int i = 0; i < 10; i++)
                 {
-                    for (int y = 0; (y < m_stride) && (*b <= iMaxBright); y++)          // m_stride = 3*framewidth (R/G/B). Loop over this for every row = entire frame.
-                    {
-                        b++;
-                        current++;
-                        previous++;
-                        //Console.WriteLine("b: " + *b + " / current: " + *current + " / previous: " + *previous);
-                    }
-
-                    //Console.WriteLine("bufsize: " + bufsize);
-
-
-                    // Are we done?
-                    if (*b > iMaxBright)
-                    {
-                        break;
-                    }
-
-                    // If the image width isn't evenly divisable by 4, sometimes padding bytes
-                    // are added on the end of the rows.  We need to make sure we skip those
-                    b = (byte*)(pBuffer);
-                    b += (x * m_stride);
+                    Console.Write(previous.GetPixel(i, 0).GetHue()-current.GetPixel(i,0).GetHue());
                 }
+                Console.WriteLine();
+                Console.WriteLine();
+
+                    for (int x = 0; x < m_videoHeight; x++)
+                    {
+                        for (int y = 0; (y < m_stride) && (*b <= iMaxBright); y++)          // m_stride = 3*framewidth (R/G/B). Loop over this for every row = entire frame.
+                        {
+                            b++;
+                        }
+
+
+                        // Are we done?
+                        if (*b > iMaxBright)
+                        {
+                            break;
+                        }
+
+                        // If the image width isn't evenly divisable by 4, sometimes padding bytes
+                        // are added on the end of the rows.  We need to make sure we skip those
+                        b = (byte*)(pBuffer);
+                        b += (x * m_stride);
+                    }
 
                 // If we didn't exit due to brightness
                 if (*b <= iMaxBright)
@@ -560,7 +560,6 @@ namespace ShotDetector{
                 }
 
                 // Increment frame number.  Done this way, frame are zero indexed.
-                Console.WriteLine("Frame: " + m_Count);
                 m_Count++;
             }
 
