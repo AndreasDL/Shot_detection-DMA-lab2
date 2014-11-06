@@ -87,7 +87,7 @@
             this.txtFileName.Name = "txtFileName";
             this.txtFileName.Size = new System.Drawing.Size(351, 20);
             this.txtFileName.TabIndex = 2;
-            this.txtFileName.Text = "c:\\csi.avi";
+            this.txtFileName.Text = "c:\\testfiles_dma\\csi.avi";
             // 
             // ofdBrowse
             // 

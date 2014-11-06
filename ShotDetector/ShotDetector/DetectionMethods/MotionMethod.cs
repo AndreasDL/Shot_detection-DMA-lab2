@@ -16,7 +16,13 @@ public class MotionMethod : aShotDetectionMethod{
     private int frameNumber;//frame number
     private byte[,][] currWindow; //current avg values
     private byte[,][] prevWindow; //previous avg values
+    int prevMotion; //total motion of the previous frame
+    int currMotion; //total motion of the current frame
+    int avgMotion;
 
+    int bulletsfired = 0;//debug
+    int[] shots = { 60, 111, 185, 235, 295, 354, 447, 497, 554, 616, 678, 785, 867, 945, 1002, 1052, 1128, 1151, 1342, 1364, 1402, 1456, 1507, 1537, 1552, 1570, 1620, 1662, 1737, 1771, 1845, 1884, 1935, 1972, 2009 };    
+    
     public MotionMethod(int _subsize, int _windowSize):base() {
         this.subsize = _subsize;
         this.windowSize = _windowSize;
@@ -24,6 +30,8 @@ public class MotionMethod : aShotDetectionMethod{
         this.current = null;
         this.currWindow = null;
         this.prevWindow = null;
+        this.prevMotion = 0;
+        this.avgMotion = 0;
     }
     public unsafe override int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
@@ -33,7 +41,10 @@ public class MotionMethod : aShotDetectionMethod{
 
         prevWindow = currWindow;//keep the avgs that have been calculated before
         currWindow = new byte[videoHeight/subsize,videoWidth/subsize][]; //hold the average pixel values for each subblock
-        
+
+        prevMotion = currMotion;
+        currMotion = 0;
+
         //calculate avg for all subblocks in current frame
         int blockX = 0, blockY = 0; //indexes of the subblock (assume that a ++ operation is faster than multiplication)
         for (int y = 0; y < videoHeight; y+= subsize ){
@@ -45,17 +56,21 @@ public class MotionMethod : aShotDetectionMethod{
             blockY++;
         }
 
+
         //skip first frame
         if (prevWindow != null) {
+
             //Estimate motion for each subblock
             int videoWidthBlocks = videoWidth / subsize; //videowidth in SUBBLOCKS
             int videoHeightBlocks = videoHeight / subsize; //videoheight in SUBBLOCKS
+            int blockCount = videoHeightBlocks * videoWidthBlocks; // amount of blocks in a frame, used to calculate average
+            int motionX = 0, motionY = 0; //motionVectors
 
             for (int y = 0; y < videoHeightBlocks; y++) {
                 for (int x = 0; x < videoWidthBlocks; x++) {
 
                     //calculate the average of the subblock (from previous frame)
-                    byte[] avgToFind = prevWindow[y,x];
+                    byte[] avgToFind = prevWindow[y, x];
 
                     //determine the start and stop position of the window in SUBBLOCKS
                     int startX = x - windowSize < 0 ? 0 : x - windowSize;
@@ -82,10 +97,26 @@ public class MotionMethod : aShotDetectionMethod{
                     }
 
                     //getMotion vector
+                    motionX += Math.Abs(best_X - x);
+                    motionY += Math.Abs(best_Y - y);//abs to avoid that positive and negative movements cancel eachother out
                 }
             }
+            currMotion = motionX + motionY;
+            int difference = Math.Abs(currMotion - prevMotion);
+
+            if (difference > 5*avgMotion) {
+                ///shotDetected(SampleTime, frameNumber);
+                Console.WriteLine("frame " + frameNumber + " total: " + currMotion + " DIFF: " + Math.Abs(currMotion - prevMotion) + " AVG: " + avgMotion);
+                avgMotion = difference; //assume that motion is somewhat consistent for the duration of a shot
+            }
+
+
+            if (frameNumber == shots[bulletsfired]) {
+                bulletsfired++;
+                Console.WriteLine("frame " + frameNumber + " total: " + currMotion + " DIFF: " + Math.Abs(currMotion - prevMotion) + " AVG: " + avgMotion + " should be a shot");
+            }
+            avgMotion = (int)(avgMotion * 0.9 + difference * 0.1);
         }
-        //motion too big => movement
 
         frameNumber++;
         return 0;
