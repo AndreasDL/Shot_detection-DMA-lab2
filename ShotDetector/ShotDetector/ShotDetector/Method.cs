@@ -15,6 +15,6 @@ using DirectShowLib;
 
 public interface Method{
 
-    void run();
+    bool run();
 
 }

@@ -534,6 +534,7 @@ namespace ShotDetector{
                 byte[] current = frameBuffer.ElementAt(bufsize - 1);
                 byte[] previous = frameBuffer.ElementAt(bufsize - 2);
 
+                /*
                 Console.WriteLine("Frame " + m_Count);
                 Console.WriteLine("Previous frame:");
                 for (int i = 0; i < 10; i++)
@@ -550,13 +551,16 @@ namespace ShotDetector{
                 }
                 Console.WriteLine();
                 Console.WriteLine();
+                 */
 
                 Method method = null; ;
 
                 switch (detectionMethod)
                 {
                     case 0:
-                        method = new Method0(frameBuffer);
+                        int delta2 = 256;
+                        double delta3 = 0.25;
+                        method = new Method0(frameBuffer.ElementAt(bufsize-1),frameBuffer.ElementAt(bufsize-2),BufferLen,delta2,delta3);
                         break;
                     case 1:
                         //method = new Method1(frameBuffer);
@@ -572,7 +576,9 @@ namespace ShotDetector{
                         break;
                 }
 
-                method.run();
+                bool detected_shot = false;
+                detected_shot = method.run();
+                if (detected_shot) Console.WriteLine("Detected shot at frame " + m_Count);
 
                 /*
                 CODE BELOW CAN SERVE AS AN EXAMPLE 
