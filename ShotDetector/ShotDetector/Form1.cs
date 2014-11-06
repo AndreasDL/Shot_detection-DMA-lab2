@@ -102,7 +102,9 @@ namespace ShotDetector
                 btnPause.Enabled = false;
                 txtFileName.Enabled = true;
                 btnStart.Text = "Start";
+                playToolStripMenuItem1.Text = "Start";
                 btnPause.Text = "Pause";
+                pauseToolStripMenuItem.Text = "Pause";
                 m_State = State.Stopped;
             }
         }
@@ -113,6 +115,7 @@ namespace ShotDetector
             {
                 m_play.Pause();
                 btnPause.Text = "Resume";
+                pauseToolStripMenuItem.Text = "Resume";
                 m_State = State.Paused;
             }
             // If we are paused, start
@@ -120,6 +123,7 @@ namespace ShotDetector
             {
                 m_play.Start();
                 btnPause.Text = "Pause";
+                pauseToolStripMenuItem.Text = "Pause";
                 m_State = State.Playing;
             }
         }
@@ -133,7 +137,9 @@ namespace ShotDetector
             btnPause.Enabled = false;
             txtFileName.Enabled = true;
             btnStart.Text = "Start";
+            playToolStripMenuItem1.Text = "Start";
             btnPause.Text = "Pause";
+            pauseToolStripMenuItem.Text = "Pause";
 
             CheckForIllegalCrossThreadCalls = true;
 

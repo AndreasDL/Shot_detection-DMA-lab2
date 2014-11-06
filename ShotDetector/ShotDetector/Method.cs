@@ -13,7 +13,7 @@ using System.IO;
 
 using DirectShowLib;
 
-public interface Method{
+public interface Method {
 
     bool run();
 
