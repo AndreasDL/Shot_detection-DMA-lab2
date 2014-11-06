@@ -74,7 +74,7 @@
             this.label1.Location = new System.Drawing.Point(9, 35);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(27, 15);
+            this.label1.Size = new System.Drawing.Size(23, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "File";
             // 
@@ -87,7 +87,7 @@
             this.txtFileName.Name = "txtFileName";
             this.txtFileName.Size = new System.Drawing.Size(351, 20);
             this.txtFileName.TabIndex = 2;
-            this.txtFileName.Text = "c:\\csi.avi";
+            this.txtFileName.Text = "c:\\testfiles_dma\\csi.avi";
             // 
             // ofdBrowse
             // 
@@ -103,7 +103,7 @@
             this.mnMenu.Location = new System.Drawing.Point(0, 0);
             this.mnMenu.Name = "mnMenu";
             this.mnMenu.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.mnMenu.Size = new System.Drawing.Size(784, 28);
+            this.mnMenu.Size = new System.Drawing.Size(784, 24);
             this.mnMenu.TabIndex = 3;
             this.mnMenu.Text = "menuStrip1";
             // 
@@ -113,20 +113,20 @@
             this.openToolStripMenuItem,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.browseFile);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
@@ -137,27 +137,27 @@
             this.pauseToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.playToolStripMenuItem.Name = "playToolStripMenuItem";
-            this.playToolStripMenuItem.Size = new System.Drawing.Size(48, 24);
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
             this.playToolStripMenuItem.Text = "Play";
             // 
             // playToolStripMenuItem1
             // 
             this.playToolStripMenuItem1.Name = "playToolStripMenuItem1";
-            this.playToolStripMenuItem1.Size = new System.Drawing.Size(116, 24);
+            this.playToolStripMenuItem1.Size = new System.Drawing.Size(105, 22);
             this.playToolStripMenuItem1.Text = "Play";
             this.playToolStripMenuItem1.Click += new System.EventHandler(this.start_Click);
             // 
             // pauseToolStripMenuItem
             // 
             this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(116, 24);
+            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.pauseToolStripMenuItem.Text = "Pause";
             this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pause_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(116, 24);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             // 
             // panel1
             // 
@@ -227,7 +227,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBar1.Location = new System.Drawing.Point(175, 392);
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(588, 56);
+            this.trackBar1.Size = new System.Drawing.Size(588, 45);
             this.trackBar1.TabIndex = 9;
             this.trackBar1.TickFrequency = 0;
             // 
@@ -237,7 +237,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(456, 35);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 15);
+            this.label2.Size = new System.Drawing.Size(43, 13);
             this.label2.TabIndex = 10;
             this.label2.Text = "Method";
             // 
@@ -255,6 +255,7 @@
             this.cmbMethod.Name = "cmbMethod";
             this.cmbMethod.Size = new System.Drawing.Size(252, 21);
             this.cmbMethod.TabIndex = 11;
+            this.cmbMethod.SelectedIndexChanged += new System.EventHandler(this.cmbMethod_SelectedIndexChanged);
             // 
             // ShotDetector
             // 

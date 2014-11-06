@@ -33,12 +33,13 @@ namespace ShotDetector
             ofdBrowse.RestoreDirectory = true;
 
             if (ofdBrowse.ShowDialog() == DialogResult.OK) {
-                MessageBox.Show("hi");
+                txtFileName.Text = ofdBrowse.FileName;
             }
         }
         private void quitToolStripMenuItem_Click(object sender, EventArgs e){
             Application.Exit();
         }
+
         private void start_Click(object sender, EventArgs e){
             // If necessary, close the old file
             if (m_State == State.Stopped){
@@ -60,6 +61,27 @@ namespace ShotDetector
                     // Let us know when the file is finished playing
                     m_play.StopPlay += new DxPlay.DxPlayEvent(m_play_StopPlay);
                     m_State = State.Stopped;
+
+                    //method1 = new Method1(txtFileName.Text);
+                    // Start displaying statistics
+                    //method1.Start();
+                    
+                    // Final update
+                    //tbFrameNum.Text = cam.m_Count.ToString();
+                    //tbBlacks.Text = cam.m_Blacks.ToString();
+                     
+
+
+
+                    //method1.WaitUntilDone();
+                    
+
+                    //lock (this)
+                    //{
+                    //    method1.Dispose();
+                    //    method1 = null;
+                    //}
+
                 }
                 catch (COMException ce){
                     MessageBox.Show("Failed to open file: " + ce.Message, "Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -93,7 +115,6 @@ namespace ShotDetector
                 m_play.Pause();
                 btnPause.Text = "Resume";
                 pauseToolStripMenuItem.Text = "Resume";
-
                 m_State = State.Paused;
             }
             // If we are paused, start
@@ -101,6 +122,7 @@ namespace ShotDetector
                 m_play.Start();
                 pauseToolStripMenuItem.Text = "Pause";
                 btnPause.Text = "Pause";
+                pauseToolStripMenuItem.Text = "Pause";
                 m_State = State.Playing;
             }
         }
@@ -114,7 +136,9 @@ namespace ShotDetector
             btnPause.Enabled = false;
             txtFileName.Enabled = true;
             btnStart.Text = "Start";
+            playToolStripMenuItem1.Text = "Start";
             btnPause.Text = "Pause";
+            pauseToolStripMenuItem.Text = "Pause";
 
             CheckForIllegalCrossThreadCalls = true;
 
@@ -122,6 +146,33 @@ namespace ShotDetector
 
             // Rewind clip to beginning to allow DxPlay.Start to work again.
             m_play.Rewind();
+        }
+
+        private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("Selected " + cmbMethod.SelectedIndex + ": " + cmbMethod.Text);
+
+            if (cmbMethod.SelectedIndex == 0)
+            {
+                // Method 1
+            }
+            else if (cmbMethod.SelectedIndex == 1)
+            {
+                // Method 2
+            }
+            else if (cmbMethod.SelectedIndex == 2)
+            {
+                // Method 3
+            }
+            else if (cmbMethod.SelectedIndex == 3)
+            {
+                // Method 4
+            }
+            else if (cmbMethod.SelectedIndex == 4)
+            {
+                // Method 5
+            }
+
         }
     }
 }

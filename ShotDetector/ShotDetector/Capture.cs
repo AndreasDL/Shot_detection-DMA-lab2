@@ -17,11 +17,15 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
+using System.ComponentModel;
+using System.IO;
 
 using DirectShowLib;
 
 namespace ShotDetector{
-    internal class DxPlay : IDisposable{
+    internal class DxPlay : ISampleGrabberCB, IDisposable{
         enum GraphState
         {
             Stopped,
@@ -48,6 +52,12 @@ namespace ShotDetector{
         private int m_videoHeight;
         private int m_stride;
         private int m_ImageSize; // In bytes
+
+        Queue<byte[]> frameBuffer = new Queue<byte[]>();
+        //Queue<Bitmap> frameBuffer = new Queue<Bitmap>();
+        int detectionMethod;
+
+        public int m_Count = 0;
 
         // Event used by Media Event thread
         private ManualResetEvent m_mre;
@@ -383,6 +393,20 @@ namespace ShotDetector{
             // Configure the samplegrabber
             hr = sampGrabber.SetBufferSamples(true);
             DsError.ThrowExceptionForHR(hr);
+            
+            ////////////////////////////////////////////////////
+            // Choose to call BufferCB instead of SampleCB
+            hr = sampGrabber.SetCallback(this, 1);
+            DsError.ThrowExceptionForHR(hr);
+            ////////////////////////////////////////////////////
+        }
+
+        /// <summary> sample callback, NOT USED. </summary>
+        int ISampleGrabberCB.SampleCB(double SampleTime, IMediaSample pSample)
+        {
+            Marshal.ReleaseComObject(pSample);
+
+            return 0;
         }
 
         // Save the size parameters for use in SnapShot
@@ -466,6 +490,129 @@ namespace ShotDetector{
                 }
             }
             GC.Collect();
+        }
+
+        /// <summary> buffer callback, COULD BE FROM FOREIGN THREAD. </summary>
+        unsafe int ISampleGrabberCB.BufferCB (double SampleTime, IntPtr pBuffer, int BufferLen)
+        {
+            // Performance is essential here.  Use unsafe for fastest possible scanning.
+
+            // If every pixel were absolutely black, *b would always be zero.  However, few frames, 
+            // no matter how dark they appear, are *completely* black.  I'm picking an arbitrary number.  
+            // If the Red, Green or Blue of any pixel is brighter than this, I'm asserting that the frame 
+            // isn't black.  Adjust this number to suit.  Set to zero to look for absolute blacks only.
+            const int iMaxBright = 255;// 10;
+
+            Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
+
+            byte[] _BGRData;
+            _BGRData = new byte[(m_videoHeight * m_videoWidth) * 3];
+            Marshal.Copy(pBuffer, _BGRData, 0, _BGRData.Length < BufferLen ? _BGRData.Length : BufferLen);
+
+            frameBuffer.Enqueue(_BGRData);
+            //frameBuffer.Enqueue(frame);
+
+            int bufsize = frameBuffer.ToArray().Length;
+            if (bufsize > 10)
+            {
+                bufsize--;
+                frameBuffer.Dequeue();
+            }
+
+            // Walk every Red/Green/Blue of every pixel in the image.
+            // If any are greater than iMaxBrightness, it's too bright to be a black frame
+            Byte* b = (byte*)pBuffer;
+
+
+            //////
+            // Set detection method
+            //////
+            detectionMethod = 0;
+
+            if(bufsize > 1){
+                byte[] current = frameBuffer.ElementAt(bufsize - 1);
+                byte[] previous = frameBuffer.ElementAt(bufsize - 2);
+
+                /*
+                Console.WriteLine("Frame " + m_Count);
+                Console.WriteLine("Previous frame:");
+                for (int i = 0; i < 10; i++)
+                {
+                    Console.Write(previous[i] + " ");
+                    //Console.Write(frameBuffer.ElementAt(bufsize-2) + " ");
+                }
+                Console.WriteLine();
+                Console.WriteLine("Current frame:");
+                for (int i = 0; i < 10; i++)
+                {
+                    Console.Write(current[i] + " ");
+                    //Console.Write(frameBuffer.ElementAt(bufsize - 1) + " ");
+                }
+                Console.WriteLine();
+                Console.WriteLine();
+                 */
+
+                Method method = null; ;
+
+                switch (detectionMethod)
+                {
+                    case 0:
+                        int delta2 = 256;
+                        double delta3 = 0.25;
+                        method = new Method0(frameBuffer.ElementAt(bufsize-1),frameBuffer.ElementAt(bufsize-2),BufferLen,delta2,delta3);
+                        break;
+                    case 1:
+                        //method = new Method1(frameBuffer);
+                        break;
+                    case 2:
+                        //method = new Method2(frameBuffer);
+                        break;
+                    case 3:
+                        //method = new Method3(frameBuffer);
+                        break;
+                    case 4:
+                        //method = new Method4(frameBuffer);;
+                        break;
+                }
+
+                bool detected_shot = false;
+                detected_shot = method.run();
+                if (detected_shot) Console.WriteLine("Detected shot at frame " + m_Count);
+
+                /*
+                CODE BELOW CAN SERVE AS AN EXAMPLE 
+                for (int x = 0; x < m_videoHeight; x++)
+                {
+                    for (int y = 0; (y < m_stride) && (*b <= iMaxBright); y++)          // m_stride = 3*framewidth (R/G/B). Loop over this for every row = entire frame.
+                    {
+                        b++;
+                    }
+
+                    // Are we done?
+                    if (*b > iMaxBright)
+                    {
+                        break;
+                    }
+
+                    // If the image width isn't evenly divisable by 4, sometimes padding bytes
+                    // are added on the end of the rows.  We need to make sure we skip those
+                    b = (byte*)(pBuffer);
+                    b += (x * m_stride);
+                }
+
+                // If we didn't exit due to brightness
+                if (*b <= iMaxBright)
+                {
+                    //m_Blacks++;
+                    //Debug.WriteLine(string.Format("Frame Number: {0}  Blacks: {1}", m_Count, m_Blacks));
+                }
+
+                */
+               
+            }
+            // Increment frame number.  Done this way, frame are zero indexed.
+            m_Count++;
+            return 0;
         }
     }
 }
