@@ -25,6 +25,7 @@ public class MotionMethod : aShotDetectionMethod{
         this.previous = null;
     }
 
+
     public unsafe override int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
         previous = current;
         current = new byte[(videoHeight * videoWidth) * 3];

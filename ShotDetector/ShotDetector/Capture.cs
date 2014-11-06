@@ -171,7 +171,7 @@ namespace ShotDetector {
                 case 0: //Pixel
                     int delta2 = 256;
                     double delta3 = 0.25;
-                    method = new Method0(delta2,delta3);
+                    method = new PixelMethod(delta2,delta3);
                     break;
                 case 1: //Motion
                     int subsize = 16;

@@ -13,7 +13,7 @@ using System.IO;
 
 using DirectShowLib;
 
-public class Method0 : aShotDetectionMethod,ISampleGrabberCB {
+public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
 
     private byte[] current;
     private byte[] previous;
@@ -21,7 +21,7 @@ public class Method0 : aShotDetectionMethod,ISampleGrabberCB {
     private double delta3;
     private int frameNumber;
 
-    public Method0(int _delta2, double _delta3): base(){
+    public PixelMethod(int _delta2, double _delta3): base(){
         this.delta2 = _delta2;
         this.delta3 = _delta3;
         this.frameNumber = 0;
