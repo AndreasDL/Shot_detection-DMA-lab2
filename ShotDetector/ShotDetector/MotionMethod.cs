@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 using DirectShowLib;
 
-public class MotionMethod: Method {
+public class MotionMethod : Method {
 
     private byte[] current;
     private byte[] previous;
     private int subsize, windowSize;
     private int m_stride;
     private int videoWidth, videoHeight;
+
     /*
      * Constructor for the motion estimation method
      * _current = the byte array of the current frame
@@ -53,35 +54,28 @@ public class MotionMethod: Method {
         int videoWidthBlocks = videoWidth / subsize; //videowidth in SUBBLOCKS
         int videoHeightBlocks = videoHeight /subsize; //videoheight in SUBBLOCKS
 
-        for (int y = 0; y < videoWidth; y += subsize) {
-            for (int x = 0; x < videoWidth; x += subsize) {
+        for (int y = 0; y < videoHeightBlocks; y++ ) {
+            for (int x = 0; x < videoWidthBlocks; x++) {
 
                 //calculate the average of the subblock (from previous frame)
                 byte[] avgToFind = getAvg(x, y, previous);
 
                 //determine the start and stop position of the window in SUBBLOCKS
-                int startX = x/subsize - windowSize;
-                startX = startX < 0 ? 0 : startX;
-                int startY = y/subsize -windowSize;
-                startY = startY < 0 ? 0 : startY;
-
-                int stopX = x/subsize + windowSize;
-                stopX = stopX > videoWidthBlocks ? videoWidthBlocks - 1: stopX;
-
-                int stopY = y/subsize + windowSize;
-                stopY = stopY > videoHeightBlocks ? videoHeightBlocks - 1 : stopY;
+                int startX = x - windowSize < 0 ? 0 : x - windowSize;
+                int startY = y - windowSize < 0 ? 0 : y - windowSize;
+                int stopX  = x + windowSize > videoWidthBlocks  ? videoWidthBlocks  : x + windowSize;
+                int stopY  = y + windowSize > videoHeightBlocks ? videoHeightBlocks : y + windowSize;
 
                 //keep track of the best match in SUBBLOCKS
                 int best_X = startX;
                 int best_Y = startY;
-                int bestDifference = getDifference(avgToFind, getAvg(best_X, best_Y, current));
+                int bestDifference = getDifference(avgToFind, window[best_Y, best_X] );
 
                 //get the best match
                 for (int wy = startY; wy < stopY; wy++) {
                     for (int wx = startX; wx < stopX; wx++) {
-                        int candidateDifference = getDifference(avgToFind, window[wy,wx]);
 
-                        //TODO break loops if difference is 0
+                        int candidateDifference = getDifference(avgToFind, window[wy,wx]);
                         if (bestDifference > candidateDifference){
                             best_X = wx;
                             best_Y = wy;
@@ -112,7 +106,7 @@ public class MotionMethod: Method {
         return pixel;
     }
     /*
-     * Return the average pixel values of a subblock
+     * Return the average pixel values of a subblock starting at position _x ; _y
      * _x = the x position in PIXELS
      * _y = the y position in PIXELS
      * frame: the frame

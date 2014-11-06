@@ -23,7 +23,6 @@ namespace ShotDetector {
         public ShotDetector() {
             InitializeComponent();
             cmbMethod.SelectedIndex = 1;
-            //m_play.setDetectionMethod(cmbMethod.SelectedIndex);
         }
 
         private void browseFile(object sender, EventArgs e) {
