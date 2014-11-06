@@ -551,24 +551,28 @@ namespace ShotDetector{
                 Console.WriteLine();
                 Console.WriteLine();
 
+                Method method = null; ;
+
                 switch (detectionMethod)
                 {
                     case 0:
-                        //method0();
+                        method = new Method0(frameBuffer);
                         break;
                     case 1:
-                        //method1();
+                        //method = new Method1(frameBuffer);
                         break;
                     case 2:
-                        //method2();
+                        //method = new Method2(frameBuffer);
                         break;
                     case 3:
-                        //method3();
+                        //method = new Method3(frameBuffer);
                         break;
                     case 4:
-                        //method4();
+                        //method = new Method4(frameBuffer);;
                         break;
                 }
+
+                method.run();
 
                 /*
                 CODE BELOW CAN SERVE AS AN EXAMPLE 
