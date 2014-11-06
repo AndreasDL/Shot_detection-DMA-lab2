@@ -30,6 +30,7 @@ public class MotionMethod : aShotDetectionMethod{
 
         current = new byte[(videoHeight * videoWidth) * 3];
         Marshal.Copy(pBuffer, current, 0, BufferLen);
+
         prevWindow = currWindow;//keep the avgs that have been calculated before
         currWindow = new byte[videoHeight/subsize,videoWidth/subsize][]; //hold the average pixel values for each subblock
         
