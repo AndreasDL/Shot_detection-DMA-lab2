@@ -15,6 +15,6 @@ using DirectShowLib;
 
 public interface Method {
 
-    bool run();
+    bool detectShot();
 
 }

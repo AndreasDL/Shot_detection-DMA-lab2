@@ -29,7 +29,7 @@ public class Method0 : Method {
         this.bufferLen = _bufferLen;
     }
 
-    public bool run() {
+    public bool detectShot() {
 
         int twoPixDiff;
         int threshReached = 0;

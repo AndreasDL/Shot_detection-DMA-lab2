@@ -24,10 +24,9 @@ using System.IO;
 
 using DirectShowLib;
 
-namespace ShotDetector{
-    internal class DxPlay : ISampleGrabberCB, IDisposable{
-        enum GraphState
-        {
+namespace ShotDetector {
+    internal class DxPlay : ISampleGrabberCB, IDisposable {
+        enum GraphState {
             Stopped,
             Paused,
             Running,
@@ -35,9 +34,9 @@ namespace ShotDetector{
         }
 
         #region Member variables
-
         // File name we are playing
         private string m_sFileName;
+
 
         // graph builder interfaces
         private IFilterGraph2 m_FilterGraph;
@@ -54,17 +53,13 @@ namespace ShotDetector{
         private int m_ImageSize; // In bytes
 
         Queue<byte[]> frameBuffer = new Queue<byte[]>();
-        //Queue<Bitmap> frameBuffer = new Queue<Bitmap>();
-        int detectionMethod;
+        private int detectionMethod = 0;
 
         public int m_Count = 0;
-
         // Event used by Media Event thread
         private ManualResetEvent m_mre;
-
         // Current state of the graph (can change async)
         volatile private GraphState m_State = GraphState.Stopped;
-
 #if DEBUG
         // Allow you to "Connect to remote graph" from GraphEdit
         DsROTEntry m_DsRot;
@@ -73,12 +68,10 @@ namespace ShotDetector{
         #endregion
 
         // Release everything.
-        public void Dispose()
-        {
+        public void Dispose() {
             CloseInterfaces();
         }
-        ~DxPlay()
-        {
+        ~DxPlay() {
             CloseInterfaces();
         }
 
@@ -88,8 +81,8 @@ namespace ShotDetector{
 
         // Play an avi file into a window.  Allow for snapshots.
         // (Control to show video in, Avi file to play
-        public DxPlay(Control hWin, string FileName){
-            try{
+        public DxPlay(Control hWin, string FileName) {
+            try {
                 int hr;
                 IntPtr hEvent;
 
@@ -116,7 +109,7 @@ namespace ShotDetector{
                 Thread t = new Thread(new ThreadStart(this.EventWait));
                 t.Name = "Media Event Thread";
                 t.Start();
-            }catch{
+            } catch {
                 Dispose();
                 throw;
             }
@@ -128,8 +121,7 @@ namespace ShotDetector{
         // in a class as we are, we don't have access to the message loop.
         // Alternately, you can receive your events as windows messages.  See
         // IMediaEventEx.SetNotifyWindow.
-        private void EventWait()
-        {
+        private void EventWait() {
             // Returned when GetEvent is called but there are no events
             const int E_ABORT = unchecked((int)0x80004004);
 
@@ -137,36 +129,30 @@ namespace ShotDetector{
             IntPtr p1, p2;
             EventCode ec;
 
-            do
-            {
+            do {
                 // Wait for an event
                 m_mre.WaitOne(-1, true);
 
                 // Avoid contention for m_State
-                lock (this)
-                {
+                lock (this) {
                     // If we are not shutting down
-                    if (m_State != GraphState.Exiting)
-                    {
+                    if (m_State != GraphState.Exiting) {
                         // Read the event
                         for (
                             hr = m_mediaEvent.GetEvent(out ec, out p1, out p2, 0);
                             hr >= 0;
                             hr = m_mediaEvent.GetEvent(out ec, out p1, out p2, 0)
-                            )
-                        {
+                            ) {
                             // Write the event name to the debug window
                             Debug.WriteLine(ec.ToString());
 
                             // If the clip is finished playing
-                            if (ec == EventCode.Complete)
-                            {
+                            if (ec == EventCode.Complete) {
                                 // Call Stop() to set state
                                 Stop();
 
                                 // Throw event
-                                if (StopPlay != null)
-                                {
+                                if (StopPlay != null) {
                                     StopPlay(this);
                                 }
                             }
@@ -177,46 +163,39 @@ namespace ShotDetector{
                         }
 
                         // If the error that exited the loop wasn't due to running out of events
-                        if (hr != E_ABORT)
-                        {
+                        if (hr != E_ABORT) {
                             DsError.ThrowExceptionForHR(hr);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // We are shutting down
                         break;
                     }
                 }
             } while (true);
         }
-
         // Return the currently playing file name
-        public string FileName
-        {
-            get
-            {
+        public string FileName {
+            get {
                 return m_sFileName;
             }
         }
-
+        public void setDetectionMethod(int detectionMethod) {
+            this.detectionMethod = detectionMethod;
+        }
         // start playing
-        public void Start(){
+        public void Start() {
             // If we aren't already playing (or shutting down)
-            if (m_State == GraphState.Stopped || m_State == GraphState.Paused){
+            if (m_State == GraphState.Stopped || m_State == GraphState.Paused) {
                 int hr = m_mediaCtrl.Run();
                 DsError.ThrowExceptionForHR(hr);
 
                 m_State = GraphState.Running;
             }
         }
-
         // Pause the capture graph.
-        public void Pause()
-        {
+        public void Pause() {
             // If we are playing
-            if (m_State == GraphState.Running)
-            {
+            if (m_State == GraphState.Running) {
                 int hr = m_mediaCtrl.Pause();
                 DsError.ThrowExceptionForHR(hr);
 
@@ -224,32 +203,26 @@ namespace ShotDetector{
             }
         }
         // Pause the capture graph.
-        public void Stop()
-        {
+        public void Stop() {
             // Can only Stop when playing or paused
-            if (m_State == GraphState.Running || m_State == GraphState.Paused)
-            {
+            if (m_State == GraphState.Running || m_State == GraphState.Paused) {
                 int hr = m_mediaCtrl.Stop();
                 DsError.ThrowExceptionForHR(hr);
 
                 m_State = GraphState.Stopped;
             }
         }
-
         // Reset the clip back to the beginning
-        public void Rewind()
-        {
+        public void Rewind() {
             int hr;
 
             IMediaPosition imp = m_FilterGraph as IMediaPosition;
             hr = imp.put_CurrentPosition(0);
         }
-
         // Grab a snapshot of the most recent image played.
         // Returns A pointer to the raw pixel data. Caller must release this memory with
         // Marshal.FreeCoTaskMem when it is no longer needed.
-        public IntPtr SnapShot()
-        {
+        public IntPtr SnapShot() {
             int hr;
             IntPtr ip = IntPtr.Zero;
             int iBuffSize = 0;
@@ -268,10 +241,8 @@ namespace ShotDetector{
 
             return ip;
         }
-
         // Convert a point to the raw pixel data to a .NET bitmap
-        public Bitmap IPToBmp(IntPtr ip)
-        {
+        public Bitmap IPToBmp(IntPtr ip) {
             // We know the Bits Per Pixel is 24 (3 bytes) because we forced it 
             // to be with sampGrabber.SetMediaType()
             int iBufSize = m_videoWidth * m_videoHeight * 3;
@@ -284,10 +255,9 @@ namespace ShotDetector{
                 (IntPtr)(ip.ToInt32() + iBufSize - m_stride)
                 );
         }
-
         // Build the capture graph for grabber and renderer.</summary>
         // (Control to show video in, Filename to play)
-        private void SetupGraph(Control hWin, string FileName){
+        private void SetupGraph(Control hWin, string FileName) {
             int hr;
 
             // Get the graphbuilder object
@@ -296,7 +266,7 @@ namespace ShotDetector{
             // Get a ICaptureGraphBuilder2 to help build the graph
             ICaptureGraphBuilder2 icgb2 = new CaptureGraphBuilder2() as ICaptureGraphBuilder2;
 
-            try{
+            try {
                 // Link the ICaptureGraphBuilder2 to the IFilterGraph2
                 hr = icgb2.SetFiltergraph(m_FilterGraph);
                 DsError.ThrowExceptionForHR(hr);
@@ -336,9 +306,8 @@ namespace ShotDetector{
                 // Grab some other interfaces
                 m_mediaEvent = m_FilterGraph as IMediaEvent;
                 m_mediaCtrl = m_FilterGraph as IMediaControl;
-            }finally{
-                if (icgb2 != null)
-                {
+            } finally {
+                if (icgb2 != null) {
                     Marshal.ReleaseComObject(icgb2);
                     icgb2 = null;
                 }
@@ -350,9 +319,8 @@ namespace ShotDetector{
             GC.WaitForPendingFinalizers();
 #endif
         }
-
         // Configure the video window
-        private void ConfigureVideoWindow(IVideoWindow videoWindow, Control hWin){
+        private void ConfigureVideoWindow(IVideoWindow videoWindow, Control hWin) {
             int hr;
 
             // Set the output window
@@ -372,10 +340,8 @@ namespace ShotDetector{
             hr = videoWindow.SetWindowPosition(0, 0, rc.Right, rc.Bottom);
             DsError.ThrowExceptionForHR(hr);
         }
-
         // Set the options on the sample grabber
-        private void ConfigureSampleGrabber(ISampleGrabber sampGrabber)
-        {
+        private void ConfigureSampleGrabber(ISampleGrabber sampGrabber) {
             AMMediaType media;
             int hr;
 
@@ -393,25 +359,21 @@ namespace ShotDetector{
             // Configure the samplegrabber
             hr = sampGrabber.SetBufferSamples(true);
             DsError.ThrowExceptionForHR(hr);
-            
+
             ////////////////////////////////////////////////////
             // Choose to call BufferCB instead of SampleCB
             hr = sampGrabber.SetCallback(this, 1);
             DsError.ThrowExceptionForHR(hr);
             ////////////////////////////////////////////////////
         }
-
         /// <summary> sample callback, NOT USED. </summary>
-        int ISampleGrabberCB.SampleCB(double SampleTime, IMediaSample pSample)
-        {
+        int ISampleGrabberCB.SampleCB(double SampleTime, IMediaSample pSample) {
             Marshal.ReleaseComObject(pSample);
 
             return 0;
         }
-
         // Save the size parameters for use in SnapShot
-        private void SaveSizeInfo(ISampleGrabber sampGrabber)
-        {
+        private void SaveSizeInfo(ISampleGrabber sampGrabber) {
             int hr;
 
             // Get the media type from the SampleGrabber
@@ -420,11 +382,9 @@ namespace ShotDetector{
             hr = sampGrabber.GetConnectedMediaType(media);
             DsError.ThrowExceptionForHR(hr);
 
-            try
-            {
+            try {
 
-                if ((media.formatType != FormatType.VideoInfo) || (media.formatPtr == IntPtr.Zero))
-                {
+                if ((media.formatType != FormatType.VideoInfo) || (media.formatPtr == IntPtr.Zero)) {
                     throw new NotSupportedException("Unknown Grabber Media Format");
                 }
 
@@ -437,54 +397,43 @@ namespace ShotDetector{
                 m_videoHeight = videoInfoHeader.BmiHeader.Height;
                 m_stride = videoInfoHeader.BmiHeader.ImageSize / m_videoHeight;
                 m_ImageSize = videoInfoHeader.BmiHeader.ImageSize;
-            }
-            finally
-            {
+            } finally {
                 DsUtils.FreeAMMediaType(media);
                 media = null;
             }
         }
-
         // Shut down capture
-        private void CloseInterfaces()
-        {
+        private void CloseInterfaces() {
             int hr;
 
-            lock (this)
-            {
-                if (m_State != GraphState.Exiting)
-                {
+            lock (this) {
+                if (m_State != GraphState.Exiting) {
                     m_State = GraphState.Exiting;
 
                     // Release the thread (if the thread was started)
-                    if (m_mre != null)
-                    {
+                    if (m_mre != null) {
                         m_mre.Set();
                     }
                 }
 
-                if (m_mediaCtrl != null)
-                {
+                if (m_mediaCtrl != null) {
                     // Stop the graph
                     hr = m_mediaCtrl.Stop();
                     m_mediaCtrl = null;
                 }
 
-                if (m_sampGrabber != null)
-                {
+                if (m_sampGrabber != null) {
                     Marshal.ReleaseComObject(m_sampGrabber);
                     m_sampGrabber = null;
                 }
 
 #if DEBUG
-                if (m_DsRot != null)
-                {
+                if (m_DsRot != null) {
                     m_DsRot.Dispose();
                 }
 #endif
 
-                if (m_FilterGraph != null)
-                {
+                if (m_FilterGraph != null) {
                     Marshal.ReleaseComObject(m_FilterGraph);
                     m_FilterGraph = null;
                 }
@@ -493,76 +442,35 @@ namespace ShotDetector{
         }
 
         /// <summary> buffer callback, COULD BE FROM FOREIGN THREAD. </summary>
-        unsafe int ISampleGrabberCB.BufferCB (double SampleTime, IntPtr pBuffer, int BufferLen)
-        {
+        unsafe int ISampleGrabberCB.BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen) {
             // Performance is essential here.  Use unsafe for fastest possible scanning.
-
-            // If every pixel were absolutely black, *b would always be zero.  However, few frames, 
-            // no matter how dark they appear, are *completely* black.  I'm picking an arbitrary number.  
-            // If the Red, Green or Blue of any pixel is brighter than this, I'm asserting that the frame 
-            // isn't black.  Adjust this number to suit.  Set to zero to look for absolute blacks only.
-            const int iMaxBright = 255;// 10;
-
             Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
-            byte[] _BGRData;
-            _BGRData = new byte[(m_videoHeight * m_videoWidth) * 3];
+            byte[] _BGRData = new byte[(m_videoHeight * m_videoWidth) * 3];
             Marshal.Copy(pBuffer, _BGRData, 0, _BGRData.Length < BufferLen ? _BGRData.Length : BufferLen);
-
             frameBuffer.Enqueue(_BGRData);
-            //frameBuffer.Enqueue(frame);
 
             int bufsize = frameBuffer.ToArray().Length;
-            if (bufsize > 10)
-            {
+            if (bufsize > 10) {
                 bufsize--;
                 frameBuffer.Dequeue();
             }
 
-            // Walk every Red/Green/Blue of every pixel in the image.
-            // If any are greater than iMaxBrightness, it's too bright to be a black frame
-            Byte* b = (byte*)pBuffer;
-
-
-            //////
-            // Set detection method
-            //////
-            detectionMethod = 0;
-
-            if(bufsize > 1){
+            if (bufsize > 1) {
                 byte[] current = frameBuffer.ElementAt(bufsize - 1);
                 byte[] previous = frameBuffer.ElementAt(bufsize - 2);
 
-                /*
-                Console.WriteLine("Frame " + m_Count);
-                Console.WriteLine("Previous frame:");
-                for (int i = 0; i < 10; i++)
-                {
-                    Console.Write(previous[i] + " ");
-                    //Console.Write(frameBuffer.ElementAt(bufsize-2) + " ");
-                }
-                Console.WriteLine();
-                Console.WriteLine("Current frame:");
-                for (int i = 0; i < 10; i++)
-                {
-                    Console.Write(current[i] + " ");
-                    //Console.Write(frameBuffer.ElementAt(bufsize - 1) + " ");
-                }
-                Console.WriteLine();
-                Console.WriteLine();
-                 */
-
                 Method method = null; ;
-
-                switch (detectionMethod)
-                {
-                    case 0:
+                switch (detectionMethod) {
+                    case 0: //Pixel
                         int delta2 = 256;
                         double delta3 = 0.25;
-                        method = new Method0(frameBuffer.ElementAt(bufsize-1),frameBuffer.ElementAt(bufsize-2),BufferLen,delta2,delta3);
+                        method = new Method0(frameBuffer.ElementAt(bufsize - 1), frameBuffer.ElementAt(bufsize - 2), BufferLen, delta2, delta3);
                         break;
-                    case 1:
-                        //method = new Method1(frameBuffer);
+                    case 1: //Motion
+                        int subsize = 16;
+                        int windowSize = 0;
+                        method = new MotionMethod(frameBuffer.ElementAt(bufsize - 1), frameBuffer.ElementAt(bufsize - 2),subsize,windowSize,m_stride,m_videoWidth,m_videoHeight);
                         break;
                     case 2:
                         //method = new Method2(frameBuffer);
@@ -576,40 +484,11 @@ namespace ShotDetector{
                 }
 
                 bool detected_shot = false;
-                detected_shot = method.run();
+                detected_shot = method.detectShot();
                 if (detected_shot) Console.WriteLine("Detected shot at frame " + m_Count);
 
-                /*
-                CODE BELOW CAN SERVE AS AN EXAMPLE 
-                for (int x = 0; x < m_videoHeight; x++)
-                {
-                    for (int y = 0; (y < m_stride) && (*b <= iMaxBright); y++)          // m_stride = 3*framewidth (R/G/B). Loop over this for every row = entire frame.
-                    {
-                        b++;
-                    }
-
-                    // Are we done?
-                    if (*b > iMaxBright)
-                    {
-                        break;
-                    }
-
-                    // If the image width isn't evenly divisable by 4, sometimes padding bytes
-                    // are added on the end of the rows.  We need to make sure we skip those
-                    b = (byte*)(pBuffer);
-                    b += (x * m_stride);
-                }
-
-                // If we didn't exit due to brightness
-                if (*b <= iMaxBright)
-                {
-                    //m_Blacks++;
-                    //Debug.WriteLine(string.Format("Frame Number: {0}  Blacks: {1}", m_Count, m_Blacks));
-                }
-
-                */
-               
             }
+
             // Increment frame number.  Done this way, frame are zero indexed.
             m_Count++;
             return 0;
