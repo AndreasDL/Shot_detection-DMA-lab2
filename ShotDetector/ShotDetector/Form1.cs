@@ -55,8 +55,8 @@ namespace ShotDetector {
             if (m_play == null) {
                 try {
                     // Open the file, provide a handle to play it in
-                    m_play = new DxPlay(panel1, txtFileName.Text);
-                    m_play.setDetectionMethod(cmbMethod.SelectedIndex);
+                    m_play = new DxPlay(panel1, txtFileName.Text, cmbMethod.SelectedIndex);
+                    //m_play.setDetectionMethod(cmbMethod.SelectedIndex);
 
                     // Let us know when the file is finished playing
                     m_play.StopPlay += new DxPlay.DxPlayEvent(m_play_StopPlay);

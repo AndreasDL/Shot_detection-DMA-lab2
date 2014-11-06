@@ -13,41 +13,49 @@ using System.IO;
 
 using DirectShowLib;
 
-public class Method0 : Method {
+public class Method0 : aShotDetectionMethod,ISampleGrabberCB {
 
-    byte[] current;
-    byte[] previous;
+    private byte[] current;
+    private byte[] previous;
     private int delta2;
     private double delta3;
-    private int bufferLen;
+    private int frameNumber;
 
-    public Method0(byte[] _current, byte[] _previous, int _bufferLen, int _delta2, double _delta3) {
-        this.current = _current;
-        this.previous = _previous;
+    public Method0(int _delta2, double _delta3): base(){
         this.delta2 = _delta2;
         this.delta3 = _delta3;
-        this.bufferLen = _bufferLen;
+        this.frameNumber = 0;
+        this.current = null;
+        this.previous = null;
     }
 
-    public bool detectShot() {
+    public unsafe override int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
+        Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
-        int twoPixDiff;
-        int threshReached = 0;
-        for (int i = 0; i < bufferLen - 3; i += 3) {
-            twoPixDiff = 0;
-            twoPixDiff += Math.Abs(current[i] - previous[i]);
-            twoPixDiff += Math.Abs(current[i + 1] - previous[i + 1]);
-            twoPixDiff += Math.Abs(current[i + 2] - previous[i + 2]);
+        previous = current;
+        current = new byte[(videoHeight * videoWidth) * 3];
+        Marshal.Copy(pBuffer, current, 0, current.Length < BufferLen ? current.Length : BufferLen);
 
-            if (twoPixDiff > delta2) threshReached++;
+        //Only do this block of code, when the previous frame is filled in (starting from the second frame)
+        if (previous != null) {
+            int twoPixDiff;
+            int threshReached = 0;
+            for (int i = 0; i < BufferLen - 3; i += 3) {
+                twoPixDiff = 0;
+                twoPixDiff += Math.Abs(current[i] - previous[i]);
+                twoPixDiff += Math.Abs(current[i + 1] - previous[i + 1]);
+                twoPixDiff += Math.Abs(current[i + 2] - previous[i + 2]);
+
+                if (twoPixDiff > delta2) threshReached++;
+            }
+
+            if (threshReached * 3.0 / (BufferLen * 1.0) > delta3) {
+                base.shotDetected(SampleTime,frameNumber);
+            }
         }
 
-        if (threshReached * 1.0 / (bufferLen * 1.0 / 3.0) > delta3) {
-            return true;
-        } else {
-            return false;
-        }
-
+        frameNumber++;
+        return 0;
     }
 
 }

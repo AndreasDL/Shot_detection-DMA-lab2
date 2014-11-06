@@ -5,37 +5,37 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DirectShowLib;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
-public class MotionMethod : Method {
+public class MotionMethod : aShotDetectionMethod{
 
     private byte[] current;
     private byte[] previous;
-    private int subsize, windowSize;
-    private int m_stride;
-    private int videoWidth, videoHeight;
 
-    /*
-     * Constructor for the motion estimation method
-     * _current = the byte array of the current frame
-     * _previous = the byte array of the previous frame
-     * _subsize = the size of a subblock
-     * _windowSize = the size of the search window in SUBBLOCKS
-     * _m_stride = the width of the frame, in BYTES (pixels /3)
-     * _videoWidth = the width of the frame in PIXELS
-     * _videoHeight = the height of the video in PIXELS
-    */
-    public MotionMethod(byte[] _current, byte[] _previous, int _subsize, int _windowSize, int _m_stride, int _videoWidth, int _videoHeight) {
-        this.current = _current;
-        this.previous = _previous;
+    private int subsize;    //size of a subblock
+    private int windowSize; //size of the search window in SUBBLOCKS
+    private int frameNumber;
+
+    public MotionMethod(int _subsize, int _windowSize):base() {
         this.subsize = _subsize;
         this.windowSize = _windowSize;
-        this.m_stride = _m_stride;
-        this.videoWidth = _videoWidth;
-        this.videoHeight = _videoHeight;
+        this.frameNumber = 0;
+        this.current = null;
+        this.previous = null;
     }
 
-    public bool detectShot() {
+    public unsafe override int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
+        previous = current;
+        current = new byte[(videoHeight * videoWidth) * 3];
+        Marshal.Copy(pBuffer, current, 0, current.Length < BufferLen ? current.Length : BufferLen);
 
+        Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
+
+        //skip first frame
+        if (previous == null)
+            return 0;
+        
         //calculate avg for all subblocks in current frame
         //TODO multithreaded
         byte[,][] window = new byte[videoHeight/subsize,videoWidth/subsize][]; //hold the average pixel values for each subblock
@@ -89,7 +89,9 @@ public class MotionMethod : Method {
         }
 
         //motion too big => movement
-        return false;
+
+        frameNumber++;
+        return 0;
     }
 
 
