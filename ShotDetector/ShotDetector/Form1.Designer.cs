@@ -245,12 +245,6 @@
             // 
             this.cmbMethod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbMethod.FormattingEnabled = true;
-            this.cmbMethod.Items.AddRange(new object[] {
-            "pixel",
-            "motion",
-            "global histogram",
-            "local histogram",
-            "generalized"});
             this.cmbMethod.Location = new System.Drawing.Point(511, 32);
             this.cmbMethod.Name = "cmbMethod";
             this.cmbMethod.Size = new System.Drawing.Size(252, 21);

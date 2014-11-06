@@ -22,6 +22,7 @@ namespace ShotDetector {
 
         public ShotDetector() {
             InitializeComponent();
+            this.cmbMethod.Items.AddRange(MethodFactory.METHODS ); //set the detection methods
             cmbMethod.SelectedIndex = 1;
         }
 

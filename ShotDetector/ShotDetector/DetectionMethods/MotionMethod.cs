@@ -9,92 +9,86 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 public class MotionMethod : aShotDetectionMethod{
-
-    private byte[] current;
-    private byte[] previous;
+    private byte[] current; //current frame
 
     private int subsize;    //size of a subblock
     private int windowSize; //size of the search window in SUBBLOCKS
-    private int frameNumber;
+    private int frameNumber;//frame number
+    private byte[,][] currWindow; //current avg values
+    private byte[,][] prevWindow; //previous avg values
 
     public MotionMethod(int _subsize, int _windowSize):base() {
         this.subsize = _subsize;
         this.windowSize = _windowSize;
         this.frameNumber = 0;
         this.current = null;
-        this.previous = null;
+        this.currWindow = null;
+        this.prevWindow = null;
     }
-
-
     public unsafe override int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
-        previous = current;
-        current = new byte[(videoHeight * videoWidth) * 3];
-        Marshal.Copy(pBuffer, current, 0, current.Length < BufferLen ? current.Length : BufferLen);
-
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
-        //skip first frame
-        if (previous == null)
-            return 0;
+        current = new byte[(videoHeight * videoWidth) * 3];
+        Marshal.Copy(pBuffer, current, 0, BufferLen);
+        prevWindow = currWindow;//keep the avgs that have been calculated before
+        currWindow = new byte[videoHeight/subsize,videoWidth/subsize][]; //hold the average pixel values for each subblock
         
         //calculate avg for all subblocks in current frame
-        //TODO multithreaded
-        byte[,][] window = new byte[videoHeight/subsize,videoWidth/subsize][]; //hold the average pixel values for each subblock
         int blockX = 0, blockY = 0; //indexes of the subblock (assume that a ++ operation is faster than multiplication)
-
         for (int y = 0; y < videoHeight; y+= subsize ){
             blockX = 0;
             for (int x = 0; x < videoWidth; x += subsize) {
-                window[blockY, blockX] = getAvg(x, y, current); ;
+                currWindow[blockY, blockX] = getAvg(x, y, current); ;
                 blockX++;
             }
             blockY++;
         }
 
-        //Estimate motion for each subblock
-        int videoWidthBlocks = videoWidth / subsize; //videowidth in SUBBLOCKS
-        int videoHeightBlocks = videoHeight /subsize; //videoheight in SUBBLOCKS
+        //skip first frame
+        if (prevWindow != null) {
+            //Estimate motion for each subblock
+            int videoWidthBlocks = videoWidth / subsize; //videowidth in SUBBLOCKS
+            int videoHeightBlocks = videoHeight / subsize; //videoheight in SUBBLOCKS
 
-        for (int y = 0; y < videoHeightBlocks; y++ ) {
-            for (int x = 0; x < videoWidthBlocks; x++) {
+            for (int y = 0; y < videoHeightBlocks; y++) {
+                for (int x = 0; x < videoWidthBlocks; x++) {
 
-                //calculate the average of the subblock (from previous frame)
-                byte[] avgToFind = getAvg(x, y, previous);
+                    //calculate the average of the subblock (from previous frame)
+                    byte[] avgToFind = prevWindow[y,x];
 
-                //determine the start and stop position of the window in SUBBLOCKS
-                int startX = x - windowSize < 0 ? 0 : x - windowSize;
-                int startY = y - windowSize < 0 ? 0 : y - windowSize;
-                int stopX  = x + windowSize > videoWidthBlocks  ? videoWidthBlocks  : x + windowSize;
-                int stopY  = y + windowSize > videoHeightBlocks ? videoHeightBlocks : y + windowSize;
+                    //determine the start and stop position of the window in SUBBLOCKS
+                    int startX = x - windowSize < 0 ? 0 : x - windowSize;
+                    int startY = y - windowSize < 0 ? 0 : y - windowSize;
+                    int stopX = x + windowSize > videoWidthBlocks ? videoWidthBlocks : x + windowSize;
+                    int stopY = y + windowSize > videoHeightBlocks ? videoHeightBlocks : y + windowSize;
 
-                //keep track of the best match in SUBBLOCKS
-                int best_X = startX;
-                int best_Y = startY;
-                int bestDifference = getDifference(avgToFind, window[best_Y, best_X] );
+                    //keep track of the best match in SUBBLOCKS
+                    int best_X = startX;
+                    int best_Y = startY;
+                    int bestDifference = getDifference(avgToFind, currWindow[best_Y, best_X]);
 
-                //get the best match
-                for (int wy = startY; wy < stopY; wy++) {
-                    for (int wx = startX; wx < stopX; wx++) {
+                    //get the best match
+                    for (int wy = startY; wy < stopY; wy++) {
+                        for (int wx = startX; wx < stopX; wx++) {
 
-                        int candidateDifference = getDifference(avgToFind, window[wy,wx]);
-                        if (bestDifference > candidateDifference){
-                            best_X = wx;
-                            best_Y = wy;
-                            bestDifference = candidateDifference;
+                            int candidateDifference = getDifference(avgToFind, currWindow[wy, wx]);
+                            if (bestDifference > candidateDifference) {
+                                best_X = wx;
+                                best_Y = wy;
+                                bestDifference = candidateDifference;
+                            }
                         }
                     }
-                }
 
-                //Console.WriteLine("Motion vector found for block " + x + ";" + y);
+                    //getMotion vector
+                }
             }
         }
-
         //motion too big => movement
 
         frameNumber++;
         return 0;
     }
-
 
     /* 
      * Returns the 3 values of a pixel at position x,y

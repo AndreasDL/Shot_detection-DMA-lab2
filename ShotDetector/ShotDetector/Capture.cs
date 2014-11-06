@@ -47,8 +47,11 @@ namespace ShotDetector {
         private ManualResetEvent m_mre;
         // Current state of the graph (can change async)
         volatile private GraphState m_State = GraphState.Stopped;
+
         private int detectionMethod = 0;
         private aShotDetectionMethod method = null;
+        private MethodFactory factory;
+
         // Event that is called when a clip finishs playing
         public event DxPlayEvent StopPlay;
         public delegate void DxPlayEvent(Object sender);
@@ -64,6 +67,7 @@ namespace ShotDetector {
         // Play an avi file into a window.  Allow for snapshots.
         // (Control to show video in, Avi file to play
         public DxPlay(Control hWin, string FileName, int detectionMethod) {
+            factory = new MethodFactory();
             setDetectionMethod(detectionMethod);
 
             try {
@@ -166,28 +170,7 @@ namespace ShotDetector {
         
         public void setDetectionMethod(int detectionMethod) {
             this.detectionMethod = detectionMethod;
-
-            switch (detectionMethod) {
-                case 0: //Pixel
-                    int delta2 = 256;
-                    double delta3 = 0.25;
-                    method = new PixelMethod(delta2,delta3);
-                    break;
-                case 1: //Motion
-                    int subsize = 16;
-                    int windowSize = 0;
-                    method = new MotionMethod(subsize,windowSize);
-                    break;
-                case 2:
-                    //method = new Method2(frameBuffer);
-                    break;
-                case 3:
-                    //method = new Method3(frameBuffer);
-                    break;
-                case 4:
-                    //method = new Method4(frameBuffer);;
-                    break;
-            }
+            method = factory.getMethod(detectionMethod);
         }
         // start playing
         public void Start() {
@@ -320,7 +303,6 @@ namespace ShotDetector {
             hr = videoWindow.SetWindowPosition(0, 0, rc.Right, rc.Bottom);
             DsError.ThrowExceptionForHR(hr);
         }
-
 
         // Save the size parameters for use in SnapShot
         private void SaveSizeInfo(ISampleGrabber sampGrabber) {

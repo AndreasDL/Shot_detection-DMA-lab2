@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DirectShowLib-2005">
-      <HintPath>..\..\..\Test_environments\DirectShowLibV2-0\lib\DirectShowLib-2005.dll</HintPath>
+      <HintPath>..\..\Test_environments\DirectShowLibV2-0\lib\DirectShowLib-2005.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Capture.cs" />
+    <Compile Include="DetectionMethods\EmptyMethod.cs" />
+    <Compile Include="DetectionMethods\MethodFactory.cs" />
     <Compile Include="DetectionMethods\PixelMethod.cs" />
     <Compile Include="DetectionMethods\aShotDetectionMethod.cs" />
     <Compile Include="Form1.cs">
