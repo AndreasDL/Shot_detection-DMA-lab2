@@ -34,7 +34,7 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
 
         previous = current;
         current = new byte[(videoHeight * videoWidth) * 3];
-        Marshal.Copy(pBuffer, current, 0, current.Length < BufferLen ? current.Length : BufferLen);
+        Marshal.Copy(pBuffer, current, 0, BufferLen);
 
         //Only do this block of code, when the previous frame is filled in (starting from the second frame)
         if (previous != null) {

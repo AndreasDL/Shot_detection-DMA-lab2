@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 public class MethodFactory {
-    public static string[] METHODS = { "Pixel", "Motion", "Global hist", "Local hist", "Generalized", "Empty" };
+    public static string[] METHODS = { "Pixel", "Motion", "Global hist", "Local hist", "Generalized", "None" };
 
     public aShotDetectionMethod getMethod(int index) {
         aShotDetectionMethod method = null;
