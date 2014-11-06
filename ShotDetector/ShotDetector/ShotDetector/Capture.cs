@@ -550,8 +550,28 @@ namespace ShotDetector{
                 }
                 Console.WriteLine();
                 Console.WriteLine();
-                                 
 
+                switch (detectionMethod)
+                {
+                    case 0:
+                        //method0();
+                        break;
+                    case 1:
+                        //method1();
+                        break;
+                    case 2:
+                        //method2();
+                        break;
+                    case 3:
+                        //method3();
+                        break;
+                    case 4:
+                        //method4();
+                        break;
+                }
+
+                /*
+                CODE BELOW CAN SERVE AS AN EXAMPLE 
                 for (int x = 0; x < m_videoHeight; x++)
                 {
                     for (int y = 0; (y < m_stride) && (*b <= iMaxBright); y++)          // m_stride = 3*framewidth (R/G/B). Loop over this for every row = entire frame.
@@ -578,7 +598,7 @@ namespace ShotDetector{
                     //Debug.WriteLine(string.Format("Frame Number: {0}  Blacks: {1}", m_Count, m_Blacks));
                 }
 
-
+                */
                
             }
             // Increment frame number.  Done this way, frame are zero indexed.
