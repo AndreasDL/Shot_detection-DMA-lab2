@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Capture.cs" />
+    <Compile Include="DetectionMethods\HistogramMethod.cs" />
     <Compile Include="DetectionMethods\EmptyMethod.cs" />
     <Compile Include="DetectionMethods\MethodFactory.cs" />
     <Compile Include="DetectionMethods\PixelMethod.cs" />

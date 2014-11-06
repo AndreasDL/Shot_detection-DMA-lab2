@@ -22,7 +22,9 @@ public class MethodFactory {
                 method = new MotionMethod(subsize, windowSize);
                 break;
             case 2://global hist
-                //method = new Method2(frameBuffer);
+                double threshold = 0.40;          // The threshold will be chosen as the fraction of pixels that ended up in a different bin of the histogram.
+                int nrOfBins = 32;
+                method = new HistogramMethod(threshold, nrOfBins);
                 break;
             case 3://local hist
                 //method = new Method3(frameBuffer);

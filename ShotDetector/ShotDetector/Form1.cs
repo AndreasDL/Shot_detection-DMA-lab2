@@ -127,5 +127,10 @@ namespace ShotDetector {
             // Rewind clip to beginning to allow DxPlay.Start to work again.
             m_play.Rewind();
         }
+
+        private void txtFileName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
