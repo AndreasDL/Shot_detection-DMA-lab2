@@ -20,6 +20,7 @@ public class MotionMethod : aShotDetectionMethod{
     int currMotion; //total motion of the current frame
     int avgMotion;
 
+    //debug
     int bulletsfired = 0;//debug
     int[] shots = { 60, 111, 185, 235, 295, 354, 447, 497, 554, 616, 678, 785, 867, 945, 1002, 1052, 1128, 1151, 1342, 1364, 1402, 1456, 1507, 1537, 1552, 1570, 1620, 1662, 1737, 1771, 1845, 1884, 1935, 1972, 2009 };    
     
