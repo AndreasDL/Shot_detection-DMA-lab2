@@ -18,6 +18,7 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     protected int videoWidth; //width of the frame in PIXELS
     protected int videoHeight;//height of the video in PIXELS
     protected int m_stride;//width of the frame, in BYTES (each pixel has 3 bytes)
+    protected ShotCollection shots;
 
     public aShotDetectionMethod(): base() {
         AMMediaType media;
@@ -43,6 +44,7 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         hr = ((ISampleGrabber)this).SetCallback((ISampleGrabberCB)this, 1);
         DsError.ThrowExceptionForHR(hr);
         ////////////////////////////////////////////////////
+        this.shots = new ShotCollection();
     }
     // sample callback, NOT USED.
     int ISampleGrabberCB.SampleCB(double SampleTime, IMediaSample pSample) {
@@ -56,19 +58,18 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         this.m_stride = videoWidth * 3;
     }
 
-    //Call one of the following methods when a shot is detected, preferably the one with sampletime and frameNumber
-    /*this method is called when a shot is detected
-     * sampleTime: the time of the shot in SECONDS
-    */
-    public void shotDetected(double sampleTime) {
-        Console.WriteLine("Shot detected at " + sampleTime);
-    }
     /*this method is called when a shot is detected
      * sampleTime: the time of the shot
      * frameNumber: number of the first frame from the shot
     */
     public void shotDetected(double sampleTime, int frameNumber) {
         Console.WriteLine("Shot detected at " + sampleTime + " FrNbr: " + frameNumber);
+
+        shots.addShot(new Shot(frameNumber, sampleTime));
+    }
+
+    public ShotCollection getShotCollection() {
+        return this.shots;
     }
 
     /* this function is called for each frame
