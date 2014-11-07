@@ -17,8 +17,8 @@ public class MethodFactory {
                 method = new PixelMethod(delta2, delta3);
                 break;
             case 1: //Motion
-                int subsize = 16;
-                int windowSize = 0;
+                int subsize = 8;
+                int windowSize = 3;
                 method = new MotionMethod(subsize, windowSize);
                 break;
             case 2://global hist
