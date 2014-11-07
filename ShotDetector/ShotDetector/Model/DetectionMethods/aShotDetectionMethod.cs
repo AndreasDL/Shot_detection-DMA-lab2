@@ -20,7 +20,7 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     protected int m_stride;//width of the frame, in BYTES (each pixel has 3 bytes)
     protected ShotCollection shots;
 
-    public aShotDetectionMethod(): base() {
+    public aShotDetectionMethod(ShotCollection shots): base() {
         AMMediaType media;
         int hr;
 
@@ -44,7 +44,7 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         hr = ((ISampleGrabber)this).SetCallback((ISampleGrabberCB)this, 1);
         DsError.ThrowExceptionForHR(hr);
         ////////////////////////////////////////////////////
-        this.shots = new ShotCollection();
+        this.shots = shots;
     }
     // sample callback, NOT USED.
     int ISampleGrabberCB.SampleCB(double SampleTime, IMediaSample pSample) {

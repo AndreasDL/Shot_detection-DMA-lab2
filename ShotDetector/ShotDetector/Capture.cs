@@ -66,8 +66,10 @@ namespace ShotDetector {
 
         // Play an avi file into a window.  Allow for snapshots.
         // (Control to show video in, Avi file to play
-        public DxPlay(Control hWin, string FileName, int detectionMethod) {
-            factory = new MethodFactory();
+        public DxPlay(Control hWin, string FileName, int detectionMethod, Form form) {
+            ShotCollection shots = new ShotCollection();
+            shots.addObserver((IObserver)form);
+            factory = new MethodFactory(shots);
             setDetectionMethod(detectionMethod);
 
             try {

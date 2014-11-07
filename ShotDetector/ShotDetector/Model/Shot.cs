@@ -22,8 +22,26 @@ public class Shot {
         tags.Add(tag);
     }
 
-    public ArrayList getTags() {
+    public ArrayList getTagArray() {
         return this.tags;
+    }
+    public string getTags() {
+        if (tags.Count == 0){
+            return "";
+        }else{
+            String s = (String)tags[0];
+            for (int i = 1; i < tags.Count ; i++)
+                s += "," + tags[i];
+            return s;
+        }
+    }
+
+    public double getStartTime() {
+        return start_time;
+    }
+
+    public int getStartFrame() {
+        return start_frame;
     }
 
     public void writeFile(string filename) {

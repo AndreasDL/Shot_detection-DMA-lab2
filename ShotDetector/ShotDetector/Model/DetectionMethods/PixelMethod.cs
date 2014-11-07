@@ -21,7 +21,7 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
     private double delta3;
     private int frameNumber;
 
-    public PixelMethod(int _delta2, double _delta3): base(){
+    public PixelMethod(int _delta2, double _delta3, ShotCollection shots): base(shots){
         this.delta2 = _delta2;
         this.delta3 = _delta3;
         this.frameNumber = 0;

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
 namespace ShotDetector {
-    public partial class ShotDetector : Form {
+    public partial class ShotDetector : Form, IObserver {
         enum State {
             Uninit,
             Stopped,
@@ -24,6 +24,7 @@ namespace ShotDetector {
             InitializeComponent();
             this.cmbMethod.Items.AddRange(MethodFactory.METHODS ); //set the detection methods
             cmbMethod.SelectedIndex = 1;
+            
         }
 
         private void browseFile(object sender, EventArgs e) {
@@ -56,7 +57,7 @@ namespace ShotDetector {
             if (m_play == null) {
                 try {
                     // Open the file, provide a handle to play it in
-                    m_play = new DxPlay(panel1, txtFileName.Text, cmbMethod.SelectedIndex);
+                    m_play = new DxPlay(panel1, txtFileName.Text, cmbMethod.SelectedIndex, this);
                     //m_play.setDetectionMethod(cmbMethod.SelectedIndex);
 
                     // Let us know when the file is finished playing
@@ -127,5 +128,12 @@ namespace ShotDetector {
             // Rewind clip to beginning to allow DxPlay.Start to work again.
             m_play.Rewind();
         }
+
+        public unsafe void updateList(Shot shot) { 
+            //updates the datagrid view
+            dataGridView1.Rows.Add(new string[] { "" + dataGridView1.RowCount , "" + shot.getStartFrame(), shot.getTags() });
+        }
+
+
     }
 }
