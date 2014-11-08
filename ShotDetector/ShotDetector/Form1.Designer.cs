@@ -37,7 +37,7 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.playToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmPlay = new System.Windows.Forms.ToolStripMenuItem();
             this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
@@ -48,16 +48,17 @@
             this.shotNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StartFrame = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tags = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.trbProgress = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.cmbMethod = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.txtGroundTruthPath = new System.Windows.Forms.TextBox();
+            this.btnRewind = new System.Windows.Forms.Button();
             this.mnMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trbProgress)).BeginInit();
             this.SuspendLayout();
             // 
             // btnBrowse
@@ -132,24 +133,24 @@
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             this.quitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.quitToolStripMenuItem.Text = "Quit";
-            this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
+            this.quitToolStripMenuItem.Click += new System.EventHandler(this.Quit_Click);
             // 
             // playToolStripMenuItem
             // 
             this.playToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.playToolStripMenuItem1,
+            this.tsmPlay,
             this.pauseToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.playToolStripMenuItem.Name = "playToolStripMenuItem";
             this.playToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
             this.playToolStripMenuItem.Text = "Play";
             // 
-            // playToolStripMenuItem1
+            // tsmPlay
             // 
-            this.playToolStripMenuItem1.Name = "playToolStripMenuItem1";
-            this.playToolStripMenuItem1.Size = new System.Drawing.Size(105, 22);
-            this.playToolStripMenuItem1.Text = "Play";
-            this.playToolStripMenuItem1.Click += new System.EventHandler(this.start_Click);
+            this.tsmPlay.Name = "tsmPlay";
+            this.tsmPlay.Size = new System.Drawing.Size(105, 22);
+            this.tsmPlay.Text = "Play";
+            this.tsmPlay.Click += new System.EventHandler(this.start_Click);
             // 
             // pauseToolStripMenuItem
             // 
@@ -198,7 +199,7 @@
             this.btnPause.UseVisualStyleBackColor = true;
             this.btnPause.Click += new System.EventHandler(this.pause_Click);
             // 
-            // dataGridView1
+            // dgvResults
             // 
             this.dgvResults.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -209,7 +210,7 @@
             this.tags});
             this.dgvResults.Location = new System.Drawing.Point(13, 538);
             this.dgvResults.Margin = new System.Windows.Forms.Padding(4);
-            this.dgvResults.Name = "dataGridView1";
+            this.dgvResults.Name = "dgvResults";
             this.dgvResults.Size = new System.Drawing.Size(645, 149);
             this.dgvResults.TabIndex = 8;
             // 
@@ -232,14 +233,14 @@
             // 
             // trackBar1
             // 
-            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.trbProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar1.Location = new System.Drawing.Point(233, 482);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(4);
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(784, 45);
-            this.trackBar1.TabIndex = 9;
-            this.trackBar1.TickFrequency = 0;
+            this.trbProgress.Location = new System.Drawing.Point(328, 482);
+            this.trbProgress.Margin = new System.Windows.Forms.Padding(4);
+            this.trbProgress.Name = "trackBar1";
+            this.trbProgress.Size = new System.Drawing.Size(689, 45);
+            this.trbProgress.TabIndex = 9;
+            this.trbProgress.TickFrequency = 0;
             // 
             // label2
             // 
@@ -261,6 +262,7 @@
             this.cmbMethod.Name = "cmbMethod";
             this.cmbMethod.Size = new System.Drawing.Size(335, 24);
             this.cmbMethod.TabIndex = 11;
+            this.cmbMethod.SelectedIndexChanged += new System.EventHandler(this.cmbMethod_SelectedIndexChanged);
             // 
             // button1
             // 
@@ -300,11 +302,22 @@
             this.txtGroundTruthPath.TabIndex = 15;
             this.txtGroundTruthPath.Text = "C:\\testfiles_dma\\csi_GT.xml";
             // 
+            // btnRewind
+            // 
+            this.btnRewind.Location = new System.Drawing.Point(231, 482);
+            this.btnRewind.Name = "btnRewind";
+            this.btnRewind.Size = new System.Drawing.Size(90, 27);
+            this.btnRewind.TabIndex = 16;
+            this.btnRewind.Text = "Rewind";
+            this.btnRewind.UseVisualStyleBackColor = true;
+            this.btnRewind.Click += new System.EventHandler(this.rewind_Click);
+            // 
             // ShotDetector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1045, 700);
+            this.Controls.Add(this.btnRewind);
             this.Controls.Add(this.txtGroundTruthPath);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button2);
@@ -312,7 +325,7 @@
             this.Controls.Add(this.cmbMethod);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.dgvResults);
-            this.Controls.Add(this.trackBar1);
+            this.Controls.Add(this.trbProgress);
             this.Controls.Add(this.btnPause);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.panel1);
@@ -327,7 +340,7 @@
             this.mnMenu.ResumeLayout(false);
             this.mnMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trbProgress)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -344,7 +357,7 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem tsmPlay;
         private System.Windows.Forms.ToolStripMenuItem pauseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
         private System.ServiceProcess.ServiceController serviceController1;
@@ -352,7 +365,7 @@
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.DataGridView dgvResults;
-        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.TrackBar trbProgress;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cmbMethod;
         private System.Windows.Forms.Button button1;
@@ -362,6 +375,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtGroundTruthPath;
+        private System.Windows.Forms.Button btnRewind;
     }
 }
 

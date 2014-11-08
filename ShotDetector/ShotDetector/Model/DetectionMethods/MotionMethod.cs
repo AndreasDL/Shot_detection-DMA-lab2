@@ -13,28 +13,23 @@ public class MotionMethod : aShotDetectionMethod{
 
     private int subsize;    //size of a subblock
     private int windowSize; //size of the search window in SUBBLOCKS
-    private int frameNumber;//frame number
     private byte[,][] currWindow; //current avg values
     private byte[,][] prevWindow; //previous avg values
     int prevMotion; //total motion of the previous frame
     int currMotion; //total motion of the current frame
-    int avgMotion;
+    int avgMotion;  //average motion (weighted over last few frames)
 
-    //debug
-    //int bulletsfired = 0;//debug
-    //int[] debugshots = { 60, 111, 185, 235, 295, 354, 447, 497, 554, 616, 678, 785, 867, 945, 1002, 1052, 1128, 1151, 1342, 1364, 1402, 1456, 1507, 1537, 1552, 1570, 1620, 1662, 1737, 1771, 1845, 1884, 1935, 1972, 2009 };    
-    
     public MotionMethod(int _subsize, int _windowSize,ShotCollection shots):base(shots) {
         this.subsize = _subsize;
         this.windowSize = _windowSize;
-        this.frameNumber = 0;
         this.current = null;
         this.currWindow = null;
         this.prevWindow = null;
         this.prevMotion = 0;
         this.avgMotion = 0;
     }
-    public unsafe override int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
+
+    public override void DetectionMethod(double SampleTime, IntPtr pBuffer, int BufferLen){
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
         current = new byte[(videoHeight * videoWidth) * 3];
@@ -105,23 +100,15 @@ public class MotionMethod : aShotDetectionMethod{
             currMotion = motionX + motionY;
             int difference = Math.Abs(currMotion - prevMotion);
 
-            if (difference > 5*avgMotion) {
+            if (difference > 5 * avgMotion && frameNumber != 1) { //hack to make the firstshot start at position 0 in stead of 1
                 shotDetected(SampleTime, frameNumber);
-                //Console.WriteLine("frame " + frameNumber + " total: " + currMotion + " DIFF: " + Math.Abs(currMotion - prevMotion) + " AVG: " + avgMotion);
                 avgMotion = difference; //assume that motion is somewhat consistent for the duration of a shot
             }
 
-            //debug
-/*            if (frameNumber == debugshots[bulletsfired]) {
-                bulletsfired++;
-                Console.WriteLine("frame " + frameNumber + " total: " + currMotion + " DIFF: " + Math.Abs(currMotion - prevMotion) + " AVG: " + avgMotion + " should be a shot");
-            }*/
-
             avgMotion = (int)(avgMotion * 0.9 + difference * 0.1);
+        } else {
+            shotDetected(SampleTime, frameNumber); //get first shot at position 0
         }
-
-        frameNumber++;
-        return 0;
     }
 
     /* 

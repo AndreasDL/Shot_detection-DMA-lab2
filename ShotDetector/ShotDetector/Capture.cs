@@ -51,6 +51,7 @@ namespace ShotDetector {
         private int detectionMethod = 0;
         private aShotDetectionMethod method = null;
         private MethodFactory factory;
+        private Control hwin;
 
         // Event that is called when a clip finishs playing
         public event DxPlayEvent StopPlay;
@@ -71,6 +72,9 @@ namespace ShotDetector {
             shots.addObserver((IObserver)form);
             factory = new MethodFactory(shots);
             setDetectionMethod(detectionMethod);
+            //method.addObserver((IObserver)form);
+
+            this.hwin = hWin;
 
             try {
                 int hr;
@@ -210,6 +214,13 @@ namespace ShotDetector {
 
             IMediaPosition imp = m_FilterGraph as IMediaPosition;
             hr = imp.put_CurrentPosition(0);
+
+            Stop();
+
+            setDetectionMethod(detectionMethod);
+            SetupGraph(hwin, m_sFileName);
+
+            Start();
         }
         
         // Convert a point to the raw pixel data to a .NET bitmap
@@ -378,6 +389,14 @@ namespace ShotDetector {
             }else {
                 return null;
             }
+        }
+
+        public long getFrameCount() {
+            IMediaSeeking ims = m_FilterGraph as IMediaSeeking;
+            ims.SetTimeFormat(TimeFormat.Frame);
+            long duration;
+            ims.GetDuration(out duration);
+            return duration;
         }
     }
 }

@@ -19,17 +19,15 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
     private byte[] previous;
     private int delta2;
     private double delta3;
-    private int frameNumber;
 
     public PixelMethod(int _delta2, double _delta3, ShotCollection shots): base(shots){
         this.delta2 = _delta2;
         this.delta3 = _delta3;
-        this.frameNumber = 0;
         this.current = null;
         this.previous = null;
     }
 
-    public unsafe override int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
+    public override void DetectionMethod(double SampleTime, IntPtr pBuffer, int BufferLen){
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
         previous = current;
@@ -50,12 +48,11 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
             }
 
             if (threshReached * 3.0 / (BufferLen * 1.0) > delta3) {
-                base.shotDetected(SampleTime,frameNumber);
+                base.shotDetected(SampleTime, frameNumber);
             }
+        } else {
+            shotDetected(SampleTime, frameNumber); //first shot 
         }
-
-        frameNumber++;
-        return 0;
     }
 
 }

@@ -24,10 +24,10 @@ namespace ShotDetector {
         public ShotDetector() {
             InitializeComponent();
             this.cmbMethod.Items.AddRange(MethodFactory.METHODS ); //set the detection methods
-            cmbMethod.SelectedIndex = 1;
-            
+            cmbMethod.SelectedIndex = 1; //default = motion
         }
 
+        //videofile
         private void browseFile(object sender, EventArgs e) {
             ofdBrowse.InitialDirectory = "C:\\";
             ofdBrowse.Filter = "video files (*.avi)|*.avi|All files (*.*)|*.*";
@@ -38,10 +38,11 @@ namespace ShotDetector {
                 txtFileName.Text = ofdBrowse.FileName;
             }
         }
-        private void quitToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void Quit_Click(object sender, EventArgs e) {
             Application.Exit();
         }
 
+        //Start - Stop - Rewind
         private void start_Click(object sender, EventArgs e) {
             // If necessary, close the old file
             if (m_State == State.Stopped) {
@@ -59,13 +60,10 @@ namespace ShotDetector {
                 try {
                     // Open the file, provide a handle to play it in
                     m_play = new DxPlay(panel1, txtFileName.Text, cmbMethod.SelectedIndex, this);
-                    //m_play.setDetectionMethod(cmbMethod.SelectedIndex);
 
                     // Let us know when the file is finished playing
                     m_play.StopPlay += new DxPlay.DxPlayEvent(m_play_StopPlay);
                     m_State = State.Stopped;
-                    
-
                 } catch (COMException ce) {
                     MessageBox.Show("Failed to open file: " + ce.Message, "Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -74,7 +72,7 @@ namespace ShotDetector {
             // If we were stopped, start
             if (m_State == State.Stopped) {
                 btnStart.Text = "Stop";
-                playToolStripMenuItem1.Text = "Stop";
+                tsmPlay.Text = "Stop";
                 m_play.Start();
                 btnPause.Enabled = true;
                 txtFileName.Enabled = false;
@@ -86,11 +84,13 @@ namespace ShotDetector {
                 btnPause.Enabled = false;
                 txtFileName.Enabled = true;
                 btnStart.Text = "Start";
-                playToolStripMenuItem1.Text = "Start";
+                tsmPlay.Text = "Start";
                 btnPause.Text = "Pause";
                 pauseToolStripMenuItem.Text = "Pause";
                 m_State = State.Stopped;
             }
+
+            trbProgress.Maximum = (int)m_play.getFrameCount();
         }
         private void pause_Click(object sender, System.EventArgs e) {
             // If we are playing, pause
@@ -109,6 +109,12 @@ namespace ShotDetector {
                 m_State = State.Playing;
             }
         }
+        private void rewind_Click(object sender, System.EventArgs e) {
+            if (m_play != null) {
+                m_play.Rewind();
+                dgvResults.Rows.Clear();
+            }
+        }
 
         // Called when the video is finished playing
         private void m_play_StopPlay(Object sender) {
@@ -118,7 +124,7 @@ namespace ShotDetector {
             btnPause.Enabled = false;
             txtFileName.Enabled = true;
             btnStart.Text = "Start";
-            playToolStripMenuItem1.Text = "Start";
+            tsmPlay.Text = "Start";
             btnPause.Text = "Pause";
             pauseToolStripMenuItem.Text = "Pause";
 
@@ -130,8 +136,8 @@ namespace ShotDetector {
             m_play.Rewind();
         }
 
+        //update gui
         delegate void UpdateGridCallback(Shot shot);
-
         public void updateList(Shot shot) { 
             //updates the datagrid view
             if (this.dgvResults.InvokeRequired) {
@@ -142,19 +148,27 @@ namespace ShotDetector {
                 dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count -1 ].Cells[0];
             }
         }
+        delegate void UpdateTrackBarCallback(int frameNumber);
+        public void updateTrackbar(int frameNumber) {
+            if (this.dgvResults.InvokeRequired) {
+                UpdateTrackBarCallback u = new UpdateTrackBarCallback(updateTrackbar);
+                this.Invoke(u, new object[] { frameNumber });
+            } else {
+                trbProgress.Value = frameNumber;
+            }
+        }
 
+        //ground truth
         private void compareGroundTruth(object sender, EventArgs e) {
-            Console.WriteLine("hoi");
-            new Thread(() => {
+            new Thread(() => { //thread just because more swag & no lagg on GUI while reading file
                 Thread.CurrentThread.IsBackground = true;
                 //get groundtruth
                 ShotCollection truth = new ShotCollection(txtGroundTruthPath.Text);
                 ShotCollection results = this.m_play.getShotCollection();
 
-                Console.WriteLine("Recall: " + results.calcRecall(truth) + " Precision: " + results.calcPrecision(truth));
+                MessageBox.Show("Recall: " + results.calcRecall(truth) + " Precision: " + results.calcPrecision(truth));
             }).Start();
         }
-
         private void browseGroundTruth(object sender, EventArgs e) {
             ofdBrowse.InitialDirectory = "C:\\";
             ofdBrowse.Filter = "video files (*.avi)|*.avi|All files (*.*)|*.*";
@@ -165,6 +179,12 @@ namespace ShotDetector {
                 txtGroundTruthPath.Text = ofdBrowse.FileName;
             }
         }
+
+        private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e) {
+            if (m_play != null)
+                m_play.setDetectionMethod(cmbMethod.SelectedIndex);
+        }
+
 
 
     }

@@ -98,4 +98,8 @@ public class ShotCollection{
     public Shot getShot(int index) { 
         return this.shots[index];
     }
+
+    public void clear() {
+        shots.Clear();
+    }
 }

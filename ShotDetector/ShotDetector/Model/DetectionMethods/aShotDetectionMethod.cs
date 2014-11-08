@@ -19,8 +19,13 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     protected int videoHeight;//height of the video in PIXELS
     protected int m_stride;//width of the frame, in BYTES (each pixel has 3 bytes)
     protected ShotCollection shots;
+    protected List<IObserver> observers;
+    protected int frameNumber;
 
     public aShotDetectionMethod(ShotCollection shots): base() {
+        this.observers = new List<IObserver>();
+        this.frameNumber = 0;
+
         AMMediaType media;
         int hr;
 
@@ -63,13 +68,19 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
      * frameNumber: number of the first frame from the shot
     */
     public void shotDetected(double sampleTime, int frameNumber) {
-        //Console.WriteLine("Shot detected at " + sampleTime + " FrNbr: " + frameNumber);
-
         shots.addShot(new Shot(frameNumber, sampleTime));
     }
 
     public ShotCollection getShotCollection() {
         return this.shots;
+    }
+    public void addObserver(IObserver observer) {
+        observers.Add(observer);
+    }
+
+    private void notifyObservers() {
+        foreach (IObserver o in observers)
+            o.updateTrackbar(frameNumber);
     }
 
     /* this function is called for each frame
@@ -77,5 +88,22 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
      * pBuffer: a pointer to the first byte of the image (each pixel has 3 bytes and the frame is m_strade wide so byte[m_stide*5 + 7*3] is the first component of pixel with y=5, x = 7
      * bufferLen: number of bytes in pBuffer
     */
-    public abstract unsafe int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen);
+    public int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
+        
+        //call the method
+        DetectionMethod(SampleTime,pBuffer,BufferLen);
+
+        frameNumber++; //keep track of frame number
+        notifyObservers(); //notify observers (e.g. update the trackbar of the gui)
+        return 0;
+    }
+
+    /*
+     * Put the detection code in this method, the method above is used to keep track of the framenumber and update the gui
+     * SampleTime: the time of the frame (if you want a frame count, then you must count in the method)
+     * pBuffer: a pointer to the first byte of the image (each pixel has 3 bytes and the frame is m_strade wide so byte[m_stide*5 + 7*3] is the first component of pixel with y=5, x = 7
+     * bufferLen: number of bytes in pBuffer
+     */
+    public abstract void DetectionMethod(double SampleTime, IntPtr pBuffer, int BufferLen);
+
 }

@@ -6,4 +6,5 @@ using System.Threading.Tasks;
 
 public interface IObserver {
     void updateList(Shot shot);
+    void updateTrackbar(int frameNumber);
 }
