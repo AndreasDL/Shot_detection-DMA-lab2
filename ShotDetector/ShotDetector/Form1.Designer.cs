@@ -231,13 +231,13 @@
             this.tags.HeaderText = "Tags";
             this.tags.Name = "tags";
             // 
-            // trackBar1
+            // trbProgress
             // 
             this.trbProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trbProgress.Location = new System.Drawing.Point(328, 482);
             this.trbProgress.Margin = new System.Windows.Forms.Padding(4);
-            this.trbProgress.Name = "trackBar1";
+            this.trbProgress.Name = "trbProgress";
             this.trbProgress.Size = new System.Drawing.Size(689, 45);
             this.trbProgress.TabIndex = 9;
             this.trbProgress.TickFrequency = 0;
@@ -304,6 +304,7 @@
             // 
             // btnRewind
             // 
+            this.btnRewind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnRewind.Location = new System.Drawing.Point(231, 482);
             this.btnRewind.Name = "btnRewind";
             this.btnRewind.Size = new System.Drawing.Size(90, 27);
