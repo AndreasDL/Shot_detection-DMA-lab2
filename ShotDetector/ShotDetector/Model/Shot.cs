@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections;
+using System.Collections.Generic;
 
 /**
  * This class holds information about one single shot
@@ -10,12 +10,12 @@ using System.Collections;
 public class Shot {
     private int start_frame;
     private double start_time;//optional
-    private ArrayList tags;
+    private List<String> tags;
 
     public Shot(int start_frame, double start_time) {
         this.start_frame = start_frame;
         this.start_time = start_time;
-        tags = new ArrayList();
+        tags = new List<String>();
     }
     public Shot(int start_frame) : this(start_frame, 0) { }
 
@@ -23,7 +23,7 @@ public class Shot {
         tags.Add(tag);
     }
 
-    public ArrayList getTagArray() {
+    public List<String> getTagArray() {
         return this.tags;
     }
     public string getTags() {

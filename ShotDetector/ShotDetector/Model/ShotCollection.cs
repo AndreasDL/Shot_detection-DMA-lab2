@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 public class ShotCollection{
-    private ArrayList shots;
-    private ArrayList observers;
+    private List<Shot> shots;
+    private List<IObserver> observers;
 
     public ShotCollection() {
-        this.shots = new ArrayList();
-        this.observers = new ArrayList();
+        this.shots = new List<Shot>();
+        this.observers = new List<IObserver>();
     }
 
     public ShotCollection(string fileName):this() { 
@@ -34,7 +34,7 @@ public class ShotCollection{
         shots.Add(shot);
         notifyObservers(shot); //update all observers
     }
-    public ArrayList getShots() {
+    public List<Shot> getShots() {
         return this.shots;
     }
 
@@ -96,6 +96,6 @@ public class ShotCollection{
     }
 
     public Shot getShot(int index) { 
-        return (Shot)this.shots[index];
+        return this.shots[index];
     }
 }
