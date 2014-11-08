@@ -63,7 +63,7 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
      * frameNumber: number of the first frame from the shot
     */
     public void shotDetected(double sampleTime, int frameNumber) {
-        Console.WriteLine("Shot detected at " + sampleTime + " FrNbr: " + frameNumber);
+        //Console.WriteLine("Shot detected at " + sampleTime + " FrNbr: " + frameNumber);
 
         shots.addShot(new Shot(frameNumber, sampleTime));
     }

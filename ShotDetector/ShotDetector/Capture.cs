@@ -372,5 +372,12 @@ namespace ShotDetector {
             GC.Collect();
         }
 
+        public ShotCollection getShotCollection() {
+            if (this.method != null){
+                return this.method.getShotCollection();
+            }else {
+                return null;
+            }
+        }
     }
 }

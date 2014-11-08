@@ -9,7 +9,7 @@ using System.Collections;
 */
 public class Shot {
     private int start_frame;
-    private double start_time;
+    private double start_time;//optional
     private ArrayList tags;
 
     public Shot(int start_frame, double start_time) {
@@ -17,6 +17,7 @@ public class Shot {
         this.start_time = start_time;
         tags = new ArrayList();
     }
+    public Shot(int start_frame) : this(start_frame, 0) { }
 
     public void addTag(string tag) {
         tags.Add(tag);

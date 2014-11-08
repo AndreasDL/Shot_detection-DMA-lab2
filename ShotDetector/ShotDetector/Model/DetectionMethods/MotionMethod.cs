@@ -21,8 +21,8 @@ public class MotionMethod : aShotDetectionMethod{
     int avgMotion;
 
     //debug
-    int bulletsfired = 0;//debug
-    int[] debugshots = { 60, 111, 185, 235, 295, 354, 447, 497, 554, 616, 678, 785, 867, 945, 1002, 1052, 1128, 1151, 1342, 1364, 1402, 1456, 1507, 1537, 1552, 1570, 1620, 1662, 1737, 1771, 1845, 1884, 1935, 1972, 2009 };    
+    //int bulletsfired = 0;//debug
+    //int[] debugshots = { 60, 111, 185, 235, 295, 354, 447, 497, 554, 616, 678, 785, 867, 945, 1002, 1052, 1128, 1151, 1342, 1364, 1402, 1456, 1507, 1537, 1552, 1570, 1620, 1662, 1737, 1771, 1845, 1884, 1935, 1972, 2009 };    
     
     public MotionMethod(int _subsize, int _windowSize,ShotCollection shots):base(shots) {
         this.subsize = _subsize;
@@ -107,15 +107,15 @@ public class MotionMethod : aShotDetectionMethod{
 
             if (difference > 5*avgMotion) {
                 shotDetected(SampleTime, frameNumber);
-                Console.WriteLine("frame " + frameNumber + " total: " + currMotion + " DIFF: " + Math.Abs(currMotion - prevMotion) + " AVG: " + avgMotion);
+                //Console.WriteLine("frame " + frameNumber + " total: " + currMotion + " DIFF: " + Math.Abs(currMotion - prevMotion) + " AVG: " + avgMotion);
                 avgMotion = difference; //assume that motion is somewhat consistent for the duration of a shot
             }
 
             //debug
-            if (frameNumber == debugshots[bulletsfired]) {
+/*            if (frameNumber == debugshots[bulletsfired]) {
                 bulletsfired++;
                 Console.WriteLine("frame " + frameNumber + " total: " + currMotion + " DIFF: " + Math.Abs(currMotion - prevMotion) + " AVG: " + avgMotion + " should be a shot");
-            }
+            }*/
 
             avgMotion = (int)(avgMotion * 0.9 + difference * 0.1);
         }

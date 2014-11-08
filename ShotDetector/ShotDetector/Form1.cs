@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace ShotDetector {
     public partial class ShotDetector : Form, IObserver {
@@ -133,11 +134,35 @@ namespace ShotDetector {
 
         public void updateList(Shot shot) { 
             //updates the datagrid view
-            if (this.dataGridView1.InvokeRequired) {
+            if (this.dgvResults.InvokeRequired) {
                 UpdateGridCallback u = new UpdateGridCallback(updateList);
                 this.Invoke(u, new object[] {shot});
             } else {
-                dataGridView1.Rows.Add(new string[] { "" + dataGridView1.RowCount, "" + shot.getStartFrame(), shot.getTags() });
+                dgvResults.Rows.Add(new string[] { "" + dgvResults.RowCount, "" + shot.getStartFrame(), shot.getTags() });
+                dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count -1 ].Cells[0];
+            }
+        }
+
+        private void compareGroundTruth(object sender, EventArgs e) {
+            Console.WriteLine("hoi");
+            new Thread(() => {
+                Thread.CurrentThread.IsBackground = true;
+                //get groundtruth
+                ShotCollection truth = new ShotCollection(txtGroundTruthPath.Text);
+                ShotCollection results = this.m_play.getShotCollection();
+
+                Console.WriteLine("Recall: " + results.calcRecall(truth) + " Precision: " + results.calcPrecision(truth));
+            }).Start();
+        }
+
+        private void browseGroundTruth(object sender, EventArgs e) {
+            ofdBrowse.InitialDirectory = "C:\\";
+            ofdBrowse.Filter = "video files (*.avi)|*.avi|All files (*.*)|*.*";
+            ofdBrowse.FilterIndex = 2;
+            ofdBrowse.RestoreDirectory = true;
+
+            if (ofdBrowse.ShowDialog() == DialogResult.OK) {
+                txtGroundTruthPath.Text = ofdBrowse.FileName;
             }
         }
 
