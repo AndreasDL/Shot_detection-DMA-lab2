@@ -185,7 +185,5 @@ namespace ShotDetector {
                 m_play.setDetectionMethod(cmbMethod.SelectedIndex);
         }
 
-
-
     }
 }
