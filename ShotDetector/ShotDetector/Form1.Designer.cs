@@ -266,6 +266,7 @@
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Location = new System.Drawing.Point(681, 572);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(335, 23);
@@ -276,6 +277,7 @@
             // 
             // button2
             // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.Location = new System.Drawing.Point(941, 534);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
@@ -286,6 +288,7 @@
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(678, 537);
             this.label3.Name = "label3";
@@ -295,6 +298,7 @@
             // 
             // txtGroundTruthPath
             // 
+            this.txtGroundTruthPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.txtGroundTruthPath.Enabled = false;
             this.txtGroundTruthPath.Location = new System.Drawing.Point(711, 534);
             this.txtGroundTruthPath.Name = "txtGroundTruthPath";
