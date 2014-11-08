@@ -129,9 +129,16 @@ namespace ShotDetector {
             m_play.Rewind();
         }
 
-        public unsafe void updateList(Shot shot) { 
+        delegate void UpdateGridCallback(Shot shot);
+
+        public void updateList(Shot shot) { 
             //updates the datagrid view
-            dataGridView1.Rows.Add(new string[] { "" + dataGridView1.RowCount , "" + shot.getStartFrame(), shot.getTags() });
+            if (this.dataGridView1.InvokeRequired) {
+                UpdateGridCallback u = new UpdateGridCallback(updateList);
+                this.Invoke(u, new object[] {shot});
+            } else {
+                dataGridView1.Rows.Add(new string[] { "" + dataGridView1.RowCount, "" + shot.getStartFrame(), shot.getTags() });
+            }
         }
 
 
