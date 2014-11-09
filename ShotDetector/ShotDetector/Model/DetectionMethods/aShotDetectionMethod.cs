@@ -67,17 +67,17 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
      * sampleTime: the time of the shot
      * frameNumber: number of the first frame from the shot
     */
-    public void shotDetected(double sampleTime, int frameNumber) {
+    private void shotDetected(double sampleTime, int frameNumber) {
         shots.addShot(new Shot(frameNumber, sampleTime));
     }
 
     public ShotCollection getShotCollection() {
         return this.shots;
     }
+
     public void addObserver(IObserver observer) {
         observers.Add(observer);
     }
-
     private void notifyObservers() {
         foreach (IObserver o in observers)
             o.updateTrackbar(frameNumber);
@@ -91,7 +91,8 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     public int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
         
         //call the method
-        DetectionMethod(SampleTime,pBuffer,BufferLen);
+        if (DetectShot(SampleTime, pBuffer, BufferLen))
+            shotDetected(SampleTime,frameNumber);
 
         frameNumber++; //keep track of frame number
         notifyObservers(); //notify observers (e.g. update the trackbar of the gui)
@@ -104,6 +105,6 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
      * pBuffer: a pointer to the first byte of the image (each pixel has 3 bytes and the frame is m_strade wide so byte[m_stide*5 + 7*3] is the first component of pixel with y=5, x = 7
      * bufferLen: number of bytes in pBuffer
      */
-    public abstract void DetectionMethod(double SampleTime, IntPtr pBuffer, int BufferLen);
+    public abstract bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen);
 
 }

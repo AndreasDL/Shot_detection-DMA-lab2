@@ -29,8 +29,9 @@ public class MotionMethod : aShotDetectionMethod{
         this.avgMotion = 0;
     }
 
-    public override void DetectionMethod(double SampleTime, IntPtr pBuffer, int BufferLen){
+    public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen){
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
+        bool isShot = false;
 
         current = new byte[(videoHeight * videoWidth) * 3];
         Marshal.Copy(pBuffer, current, 0, BufferLen);
@@ -101,14 +102,17 @@ public class MotionMethod : aShotDetectionMethod{
             int difference = Math.Abs(currMotion - prevMotion);
 
             if (difference > 5 * avgMotion && frameNumber != 1) { //hack to make the firstshot start at position 0 in stead of 1
-                shotDetected(SampleTime, frameNumber);
+                isShot = true;
                 avgMotion = difference; //assume that motion is somewhat consistent for the duration of a shot
             }
 
             avgMotion = (int)(avgMotion * 0.9 + difference * 0.1);
-        } else {
-            shotDetected(SampleTime, frameNumber); //get first shot at position 0
+        } else { 
+            //first shot
+            isShot = true;
         }
+
+        return isShot;
     }
 
     /* 

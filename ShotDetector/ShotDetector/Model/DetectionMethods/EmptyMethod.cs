@@ -8,5 +8,7 @@ public class EmptyMethod: aShotDetectionMethod {
 
     public EmptyMethod(ShotCollection shots) : base(shots) {}
 
-    public override void DetectionMethod(double SampleTime, IntPtr pBuffer, int BufferLen) {}
+    public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen) {
+        return false;
+    }
 }

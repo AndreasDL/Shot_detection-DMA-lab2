@@ -30,7 +30,7 @@ public class HistogramMethod: aShotDetectionMethod, ISampleGrabberCB {
         this.previous_histogram = null;
     }
 
-    public override void DetectionMethod(double SampleTime, IntPtr pBuffer, int BufferLen) {
+    public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen) {
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
         previous_histogram = current_histogram;
@@ -58,11 +58,12 @@ public class HistogramMethod: aShotDetectionMethod, ISampleGrabberCB {
             }
 
             if (twoHistsDiff > threshold * BufferLen) {
-                Console.WriteLine(twoHistsDiff + " > " + threshold * BufferLen);
-                base.shotDetected(SampleTime, frameNumber);
+                return true;
+            }else{
+                return false;
             }
         } else {
-            shotDetected(SampleTime, frameNumber); //first shot
+            return true;
         }
     }
 

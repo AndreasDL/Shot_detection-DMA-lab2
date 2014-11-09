@@ -27,7 +27,7 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
         this.previous = null;
     }
 
-    public override void DetectionMethod(double SampleTime, IntPtr pBuffer, int BufferLen){
+    public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen){
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
         previous = current;
@@ -48,10 +48,12 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
             }
 
             if (threshReached * 3.0 / (BufferLen * 1.0) > delta3) {
-                base.shotDetected(SampleTime, frameNumber);
+                return true;
+            } else {
+                return false;
             }
         } else {
-            shotDetected(SampleTime, frameNumber); //first shot 
+            return true;
         }
     }
 
