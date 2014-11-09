@@ -12,7 +12,9 @@ using System.ComponentModel;
 using System.IO;
 
 using DirectShowLib;
-
+/// <summary>
+/// This method uses a global histogram to detect shots
+/// </summary>
 public class HistogramMethod: aShotDetectionMethod, ISampleGrabberCB {
 
     private int[] current_histogram;

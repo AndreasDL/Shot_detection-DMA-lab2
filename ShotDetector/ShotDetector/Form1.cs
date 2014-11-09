@@ -133,7 +133,7 @@ namespace ShotDetector {
             m_State = State.Stopped;
 
             // Rewind clip to beginning to allow DxPlay.Start to work again.
-            m_play.Rewind();
+            //m_play.Rewind(); //doesn't work
         }
 
         //update gui

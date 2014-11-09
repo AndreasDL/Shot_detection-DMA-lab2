@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using DirectShowLib;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-
+/// <summary>
+/// This method uses motion estimation to detect shots
+/// </summary>
 public class MotionMethod : aShotDetectionMethod{
     private byte[] current; //current frame
 

@@ -12,7 +12,9 @@ using System.ComponentModel;
 using System.IO;
 
 using DirectShowLib;
-
+/// <summary>
+/// This method compares pixels to detect shots
+/// </summary>
 public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
 
     private byte[] current;

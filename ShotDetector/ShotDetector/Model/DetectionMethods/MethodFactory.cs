@@ -3,15 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+/// <summary>
+/// Factory that creates the different methods
+/// </summary>
 public class MethodFactory {
+    /// <summary>
+    /// table that contains all the methods, the index of the method name is used in the getMethod
+    /// </summary>
     public static string[] METHODS = { "Pixel", "Motion", "Global hist", "Local hist", "Generalized", "None" };
     private ShotCollection shots;
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="shots">the shot collection that must contain all the detected shots</param>
     public MethodFactory(ShotCollection shots) {
         this.shots = shots;
     }
 
+    /// <summary>
+    /// Creates a shotDetectionMethod
+    /// </summary>
+    /// <param name="index">the index that represents the shot detection method</param>
+    /// <returns></returns>
     public aShotDetectionMethod getMethod(int index) {
         aShotDetectionMethod method = null;
 
