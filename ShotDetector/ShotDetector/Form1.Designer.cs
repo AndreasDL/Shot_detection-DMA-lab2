@@ -56,6 +56,11 @@
             this.label3 = new System.Windows.Forms.Label();
             this.txtGroundTruthPath = new System.Windows.Forms.TextBox();
             this.btnRewind = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.txtPathExport = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnBrowseOutput = new System.Windows.Forms.Button();
+            this.sfdBrowse = new System.Windows.Forms.SaveFileDialog();
             this.mnMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbProgress)).BeginInit();
@@ -78,7 +83,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 43);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(30, 16);
+            this.label1.Size = new System.Drawing.Size(30, 17);
             this.label1.TabIndex = 1;
             this.label1.Text = "File";
             // 
@@ -108,7 +113,7 @@
             this.mnMenu.Location = new System.Drawing.Point(0, 0);
             this.mnMenu.Name = "mnMenu";
             this.mnMenu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.mnMenu.Size = new System.Drawing.Size(1045, 24);
+            this.mnMenu.Size = new System.Drawing.Size(1045, 28);
             this.mnMenu.TabIndex = 3;
             this.mnMenu.Text = "menuStrip1";
             // 
@@ -118,20 +123,20 @@
             this.openToolStripMenuItem,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.browseFile);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.Quit_Click);
             // 
@@ -142,27 +147,27 @@
             this.pauseToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.playToolStripMenuItem.Name = "playToolStripMenuItem";
-            this.playToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(48, 24);
             this.playToolStripMenuItem.Text = "Play";
             // 
             // tsmPlay
             // 
             this.tsmPlay.Name = "tsmPlay";
-            this.tsmPlay.Size = new System.Drawing.Size(105, 22);
+            this.tsmPlay.Size = new System.Drawing.Size(116, 24);
             this.tsmPlay.Text = "Play";
             this.tsmPlay.Click += new System.EventHandler(this.start_Click);
             // 
             // pauseToolStripMenuItem
             // 
             this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(116, 24);
             this.pauseToolStripMenuItem.Text = "Pause";
             this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pause_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(116, 24);
             // 
             // panel1
             // 
@@ -238,7 +243,7 @@
             this.trbProgress.Location = new System.Drawing.Point(328, 482);
             this.trbProgress.Margin = new System.Windows.Forms.Padding(4);
             this.trbProgress.Name = "trbProgress";
-            this.trbProgress.Size = new System.Drawing.Size(689, 45);
+            this.trbProgress.Size = new System.Drawing.Size(689, 56);
             this.trbProgress.TabIndex = 9;
             this.trbProgress.TickFrequency = 0;
             // 
@@ -249,7 +254,7 @@
             this.label2.Location = new System.Drawing.Point(608, 43);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 16);
+            this.label2.Size = new System.Drawing.Size(55, 17);
             this.label2.TabIndex = 10;
             this.label2.Text = "Method";
             // 
@@ -269,7 +274,7 @@
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Location = new System.Drawing.Point(681, 572);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(335, 23);
+            this.button1.Size = new System.Drawing.Size(335, 31);
             this.button1.TabIndex = 12;
             this.button1.Text = "Compare with ground truth";
             this.button1.UseVisualStyleBackColor = true;
@@ -292,17 +297,17 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(678, 537);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(27, 16);
+            this.label3.Size = new System.Drawing.Size(61, 17);
             this.label3.TabIndex = 14;
-            this.label3.Text = "GT";
+            this.label3.Text = "GT Path";
             // 
             // txtGroundTruthPath
             // 
             this.txtGroundTruthPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.txtGroundTruthPath.Enabled = false;
-            this.txtGroundTruthPath.Location = new System.Drawing.Point(711, 534);
+            this.txtGroundTruthPath.Location = new System.Drawing.Point(745, 534);
             this.txtGroundTruthPath.Name = "txtGroundTruthPath";
-            this.txtGroundTruthPath.Size = new System.Drawing.Size(224, 22);
+            this.txtGroundTruthPath.Size = new System.Drawing.Size(190, 22);
             this.txtGroundTruthPath.TabIndex = 15;
             this.txtGroundTruthPath.Text = "C:\\testfiles_dma\\csi_GT.xml";
             // 
@@ -317,11 +322,52 @@
             this.btnRewind.UseVisualStyleBackColor = true;
             this.btnRewind.Click += new System.EventHandler(this.rewind_Click);
             // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(681, 656);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(335, 31);
+            this.btnExport.TabIndex = 17;
+            this.btnExport.Text = "Export";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.export);
+            // 
+            // txtPathExport
+            // 
+            this.txtPathExport.Enabled = false;
+            this.txtPathExport.Location = new System.Drawing.Point(724, 622);
+            this.txtPathExport.Name = "txtPathExport";
+            this.txtPathExport.Size = new System.Drawing.Size(211, 22);
+            this.txtPathExport.TabIndex = 18;
+            this.txtPathExport.Text = "C:\\testfiles_dma\\test.xml";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(678, 625);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(37, 17);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Path";
+            // 
+            // btnBrowseOutput
+            // 
+            this.btnBrowseOutput.Location = new System.Drawing.Point(941, 621);
+            this.btnBrowseOutput.Name = "btnBrowseOutput";
+            this.btnBrowseOutput.Size = new System.Drawing.Size(75, 23);
+            this.btnBrowseOutput.TabIndex = 20;
+            this.btnBrowseOutput.Text = "browse";
+            this.btnBrowseOutput.UseVisualStyleBackColor = true;
+            // 
             // ShotDetector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1045, 700);
+            this.Controls.Add(this.btnBrowseOutput);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.txtPathExport);
+            this.Controls.Add(this.btnExport);
             this.Controls.Add(this.btnRewind);
             this.Controls.Add(this.txtGroundTruthPath);
             this.Controls.Add(this.label3);
@@ -381,6 +427,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtGroundTruthPath;
         private System.Windows.Forms.Button btnRewind;
+        private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.TextBox txtPathExport;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnBrowseOutput;
+        private System.Windows.Forms.SaveFileDialog sfdBrowse;
     }
 }
 

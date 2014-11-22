@@ -33,16 +33,25 @@ public class MethodFactory {
             case 0: //Pixel
                 int delta2 = 256;
                 double delta3 = 0.25;
+
+                shots.addParameter(delta2);
+                shots.addParameter(delta3);
+
                 method = new PixelMethod(delta2, delta3,shots);
                 break;
             case 1: //Motion
                 int subsize = 8;
                 int windowSize = 3;
+                shots.addParameter(subsize);
+                shots.addParameter(windowSize);
+
                 method = new MotionMethod(subsize, windowSize,shots);
                 break;
             case 2://global hist
-                double threshold = 1.5;          // The threshold will be chosen as the fraction of pixels that ended up in a different bin of the histogram.
+                double threshold = 0.25;          // The threshold will be chosen as the fraction of pixels that ended up in a different bin of the histogram.
                 int nrOfBins = 51; //5 values wide
+                shots.addParameter(threshold);
+                shots.addParameter(nrOfBins);
                 method = new GlobalHistogramMethod(threshold, nrOfBins,shots);
                 break;
             case 3://local hist

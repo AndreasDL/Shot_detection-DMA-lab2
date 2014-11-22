@@ -158,16 +158,26 @@ namespace ShotDetector {
             }
         }
 
+        //update model
+        private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e) {
+            if (m_play != null)
+                m_play.setDetectionMethod(cmbMethod.SelectedIndex);
+        }
+
         //ground truth
         private void compareGroundTruth(object sender, EventArgs e) {
-            new Thread(() => { //thread just because more swag & no lagg on GUI while reading file
-                Thread.CurrentThread.IsBackground = true;
-                //get groundtruth
-                ShotCollection truth = new ShotCollection(txtGroundTruthPath.Text);
-                ShotCollection results = this.m_play.getShotCollection();
+            if (this.m_play != null) {
+                new Thread(() => { //thread just because more swag & no lagg on GUI while reading file
+                    Thread.CurrentThread.IsBackground = true;
+                    //get groundtruth
+                    ShotCollection truth = new ShotCollection(txtGroundTruthPath.Text);
+                    ShotCollection results = this.m_play.getShotCollection();
 
-                MessageBox.Show("Recall: " + results.calcRecall(truth) + " Precision: " + results.calcPrecision(truth));
-            }).Start();
+                    MessageBox.Show("Recall: " + results.calcRecall(truth) + " Precision: " + results.calcPrecision(truth));
+                }).Start();
+            } else {
+                MessageBox.Show("Video hasn't started yet, press Start to start playing!");
+            }
         }
         private void browseGroundTruth(object sender, EventArgs e) {
             ofdBrowse.InitialDirectory = "C:\\";
@@ -180,10 +190,37 @@ namespace ShotDetector {
             }
         }
 
-        private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e) {
-            if (m_play != null)
-                m_play.setDetectionMethod(cmbMethod.SelectedIndex);
+        //export
+        private void BrowseOutput(object sender, EventArgs e) {
+            sfdBrowse.InitialDirectory = "C:\\";
+            sfdBrowse.Filter = "xml document (*.xml)|*.xml";
+            sfdBrowse.FilterIndex = 2;
+            sfdBrowse.RestoreDirectory = true;
+
+            if (sfdBrowse.ShowDialog() == DialogResult.OK) {
+                this.txtPathExport.Text = sfdBrowse.FileName;
+            }
         }
+
+        private void export(object sender, EventArgs e){
+            if (this.m_play != null) {
+                new Thread(() => { //thread just because more swag & no lagg on GUI while reading file
+                    Thread.CurrentThread.IsBackground = true;
+                    //get groundtruth
+                    ShotCollection results = this.m_play.getShotCollection();
+
+                    results.setLastFrame(this.m_play.getFrameCount());
+                    results.setfile(txtFileName.Text);
+                    results.setLastFrame(m_play.getFrameCount());
+
+                    results.export(this.txtPathExport.Text);
+
+                }).Start();
+            } else {
+                MessageBox.Show("Video hasn't started yet, press Start to start playing!");
+            }
+        } 
+
 
     }
 }

@@ -3,35 +3,92 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 /// <summary>
 /// Collection of the detected shots
 /// </summary>
 public class ShotCollection{
     private List<Shot> shots; //list of the shots
-    private List<IObserver> observers; //list of the observers 
-
+    private List<IObserver> observers; //list of the observers
+    private int method;
+    private List<Object> parameters;
+    private long lastFrame;
+    private String videoFileName;
 
     public ShotCollection() {
         this.shots = new List<Shot>();
         this.observers = new List<IObserver>();
+        this.parameters = new List<Object>();
     }
     public ShotCollection(string fileName):this() { 
         //TODO use xml parser?
+        XmlDocument doc = new XmlDocument();
+        doc.Load(fileName);
 
-        //open file
-        string[] lines = System.IO.File.ReadAllLines(fileName);
-        //parse results
-        for (int i = 2; i < lines.Length; i++) {
-            if (lines[i].Substring(0, 10) == "    <shot>") {
-                string line = lines[i].Substring(10, lines[i].Length - 17);
-                line = line.Substring(0, line.IndexOf("-"));
-                
-                //add to colection
-                addShot(new Shot( Convert.ToInt32(line) ));
-            }
-        }
+        //Display all the book titles.
+        XmlNodeList elemList = doc.GetElementsByTagName("shot");
+        for (int i = 0; i < elemList.Count; i++) {
+            String line = elemList[i].InnerText;
+            line = line.Substring(0, line.IndexOf("-"));
+
+            addShot(new Shot(Convert.ToInt32(line)));
+        } 
     }
+
+    public void setMethod(int method) {
+        this.method = method;
+    }
+
+    public void addParameter(Object parameter) {
+        parameters.Add(parameter);
+    }
+    public void setLastFrame(long frameCount) {
+        //fix for the last shot
+        lastFrame = frameCount;
+        addShot(new Shot((int)frameCount));
+    }
+
+    public void setfile(string videoFileName) {
+        this.videoFileName = videoFileName;
+    }
+
+    /// <summary> exports the data struct to xml </summary>
+    /// <param name="fileName">the path of the output file</param>
+    public void export(string fileName) {
+        XmlDocument doc = new XmlDocument();
+        
+        //root
+        XmlNode root = doc.CreateElement("Shotdetection");
+        XmlAttribute file = doc.CreateAttribute("file");
+        file.Value = videoFileName;
+        root.Attributes.Append(file);
+        doc.AppendChild(root);
+
+        //method
+        XmlNode method = doc.CreateElement("method");
+        XmlAttribute nr = doc.CreateAttribute("nr");
+        nr.Value = Convert.ToString(this.method + 1);
+        method.Attributes.Append(nr);
+        for (int i = 0; i < parameters.Count; i++) {
+            XmlNode param = doc.CreateElement("param" + i);
+            param.InnerText = Convert.ToString(this.parameters[i]);
+            method.AppendChild(param);
+        }
+        root.AppendChild(method);
+
+        //shots
+        XmlNode shots = doc.CreateElement("shots");
+        for (int i = 0; i < this.shots.Count - 1; i++) {
+            XmlNode shot = doc.CreateElement("shot");
+            shot.InnerText = this.shots[i].getStartFrame() + "-" + this.shots[i + 1].getStartFrame();
+            shots.AppendChild(shot);
+        }
+        root.AppendChild(shots);
+
+        doc.Save(fileName);
+    }
+
     /// <summary>
     /// adds a shot to the collection
     /// </summary>
@@ -75,35 +132,7 @@ public class ShotCollection{
 
         while (indexResults < this.shots.Count) {
             //move indextruth until there is a possible match
-            while (indexTruth < truth.shots.Count && truth.getShot(indexTruth).getStartFrame() < getShot(indexResults).getStartFrame()) {
-                indexTruth++;
-            }
-
-            //kijken of het overeen komt
-            if (truth.getShot(indexTruth).getStartFrame() == getShot(indexResults).getStartFrame()) {
-                truthCount++;
-            }
-
-            //move indeResults until there is a possible match
-            indexResults++;
-        }
-
-        return (1.0*truthCount) / (truth.getShots().Count);
-    }
-    /// <summary>
-    /// calculates the precision
-    /// </summary>
-    /// <param name="truth">the ground truth collection</param>
-    /// <returns>the precision</returns>
-    public double calcPrecision(ShotCollection truth) {
-        int truthCount = 0;
-
-        int indexTruth = 0;
-        int indexResults = 0;
-
-        while (indexResults < this.shots.Count) {
-            //move indextruth until there is a possible match
-            while (indexTruth < truth.shots.Count 
+            while (indexTruth < truth.shots.Count
                 && truth.getShot(indexTruth).getStartFrame() < getShot(indexResults).getStartFrame()) {
                 indexTruth++;
             }
@@ -115,8 +144,37 @@ public class ShotCollection{
 
             indexResults++;
         }
+        
+        return this.shots.Count > 0 ? (1.0 * truthCount) / (this.shots.Count) : 0 ;
+    }
+    /// <summary>
+    /// calculates the precision
+    /// </summary>
+    /// <param name="truth">the ground truth collection</param>
+    /// <returns>the precision</returns>
+    public double calcPrecision(ShotCollection truth) {
+        
+        int truthCount = 0;
 
-        return (1.0 * truthCount) / (this.shots.Count);
+        int indexTruth = 0;
+        int indexResults = 0;
+
+        while (indexResults < this.shots.Count) {
+            //move indextruth until there is a possible match
+            while (indexTruth < truth.shots.Count && truth.getShot(indexTruth).getStartFrame() < getShot(indexResults).getStartFrame()) {
+                indexTruth++;
+            }
+
+            //kijken of het overeen komt
+            if (truth.getShot(indexTruth).getStartFrame() == getShot(indexResults).getStartFrame()) {
+                truthCount++;
+            }
+
+            //move indexResults until there is a possible match
+            indexResults++;
+        }
+
+        return (1.0 * truthCount) / (truth.getShots().Count);
     }
     /// <summary>
     /// returns the shot at a given index
