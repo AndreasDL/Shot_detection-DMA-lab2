@@ -15,16 +15,16 @@ using DirectShowLib;
 /// <summary>
 /// This method uses a global histogram to detect shots
 /// </summary>
-public class HistogramMethod: aShotDetectionMethod, ISampleGrabberCB {
+public class GlobalHistogramMethod: aShotDetectionMethod, ISampleGrabberCB {
 
     private int[] current_histogram;
     private int[] previous_histogram;
     private double threshold;
     private int nrOfBins;
     private int divider;
+    private int lastShot;
 
-    public HistogramMethod(double _threshold, int _nrOfBins,ShotCollection shots)
-        : base(shots) {
+    public GlobalHistogramMethod(double _threshold, int _nrOfBins,ShotCollection shots): base(shots) {
         this.threshold = _threshold;
         this.nrOfBins = _nrOfBins;
         this.divider = 255 / nrOfBins;
@@ -42,29 +42,35 @@ public class HistogramMethod: aShotDetectionMethod, ISampleGrabberCB {
         Marshal.Copy(pBuffer, current, 0, BufferLen);
 
         current_histogram = new int[nrOfBins * 3];           // We choose to combine the histogram of R, G and B values in 1 large array
+        for (int i = 0; i < 3*nrOfBins; i++) {
+            current_histogram[i] = 0;
+        }
+
         for (int i = 0; i < BufferLen - 3; i += 3) {
             current_histogram[current[i] / divider]++;          // R position in histogram
             current_histogram[current[i + 1] / divider + 1]++;  // G position in histogram
             current_histogram[current[i + 2] / divider + 2]++;  // B position in histogram
         }
 
-        //////////////////////////////
-
-        //Only do this block of code, when the previous frame is filled in (starting from the second frame)
+        //Only do this block of code, when the previous frame is filled in (starting from the second frame), to detect shots
         if (previous_histogram != null) {
-            int twoHistsDiff = 0;
+            long twoHistsDiff = 0;
+
             for (int i = 0; i < nrOfBins * 3 - 3; i += 3) {
                 twoHistsDiff += Math.Abs(current_histogram[i] - previous_histogram[i]);
                 twoHistsDiff += Math.Abs(current_histogram[i + 1] - previous_histogram[i + 1]);
                 twoHistsDiff += Math.Abs(current_histogram[i + 2] - previous_histogram[i + 2]);
             }
 
-            if (twoHistsDiff > threshold * BufferLen) {
+            if (twoHistsDiff > threshold * BufferLen && frameNumber > lastShot + 10 ) {
+                lastShot = frameNumber;
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } else {
+            //first shot starts at frame 0
+            lastShot = 0;
             return true;
         }
     }
