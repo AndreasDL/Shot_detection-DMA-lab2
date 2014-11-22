@@ -17,38 +17,37 @@ public class LocalHistogram: aShotDetectionMethod {
     private List<int[]> previous_histograms;
     private List<int[]> current_histograms;
     
-    private int[] current_histogram;
-    private int[] previous_histogram;
-
     private double threshold;
     private int nrOfBins;
     private int divider;
-    private int nrOfBlocks;
+    //private int nrOfBlocks;
+    private int number, endCols, endRows, sizeCols, sizeRows;
 
     public LocalHistogram(double _threshold, int _nrOfBins, int _nrOfBlocks,ShotCollection shots): base(shots) {
-
         this.threshold = _threshold;
         this.nrOfBins = _nrOfBins;
         this.divider = (int)(Math.Ceiling(255.0 / nrOfBins));
-        this.nrOfBlocks = _nrOfBlocks;
-        this.previous_histograms = new List<int[]>();
-        //this.current_histograms = new List<int[]>();
+        //this.nrOfBlocks = _nrOfBlocks;
+
+        this.previous_histograms = null;
+        this.current_histograms = null;
+
+        //calculate this only once
+        this.number = (int)Math.Sqrt((double)_nrOfBlocks);
+        int endCols = videoWidth - (videoWidth % number);//Ignore last x pixels if they don't match
+        int endRows = videoHeight - (videoHeight % number);
+        int sizeCols = endCols / number;
+        int sizeRows = endRows / number;
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen){
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
+        
         byte[] current = new byte[(videoHeight * videoWidth) * 3];
         Marshal.Copy(pBuffer, current, 0, BufferLen);
 
-        int number = (int)Math.Sqrt((double)nrOfBlocks);
         previous_histograms = current_histograms;
         current_histograms = new List<int[]>();
-
-        int endCols = videoWidth - (videoWidth % number);
-        int endRows = videoHeight - (videoHeight % number);
-
-        int sizeCols = endCols / number;
-        int sizeRows = endRows / number;
 
         // Create nrOfBlocks histograms of the current frame
         for (int i = 0; i < endRows; i = i + sizeRows) {
@@ -80,7 +79,6 @@ public class LocalHistogram: aShotDetectionMethod {
                     twoHistsDiff += Math.Abs(current_histograms[k][i] - previous_histograms[k][i]);
                 }
             }
-
             return twoHistsDiff > threshold * BufferLen;
         }else{
             return true;
