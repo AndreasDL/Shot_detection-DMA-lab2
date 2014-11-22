@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Capture.cs" />
     <Compile Include="Model\DetectionMethods\EmptyMethod.cs" />
+    <Compile Include="Model\DetectionMethods\LocalHistogramMethod.cs" />
     <Compile Include="Model\DetectionMethods\MethodFactory.cs" />
     <Compile Include="Model\DetectionMethods\PixelMethod.cs" />
     <Compile Include="Model\DetectionMethods\aShotDetectionMethod.cs" />

@@ -55,8 +55,15 @@ public class MethodFactory {
                 method = new GlobalHistogramMethod(threshold, nrOfBins,shots);
                 break;
             case 3://local hist
-                //method = new Method3(frameBuffer);
-                //break;
+                double thresh = 0.40;          // The threshold will be chosen as the fraction of pixels that ended up in a different bin of the histogram.
+                int nrBins = 32;
+                int nrOfBlocks = 9;
+                shots.addParameter(thresh);
+                shots.addParameter(nrBins);
+                shots.addParameter(nrOfBlocks);
+
+                method = new LocalHistogram(thresh, nrBins, nrOfBlocks,shots);
+                break;
             case 4://generalized
                 //method = new Method4(frameBuffer);;
                 //break;
