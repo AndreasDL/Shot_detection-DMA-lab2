@@ -89,8 +89,6 @@ namespace ShotDetector {
                 pauseToolStripMenuItem.Text = "Pause";
                 m_State = State.Stopped;
             }
-
-            trbProgress.Maximum = (int)m_play.getFrameCount();
         }
         private void pause_Click(object sender, System.EventArgs e) {
             // If we are playing, pause
@@ -148,15 +146,15 @@ namespace ShotDetector {
                 dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count -1 ].Cells[0];
             }
         }
-        delegate void UpdateTrackBarCallback(int frameNumber);
+        /*delegate void UpdateTrackBarCallback(int frameNumber);
         public void updateTrackbar(int frameNumber) {
             if (this.dgvResults.InvokeRequired) {
                 UpdateTrackBarCallback u = new UpdateTrackBarCallback(updateTrackbar);
                 this.Invoke(u, new object[] { frameNumber });
             } else {
-                trbProgress.Value = frameNumber;
+                //trbProgress.Value = frameNumber;
             }
-        }
+        }*/
 
         //update model
         private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e) {
@@ -219,8 +217,7 @@ namespace ShotDetector {
             } else {
                 MessageBox.Show("Video hasn't started yet, press Start to start playing!");
             }
-        } 
-
+        }
 
     }
 }

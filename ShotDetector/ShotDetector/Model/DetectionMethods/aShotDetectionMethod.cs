@@ -92,8 +92,8 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     }
     /// <summary>Notifies all the observers</summary>
     private void notifyObservers() {
-        foreach (IObserver o in observers)
-            o.updateTrackbar(frameNumber);
+        /*foreach (IObserver o in observers)
+            o.updateTrackbar(frameNumber);*/
     }
 
     /// <summary> this function is called for each frame </summary>

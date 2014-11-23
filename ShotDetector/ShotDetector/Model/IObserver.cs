@@ -16,5 +16,5 @@ public interface IObserver {
     /// Next frame is handled
     /// </summary>
     /// <param name="frameNumber">the number of the new frame</param>
-    void updateTrackbar(int frameNumber);
+    //void updateTrackbar(int frameNumber);
 }

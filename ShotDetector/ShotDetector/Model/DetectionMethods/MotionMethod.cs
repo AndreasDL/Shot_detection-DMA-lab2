@@ -32,16 +32,41 @@ public class MotionMethod : aShotDetectionMethod{
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen){
-        Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
-        bool isShot = false;
-
+        
         current = new byte[(videoHeight * videoWidth) * 3];
         Marshal.Copy(pBuffer, current, 0, BufferLen);
 
         prevWindow = currWindow;//keep the avgs that have been calculated before
         currWindow = new byte[videoHeight/subsize,videoWidth/subsize][]; //hold the average pixel values for each subblock
-
         prevMotion = currMotion;
+        currMotion = 0;
+
+        return _DetectShot();
+    }
+    public bool DetectShotBetween(double SampleTime, byte[] current, byte[] previous, int BufferLen) {
+
+        prevWindow = new byte[videoHeight / subsize, videoWidth / subsize][];
+        currWindow = new byte[videoHeight / subsize, videoWidth / subsize][];
+        prevMotion = 0;
+        currMotion = 0;
+
+        //calculate avg for all subblocks in the previous frame
+        int blockX = 0, blockY = 0; //indexes of the subblock (assume that a ++ operation is faster than multiplication)
+        for (int y = 0; y < videoHeight; y += subsize) {
+            blockX = 0;
+            for (int x = 0; x < videoWidth; x += subsize) {
+                prevWindow[blockY, blockX] = getAvg(x, y, previous); ;
+                blockX++;
+            }
+            blockY++;
+        }
+
+        return _DetectShot();
+    }
+
+    private bool _DetectShot(){
+        Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
+        bool isShot = false;
         currMotion = 0;
 
         //calculate avg for all subblocks in current frame

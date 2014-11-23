@@ -48,7 +48,6 @@
             this.shotNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StartFrame = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tags = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.trbProgress = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.cmbMethod = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -61,9 +60,13 @@
             this.label4 = new System.Windows.Forms.Label();
             this.btnBrowseOutput = new System.Windows.Forms.Button();
             this.sfdBrowse = new System.Windows.Forms.SaveFileDialog();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.mnMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trbProgress)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnBrowse
@@ -174,16 +177,16 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Location = new System.Drawing.Point(16, 74);
+            this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1001, 400);
+            this.panel1.Size = new System.Drawing.Size(1011, 404);
             this.panel1.TabIndex = 4;
             // 
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnStart.Location = new System.Drawing.Point(16, 481);
+            this.btnStart.Location = new System.Drawing.Point(4, 416);
             this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(100, 28);
@@ -195,7 +198,7 @@
             // btnPause
             // 
             this.btnPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnPause.Location = new System.Drawing.Point(124, 481);
+            this.btnPause.Location = new System.Drawing.Point(112, 416);
             this.btnPause.Margin = new System.Windows.Forms.Padding(4);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(100, 28);
@@ -206,17 +209,18 @@
             // 
             // dgvResults
             // 
-            this.dgvResults.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.dgvResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvResults.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.shotNumber,
             this.StartFrame,
             this.tags});
-            this.dgvResults.Location = new System.Drawing.Point(13, 538);
+            this.dgvResults.Location = new System.Drawing.Point(4, 17);
             this.dgvResults.Margin = new System.Windows.Forms.Padding(4);
             this.dgvResults.Name = "dgvResults";
-            this.dgvResults.Size = new System.Drawing.Size(645, 149);
+            this.dgvResults.Size = new System.Drawing.Size(656, 139);
             this.dgvResults.TabIndex = 8;
             // 
             // shotNumber
@@ -235,17 +239,6 @@
             this.tags.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.tags.HeaderText = "Tags";
             this.tags.Name = "tags";
-            // 
-            // trbProgress
-            // 
-            this.trbProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trbProgress.Location = new System.Drawing.Point(328, 482);
-            this.trbProgress.Margin = new System.Windows.Forms.Padding(4);
-            this.trbProgress.Name = "trbProgress";
-            this.trbProgress.Size = new System.Drawing.Size(689, 56);
-            this.trbProgress.TabIndex = 9;
-            this.trbProgress.TickFrequency = 0;
             // 
             // label2
             // 
@@ -272,7 +265,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(681, 572);
+            this.button1.Location = new System.Drawing.Point(667, 46);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(335, 31);
             this.button1.TabIndex = 12;
@@ -283,7 +276,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(941, 534);
+            this.button2.Location = new System.Drawing.Point(927, 17);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 13;
@@ -295,7 +288,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(678, 537);
+            this.label3.Location = new System.Drawing.Point(664, 20);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(61, 17);
             this.label3.TabIndex = 14;
@@ -305,7 +298,7 @@
             // 
             this.txtGroundTruthPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.txtGroundTruthPath.Enabled = false;
-            this.txtGroundTruthPath.Location = new System.Drawing.Point(745, 534);
+            this.txtGroundTruthPath.Location = new System.Drawing.Point(731, 17);
             this.txtGroundTruthPath.Name = "txtGroundTruthPath";
             this.txtGroundTruthPath.Size = new System.Drawing.Size(190, 22);
             this.txtGroundTruthPath.TabIndex = 15;
@@ -314,7 +307,7 @@
             // btnRewind
             // 
             this.btnRewind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRewind.Location = new System.Drawing.Point(231, 482);
+            this.btnRewind.Location = new System.Drawing.Point(219, 416);
             this.btnRewind.Name = "btnRewind";
             this.btnRewind.Size = new System.Drawing.Size(90, 27);
             this.btnRewind.TabIndex = 16;
@@ -324,7 +317,8 @@
             // 
             // btnExport
             // 
-            this.btnExport.Location = new System.Drawing.Point(681, 656);
+            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExport.Location = new System.Drawing.Point(667, 125);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(335, 31);
             this.btnExport.TabIndex = 17;
@@ -334,8 +328,9 @@
             // 
             // txtPathExport
             // 
+            this.txtPathExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPathExport.Enabled = false;
-            this.txtPathExport.Location = new System.Drawing.Point(724, 622);
+            this.txtPathExport.Location = new System.Drawing.Point(710, 96);
             this.txtPathExport.Name = "txtPathExport";
             this.txtPathExport.Size = new System.Drawing.Size(211, 22);
             this.txtPathExport.TabIndex = 18;
@@ -343,8 +338,9 @@
             // 
             // label4
             // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(678, 625);
+            this.label4.Location = new System.Drawing.Point(664, 99);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(37, 17);
             this.label4.TabIndex = 19;
@@ -352,34 +348,52 @@
             // 
             // btnBrowseOutput
             // 
-            this.btnBrowseOutput.Location = new System.Drawing.Point(941, 621);
+            this.btnBrowseOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowseOutput.Location = new System.Drawing.Point(927, 96);
             this.btnBrowseOutput.Name = "btnBrowseOutput";
             this.btnBrowseOutput.Size = new System.Drawing.Size(75, 23);
             this.btnBrowseOutput.TabIndex = 20;
             this.btnBrowseOutput.Text = "browse";
             this.btnBrowseOutput.UseVisualStyleBackColor = true;
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer1.Location = new System.Drawing.Point(12, 72);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.btnStart);
+            this.splitContainer1.Panel1.Controls.Add(this.btnPause);
+            this.splitContainer1.Panel1.Controls.Add(this.btnRewind);
+            this.splitContainer1.Panel1.Controls.Add(this.panel1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.dgvResults);
+            this.splitContainer1.Panel2.Controls.Add(this.txtGroundTruthPath);
+            this.splitContainer1.Panel2.Controls.Add(this.btnBrowseOutput);
+            this.splitContainer1.Panel2.Controls.Add(this.label3);
+            this.splitContainer1.Panel2.Controls.Add(this.label4);
+            this.splitContainer1.Panel2.Controls.Add(this.button2);
+            this.splitContainer1.Panel2.Controls.Add(this.button1);
+            this.splitContainer1.Panel2.Controls.Add(this.btnExport);
+            this.splitContainer1.Panel2.Controls.Add(this.txtPathExport);
+            this.splitContainer1.Panel2MinSize = 166;
+            this.splitContainer1.Size = new System.Drawing.Size(1021, 616);
+            this.splitContainer1.SplitterDistance = 450;
+            this.splitContainer1.TabIndex = 21;
+            // 
             // ShotDetector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1045, 700);
-            this.Controls.Add(this.btnBrowseOutput);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.txtPathExport);
-            this.Controls.Add(this.btnExport);
-            this.Controls.Add(this.btnRewind);
-            this.Controls.Add(this.txtGroundTruthPath);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.cmbMethod);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.dgvResults);
-            this.Controls.Add(this.trbProgress);
-            this.Controls.Add(this.btnPause);
-            this.Controls.Add(this.btnStart);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.txtFileName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnBrowse);
@@ -391,7 +405,11 @@
             this.mnMenu.ResumeLayout(false);
             this.mnMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trbProgress)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -416,7 +434,6 @@
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.DataGridView dgvResults;
-        private System.Windows.Forms.TrackBar trbProgress;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cmbMethod;
         private System.Windows.Forms.Button button1;
@@ -432,6 +449,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnBrowseOutput;
         private System.Windows.Forms.SaveFileDialog sfdBrowse;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
 
