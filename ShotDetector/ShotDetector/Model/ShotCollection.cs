@@ -22,17 +22,15 @@ public class ShotCollection{
         this.parameters = new List<Object>();
     }
     public ShotCollection(string fileName):this() { 
-        //TODO use xml parser?
         XmlDocument doc = new XmlDocument();
         doc.Load(fileName);
 
-        //Display all the book titles.
         XmlNodeList elemList = doc.GetElementsByTagName("shot");
         for (int i = 0; i < elemList.Count; i++) {
             String line = elemList[i].InnerText;
             line = line.Substring(0, line.IndexOf("-"));
 
-            addShot(new Shot(Convert.ToInt32(line)));
+            addShot(new Shot(Convert.ToInt32(line), i));
         } 
     }
 
@@ -46,7 +44,7 @@ public class ShotCollection{
     public void setLastFrame(long frameCount) {
         //fix for the last shot
         lastFrame = frameCount;
-        addShot(new Shot((int)frameCount));
+        addShot(new Shot((int)frameCount , shots.Count));
     }
 
     public void setfile(string videoFileName) {
@@ -65,11 +63,17 @@ public class ShotCollection{
         root.Attributes.Append(file);
         doc.AppendChild(root);
 
-        //method
+        //method number
         XmlNode method = doc.CreateElement("method");
         XmlAttribute nr = doc.CreateAttribute("nr");
         nr.Value = Convert.ToString(this.method + 1);
         method.Attributes.Append(nr);
+        //method name
+        XmlAttribute methodName = doc.CreateAttribute("methodName");
+        methodName.Value = MethodFactory.METHODS[this.method];
+        method.Attributes.Append(methodName);
+        
+        //params
         for (int i = 0; i < parameters.Count; i++) {
             XmlNode param = doc.CreateElement("param" + i);
             param.InnerText = Convert.ToString(this.parameters[i]);
@@ -85,6 +89,31 @@ public class ShotCollection{
             shots.AppendChild(shot);
         }
         root.AppendChild(shots);
+
+        //tags
+        XmlNode tagList = doc.CreateElement("shotDetails");
+        for (int i = 0; i < this.shots.Count - 1; i++) {
+            //all tags of a frame
+            XmlNode tags = doc.CreateElement("shotDetail");
+            
+            XmlAttribute frameNumber = doc.CreateAttribute("shotNumber");
+            frameNumber.Value = "" + i;
+            tags.Attributes.Append(frameNumber);
+            XmlAttribute startFrame = doc.CreateAttribute("startFrame");
+            startFrame.Value = "" + this.shots[i].getStartFrame();
+            tags.Attributes.Append(startFrame);
+            XmlAttribute stopFrame = doc.CreateAttribute("stopFrame");
+            stopFrame.Value = "" + (this.shots[i + 1].getStartFrame() -1);
+            tags.Attributes.Append(stopFrame);
+
+            foreach (String t in this.shots[i].getTagArray()) {
+                XmlNode tag = doc.CreateElement("tag");
+                tag.InnerText = t;
+                tags.AppendChild(tag);
+            }
+            tagList.AppendChild(tags);
+        }
+        root.AppendChild(tagList);
 
         doc.Save(fileName);
     }
@@ -161,7 +190,8 @@ public class ShotCollection{
 
         while (indexResults < this.shots.Count) {
             //move indextruth until there is a possible match
-            while (indexTruth < truth.shots.Count && truth.getShot(indexTruth).getStartFrame() < getShot(indexResults).getStartFrame()) {
+            while (indexTruth < truth.shots.Count - 1
+                && truth.getShot(indexTruth).getStartFrame() < getShot(indexResults).getStartFrame()) {
                 indexTruth++;
             }
 

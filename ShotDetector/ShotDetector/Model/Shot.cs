@@ -9,19 +9,19 @@ using System.Collections.Generic;
 /// </summary>
 public class Shot {
     private int start_frame;  //Start_frame number of the shot
-    private double start_time;//start time of the shot (optional)
     private List<String> tags;//list of the tags defined by the user
+    private int shotNumber;
+
     /// <summary>
     /// Constructor that creates a shot
     /// </summary>
     /// <param name="start_frame">the number of the start frame of the shot</param>
     /// <param name="start_time">the start time of the shot in seconds</param>
-    public Shot(int start_frame, double start_time) {
+    public Shot(int start_frame, int shotNumber) {
         this.start_frame = start_frame;
-        this.start_time = start_time;
+        this.shotNumber = shotNumber;
         tags = new List<String>();
     }
-    public Shot(int start_frame) : this(start_frame, 0) { }
 
     /// <summary>
     /// Add a tag to the shot
@@ -39,21 +39,6 @@ public class Shot {
     }
 
     /// <summary>
-    /// return the saved tags in a single string
-    /// </summary>
-    /// <returns>tag1,tag2,tag2...</returns>
-    public string getTags() {
-        if (tags.Count == 0){
-            return "";
-        }else{
-            String s = (String)tags[0];
-            for (int i = 1; i < tags.Count ; i++)
-                s += "," + tags[i];
-            return s;
-        }
-    }
-
-    /// <summary>
     /// returns the number of the start frame
     /// </summary>
     /// <returns>framenumber of the start frame</returns>
@@ -61,14 +46,21 @@ public class Shot {
         return start_frame;
     }
 
-    /// <summary>
-    /// writes the contents to the console (debugging purposes only)
-    /// </summary>
-    public void writeConsole() {
-        Console.Write("Shot at " + start_frame + "has tags: ");
-        for (int i = 0; i < tags.Count; i++)
-            Console.Write(tags[i] + "\t");
-        Console.WriteLine();
+    public int getShotNumber() {
+        return shotNumber;
+    }
+
+    public String getTagString() {
+        String s = "";
+        foreach (String tag in this.tags) {
+            s += tag + ";";
+        }
+
+        return s;
+    }
+
+    public void setTagString(String tags) {
+        this.tags = new List<String>(tags.Split(';'));
     }
 }
 

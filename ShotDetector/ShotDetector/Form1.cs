@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace ShotDetector {
     public partial class ShotDetector : Form, IObserver {
@@ -20,6 +21,7 @@ namespace ShotDetector {
         }
         State m_State = State.Uninit;
         DxPlay m_play = null;
+        private string fileName = "c:\\testfiles_dma\\csi.avi";
 
         public ShotDetector() {
             InitializeComponent();
@@ -35,7 +37,7 @@ namespace ShotDetector {
             ofdBrowse.RestoreDirectory = true;
 
             if (ofdBrowse.ShowDialog() == DialogResult.OK) {
-                txtFileName.Text = ofdBrowse.FileName;
+                fileName = ofdBrowse.FileName;
             }
         }
         private void Quit_Click(object sender, EventArgs e) {
@@ -47,7 +49,7 @@ namespace ShotDetector {
             // If necessary, close the old file
             if (m_State == State.Stopped) {
                 // Did the filename change?
-                if (txtFileName.Text != m_play.FileName) {
+                if (fileName != m_play.FileName) {
                     // File name changed, close the old file
                     m_play.Dispose();
                     m_play = null;
@@ -59,8 +61,7 @@ namespace ShotDetector {
             if (m_play == null) {
                 try {
                     // Open the file, provide a handle to play it in
-                    m_play = new DxPlay(panel1, txtFileName.Text, cmbMethod.SelectedIndex, this);
-
+                    m_play = new DxPlay(panel1, fileName, cmbMethod.SelectedIndex, this);
                     // Let us know when the file is finished playing
                     m_play.StopPlay += new DxPlay.DxPlayEvent(m_play_StopPlay);
                     m_State = State.Stopped;
@@ -75,14 +76,12 @@ namespace ShotDetector {
                 tsmPlay.Text = "Stop";
                 m_play.Start();
                 btnPause.Enabled = true;
-                txtFileName.Enabled = false;
                 m_State = State.Playing;
             }
                 // If we are playing or paused, stop
             else if (m_State == State.Playing || m_State == State.Paused) {
                 m_play.Stop();
                 btnPause.Enabled = false;
-                txtFileName.Enabled = true;
                 btnStart.Text = "Start";
                 tsmPlay.Text = "Start";
                 btnPause.Text = "Pause";
@@ -120,7 +119,6 @@ namespace ShotDetector {
             CheckForIllegalCrossThreadCalls = false;
 
             btnPause.Enabled = false;
-            txtFileName.Enabled = true;
             btnStart.Text = "Start";
             tsmPlay.Text = "Start";
             btnPause.Text = "Pause";
@@ -144,7 +142,7 @@ namespace ShotDetector {
                 UpdateGridCallback u = new UpdateGridCallback(updateList);
                 this.Invoke(u, new object[] {shot});
             } else {
-                dgvResults.Rows.Add(new string[] { "" + dgvResults.RowCount, "" + shot.getStartFrame(), shot.getTags() });
+                dgvResults.Rows.Add(new string[] { "" + dgvResults.RowCount, "" + shot.getStartFrame(), shot.getTagString() });
                 dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count -1 ].Cells[0];
             }
         }
@@ -155,7 +153,7 @@ namespace ShotDetector {
         }
 
         //export
-        private void exportResultToXmlToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void exportXML(object sender, EventArgs e) {
             String outputPath = "C:\\test.xml";
 
             if (this.m_play != null) {
@@ -167,13 +165,12 @@ namespace ShotDetector {
 
                 if (sfdBrowse.ShowDialog() == DialogResult.OK) {
                     outputPath = sfdBrowse.FileName;
-                    new Thread(() => { //thread just because more swag & no lagg on GUI while reading file
+                    new Thread(() => { //thread = no lagg on GUI
                         Thread.CurrentThread.IsBackground = true;
-                        //get groundtruth
                         ShotCollection results = this.m_play.getShotCollection();
 
                         results.setLastFrame(this.m_play.getFrameCount());
-                        results.setfile(txtFileName.Text);
+                        results.setfile(fileName);
                         results.setLastFrame(m_play.getFrameCount());
 
                         results.export(outputPath);
@@ -185,7 +182,7 @@ namespace ShotDetector {
             }
         }
         //ground truth
-        private void calculateRecallToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void calcRecallandPrecision(object sender, EventArgs e) {
             String groundTruthPath = "C:\\testfiles_dma\\csi_GT.xml";
 
             if (this.m_play != null) {
@@ -197,7 +194,7 @@ namespace ShotDetector {
 
                 if (ofdBrowse.ShowDialog() == DialogResult.OK) {
                     groundTruthPath = ofdBrowse.FileName;
-                    new Thread(() => { //thread just because more swag & no lagg on GUI while reading file
+                    new Thread(() => { //thread : no lagg on GUI
                         Thread.CurrentThread.IsBackground = true;
                         //get groundtruth
                         ShotCollection truth = new ShotCollection(groundTruthPath);
@@ -209,6 +206,16 @@ namespace ShotDetector {
 
             } else {
                 MessageBox.Show("Video hasn't started yet, press Start to start playing!");
+            }
+        }
+
+        //sync tags with shotCollection
+        private void DataGridChanged(object sender, EventArgs e){
+            if (e != null && m_play != null) {
+                System.Windows.Forms.DataGridViewCellEventArgs args = (System.Windows.Forms.DataGridViewCellEventArgs)e;
+                //Console.WriteLine("something changed at " + args.ColumnIndex + " " + args.RowIndex);
+                //update in model
+                m_play.getShotCollection().getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
             }
         }
 

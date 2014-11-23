@@ -77,8 +77,8 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     /// <summary>this method is called when a shot is detected </summary>
     /// <param name="sampleTime">the time of the shot</param>
     /// <param name="frameNumber">the number of the first frame from the shot</param>
-    private void shotDetected(double sampleTime, int frameNumber) {
-        shots.addShot(new Shot(frameNumber, sampleTime));
+    private void shotDetected(int frameNumber) {
+        shots.addShot(new Shot(frameNumber, shots.getShots().Count));
     }
 
     /// <Summary>Returns the collected shots</Summary>
@@ -108,7 +108,7 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
 
         //call the method
         if (DetectShot(SampleTime, pBuffer, BufferLen))
-            shotDetected(SampleTime,frameNumber);
+            shotDetected(frameNumber);
 
         frameNumber++; //keep track of frame number
         notifyObservers(); //notify observers (e.g. update the trackbar of the gui)

@@ -28,15 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnBrowse = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtFileName = new System.Windows.Forms.TextBox();
             this.ofdBrowse = new System.Windows.Forms.OpenFileDialog();
             this.mnMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.exportResultToXmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.calculateRecallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmPlay = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,14 +46,14 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
             this.dgvResults = new System.Windows.Forms.DataGridView();
-            this.shotNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StartFrame = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tags = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.cmbMethod = new System.Windows.Forms.ComboBox();
             this.btnRewind = new System.Windows.Forms.Button();
             this.sfdBrowse = new System.Windows.Forms.SaveFileDialog();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.shotNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StartFrame = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tags = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mnMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -62,39 +61,6 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnBrowse
-            // 
-            this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowse.Location = new System.Drawing.Point(527, 34);
-            this.btnBrowse.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(75, 33);
-            this.btnBrowse.TabIndex = 0;
-            this.btnBrowse.Text = "browse";
-            this.btnBrowse.UseVisualStyleBackColor = true;
-            this.btnBrowse.Click += new System.EventHandler(this.browseFile);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 43);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(30, 17);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "File";
-            // 
-            // txtFileName
-            // 
-            this.txtFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFileName.Enabled = false;
-            this.txtFileName.Location = new System.Drawing.Point(53, 39);
-            this.txtFileName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(467, 22);
-            this.txtFileName.TabIndex = 2;
-            this.txtFileName.Text = "c:\\testfiles_dma\\csi.avi";
             // 
             // ofdBrowse
             // 
@@ -118,8 +84,10 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.exportResultToXmlToolStripMenuItem,
             this.calculateRecallToolStripMenuItem,
+            this.toolStripMenuItem1,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
@@ -128,28 +96,38 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(211, 24);
-            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.openToolStripMenuItem.Text = "Open Video File";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.browseFile);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(272, 6);
             // 
             // exportResultToXmlToolStripMenuItem
             // 
             this.exportResultToXmlToolStripMenuItem.Name = "exportResultToXmlToolStripMenuItem";
-            this.exportResultToXmlToolStripMenuItem.Size = new System.Drawing.Size(211, 24);
-            this.exportResultToXmlToolStripMenuItem.Text = "Export Result to xml";
-            this.exportResultToXmlToolStripMenuItem.Click += new System.EventHandler(this.exportResultToXmlToolStripMenuItem_Click);
+            this.exportResultToXmlToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.exportResultToXmlToolStripMenuItem.Text = "Export Results to xml";
+            this.exportResultToXmlToolStripMenuItem.Click += new System.EventHandler(this.exportXML);
             // 
             // calculateRecallToolStripMenuItem
             // 
             this.calculateRecallToolStripMenuItem.Name = "calculateRecallToolStripMenuItem";
-            this.calculateRecallToolStripMenuItem.Size = new System.Drawing.Size(211, 24);
-            this.calculateRecallToolStripMenuItem.Text = "Calculate Recall";
-            this.calculateRecallToolStripMenuItem.Click += new System.EventHandler(this.calculateRecallToolStripMenuItem_Click);
+            this.calculateRecallToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.calculateRecallToolStripMenuItem.Text = "Calculate Precision and Recall";
+            this.calculateRecallToolStripMenuItem.Click += new System.EventHandler(this.calcRecallandPrecision);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(272, 6);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(211, 24);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.Quit_Click);
             // 
@@ -190,13 +168,13 @@
             this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1011, 424);
+            this.panel1.Size = new System.Drawing.Size(1011, 446);
             this.panel1.TabIndex = 4;
             // 
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnStart.Location = new System.Drawing.Point(4, 436);
+            this.btnStart.Location = new System.Drawing.Point(4, 458);
             this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(100, 28);
@@ -208,7 +186,7 @@
             // btnPause
             // 
             this.btnPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnPause.Location = new System.Drawing.Point(112, 436);
+            this.btnPause.Location = new System.Drawing.Point(112, 458);
             this.btnPause.Margin = new System.Windows.Forms.Padding(4);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(100, 28);
@@ -219,6 +197,8 @@
             // 
             // dgvResults
             // 
+            this.dgvResults.AllowUserToAddRows = false;
+            this.dgvResults.AllowUserToDeleteRows = false;
             this.dgvResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -230,31 +210,15 @@
             this.dgvResults.Location = new System.Drawing.Point(4, 9);
             this.dgvResults.Margin = new System.Windows.Forms.Padding(4);
             this.dgvResults.Name = "dgvResults";
-            this.dgvResults.Size = new System.Drawing.Size(1011, 127);
+            this.dgvResults.Size = new System.Drawing.Size(1011, 135);
             this.dgvResults.TabIndex = 8;
-            // 
-            // shotNumber
-            // 
-            this.shotNumber.HeaderText = "shotNumber";
-            this.shotNumber.Name = "shotNumber";
-            // 
-            // StartFrame
-            // 
-            this.StartFrame.HeaderText = "StartFrame";
-            this.StartFrame.Name = "StartFrame";
-            this.StartFrame.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // tags
-            // 
-            this.tags.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.tags.HeaderText = "Tags";
-            this.tags.Name = "tags";
+            this.dgvResults.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridChanged);
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(608, 43);
+            this.label2.Location = new System.Drawing.Point(617, 464);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(55, 17);
@@ -263,9 +227,9 @@
             // 
             // cmbMethod
             // 
-            this.cmbMethod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbMethod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbMethod.FormattingEnabled = true;
-            this.cmbMethod.Location = new System.Drawing.Point(681, 39);
+            this.cmbMethod.Location = new System.Drawing.Point(680, 460);
             this.cmbMethod.Margin = new System.Windows.Forms.Padding(4);
             this.cmbMethod.Name = "cmbMethod";
             this.cmbMethod.Size = new System.Drawing.Size(335, 24);
@@ -275,7 +239,7 @@
             // btnRewind
             // 
             this.btnRewind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRewind.Location = new System.Drawing.Point(219, 436);
+            this.btnRewind.Location = new System.Drawing.Point(219, 458);
             this.btnRewind.Name = "btnRewind";
             this.btnRewind.Size = new System.Drawing.Size(90, 27);
             this.btnRewind.TabIndex = 16;
@@ -286,14 +250,16 @@
             // splitContainer1
             // 
             this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer1.Location = new System.Drawing.Point(12, 72);
+            this.splitContainer1.Location = new System.Drawing.Point(12, 42);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.btnStart);
+            this.splitContainer1.Panel1.Controls.Add(this.cmbMethod);
             this.splitContainer1.Panel1.Controls.Add(this.btnPause);
+            this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.btnRewind);
             this.splitContainer1.Panel1.Controls.Add(this.panel1);
             // 
@@ -301,9 +267,28 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.dgvResults);
             this.splitContainer1.Panel2MinSize = 70;
-            this.splitContainer1.Size = new System.Drawing.Size(1021, 616);
-            this.splitContainer1.SplitterDistance = 470;
+            this.splitContainer1.Size = new System.Drawing.Size(1021, 646);
+            this.splitContainer1.SplitterDistance = 492;
             this.splitContainer1.TabIndex = 21;
+            // 
+            // shotNumber
+            // 
+            this.shotNumber.HeaderText = "ShotNumber";
+            this.shotNumber.Name = "shotNumber";
+            this.shotNumber.ReadOnly = true;
+            // 
+            // StartFrame
+            // 
+            this.StartFrame.HeaderText = "StartFrame";
+            this.StartFrame.Name = "StartFrame";
+            this.StartFrame.ReadOnly = true;
+            this.StartFrame.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // tags
+            // 
+            this.tags.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.tags.HeaderText = "Tags";
+            this.tags.Name = "tags";
             // 
             // ShotDetector
             // 
@@ -311,11 +296,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1045, 700);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.cmbMethod);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtFileName);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.mnMenu);
             this.MainMenuStrip = this.mnMenu;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -325,6 +305,7 @@
             this.mnMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
@@ -335,9 +316,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnBrowse;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtFileName;
         private System.Windows.Forms.OpenFileDialog ofdBrowse;
         private System.Windows.Forms.MenuStrip mnMenu;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
@@ -354,14 +332,16 @@
         private System.Windows.Forms.DataGridView dgvResults;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cmbMethod;
-        private System.Windows.Forms.DataGridViewTextBoxColumn shotNumber;
-        private System.Windows.Forms.DataGridViewTextBoxColumn StartFrame;
-        private System.Windows.Forms.DataGridViewTextBoxColumn tags;
         private System.Windows.Forms.Button btnRewind;
         private System.Windows.Forms.SaveFileDialog sfdBrowse;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripMenuItem exportResultToXmlToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem calculateRecallToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn shotNumber;
+        private System.Windows.Forms.DataGridViewTextBoxColumn StartFrame;
+        private System.Windows.Forms.DataGridViewTextBoxColumn tags;
     }
 }
 
