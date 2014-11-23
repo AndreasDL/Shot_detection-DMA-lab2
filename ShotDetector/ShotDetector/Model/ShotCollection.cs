@@ -81,7 +81,7 @@ public class ShotCollection{
         XmlNode shots = doc.CreateElement("shots");
         for (int i = 0; i < this.shots.Count - 1; i++) {
             XmlNode shot = doc.CreateElement("shot");
-            shot.InnerText = this.shots[i].getStartFrame() + "-" + this.shots[i + 1].getStartFrame();
+            shot.InnerText = this.shots[i].getStartFrame() + "-" + (this.shots[i + 1].getStartFrame() - 1);
             shots.AppendChild(shot);
         }
         root.AppendChild(shots);
@@ -132,7 +132,7 @@ public class ShotCollection{
 
         while (indexResults < this.shots.Count) {
             //move indextruth until there is a possible match
-            while (indexTruth < truth.shots.Count
+            while (indexTruth < truth.shots.Count - 1
                 && truth.getShot(indexTruth).getStartFrame() < getShot(indexResults).getStartFrame()) {
                 indexTruth++;
             }
