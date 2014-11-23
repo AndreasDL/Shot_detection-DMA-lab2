@@ -61,6 +61,7 @@
             this.btnBrowseOutput = new System.Windows.Forms.Button();
             this.sfdBrowse = new System.Windows.Forms.SaveFileDialog();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.timings = new System.Windows.Forms.Label();
             this.mnMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -220,7 +221,7 @@
             this.dgvResults.Location = new System.Drawing.Point(4, 17);
             this.dgvResults.Margin = new System.Windows.Forms.Padding(4);
             this.dgvResults.Name = "dgvResults";
-            this.dgvResults.Size = new System.Drawing.Size(656, 139);
+            this.dgvResults.Size = new System.Drawing.Size(656, 143);
             this.dgvResults.TabIndex = 8;
             // 
             // shotNumber
@@ -265,7 +266,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(667, 46);
+            this.button1.Location = new System.Drawing.Point(667, 50);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(335, 31);
             this.button1.TabIndex = 12;
@@ -276,7 +277,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(927, 17);
+            this.button2.Location = new System.Drawing.Point(927, 21);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 13;
@@ -288,7 +289,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(664, 20);
+            this.label3.Location = new System.Drawing.Point(664, 24);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(61, 17);
             this.label3.TabIndex = 14;
@@ -298,7 +299,7 @@
             // 
             this.txtGroundTruthPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.txtGroundTruthPath.Enabled = false;
-            this.txtGroundTruthPath.Location = new System.Drawing.Point(731, 17);
+            this.txtGroundTruthPath.Location = new System.Drawing.Point(731, 21);
             this.txtGroundTruthPath.Name = "txtGroundTruthPath";
             this.txtGroundTruthPath.Size = new System.Drawing.Size(190, 22);
             this.txtGroundTruthPath.TabIndex = 15;
@@ -318,7 +319,7 @@
             // btnExport
             // 
             this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExport.Location = new System.Drawing.Point(667, 125);
+            this.btnExport.Location = new System.Drawing.Point(667, 129);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(335, 31);
             this.btnExport.TabIndex = 17;
@@ -330,7 +331,7 @@
             // 
             this.txtPathExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPathExport.Enabled = false;
-            this.txtPathExport.Location = new System.Drawing.Point(710, 96);
+            this.txtPathExport.Location = new System.Drawing.Point(710, 100);
             this.txtPathExport.Name = "txtPathExport";
             this.txtPathExport.Size = new System.Drawing.Size(211, 22);
             this.txtPathExport.TabIndex = 18;
@@ -340,7 +341,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(664, 99);
+            this.label4.Location = new System.Drawing.Point(664, 103);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(37, 17);
             this.label4.TabIndex = 19;
@@ -349,7 +350,7 @@
             // btnBrowseOutput
             // 
             this.btnBrowseOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowseOutput.Location = new System.Drawing.Point(927, 96);
+            this.btnBrowseOutput.Location = new System.Drawing.Point(927, 100);
             this.btnBrowseOutput.Name = "btnBrowseOutput";
             this.btnBrowseOutput.Size = new System.Drawing.Size(75, 23);
             this.btnBrowseOutput.TabIndex = 20;
@@ -365,6 +366,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.timings);
             this.splitContainer1.Panel1.Controls.Add(this.btnStart);
             this.splitContainer1.Panel1.Controls.Add(this.btnPause);
             this.splitContainer1.Panel1.Controls.Add(this.btnRewind);
@@ -386,6 +388,15 @@
             this.splitContainer1.SplitterDistance = 450;
             this.splitContainer1.TabIndex = 21;
             // 
+            // timings
+            // 
+            this.timings.AutoSize = true;
+            this.timings.Location = new System.Drawing.Point(969, 426);
+            this.timings.Name = "timings";
+            this.timings.Size = new System.Drawing.Size(27, 17);
+            this.timings.TabIndex = 22;
+            this.timings.Text = "0 s";
+            // 
             // ShotDetector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -406,6 +417,7 @@
             this.mnMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -450,6 +462,7 @@
         private System.Windows.Forms.Button btnBrowseOutput;
         private System.Windows.Forms.SaveFileDialog sfdBrowse;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Label timings;
     }
 }
 

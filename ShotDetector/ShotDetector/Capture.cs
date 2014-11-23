@@ -398,5 +398,9 @@ namespace ShotDetector {
             ims.GetDuration(out duration);
             return duration;
         }
+
+        public aShotDetectionMethod getCurrentShotDetectionMethod(){
+            return this.method;
+        }
     }
 }

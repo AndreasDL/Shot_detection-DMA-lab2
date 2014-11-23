@@ -21,12 +21,14 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     protected ShotCollection shots; //The collected shots
     protected List<IObserver> observers; //the observers that need to be modified
     protected int frameNumber; //the frame number
+    private long times;
 
     /// <summary> Constructor that creates the basic needed elements </summary>
     /// <param name="shots">the shotCollection to save the different shots</param>
     public aShotDetectionMethod(ShotCollection shots): base() {
         this.observers = new List<IObserver>();
         this.frameNumber = 0;
+        this.times = 0;
 
         AMMediaType media;
         int hr;
@@ -102,14 +104,22 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     /// <param name="bufferLen>number of bytes in pBuffer</param>
     /// <returns>error code if zero then it's all ok</returns>
     public int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
-        
+        var sw = Stopwatch.StartNew();
+
         //call the method
         if (DetectShot(SampleTime, pBuffer, BufferLen))
             shotDetected(SampleTime,frameNumber);
 
         frameNumber++; //keep track of frame number
         notifyObservers(); //notify observers (e.g. update the trackbar of the gui)
+        long time = sw.ElapsedMilliseconds;
+        sw.Stop();
+        times += time;
         return 0;
+    }
+
+    public long getTime() {
+        return times;
     }
 
     /// <summary>Put the detection code in this method, the method above is used to keep track of the framenumber and update the gui </summary>

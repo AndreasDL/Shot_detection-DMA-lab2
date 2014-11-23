@@ -132,6 +132,8 @@ namespace ShotDetector {
 
             // Rewind clip to beginning to allow DxPlay.Start to work again.
             //m_play.Rewind(); //doesn't work
+
+            MessageBox.Show("Method took: " + m_play.getCurrentShotDetectionMethod().getTime() + " ms");
         }
 
         //update gui
@@ -146,15 +148,6 @@ namespace ShotDetector {
                 dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count -1 ].Cells[0];
             }
         }
-        /*delegate void UpdateTrackBarCallback(int frameNumber);
-        public void updateTrackbar(int frameNumber) {
-            if (this.dgvResults.InvokeRequired) {
-                UpdateTrackBarCallback u = new UpdateTrackBarCallback(updateTrackbar);
-                this.Invoke(u, new object[] { frameNumber });
-            } else {
-                //trbProgress.Value = frameNumber;
-            }
-        }*/
 
         //update model
         private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e) {
