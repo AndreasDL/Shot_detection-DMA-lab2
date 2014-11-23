@@ -20,29 +20,28 @@ public class LocalHistogram: aShotDetectionMethod {
     private double threshold;
     private int nrOfBins;
     private int divider;
-    //private int nrOfBlocks;
-    private int number, endCols, endRows, sizeCols, sizeRows;
+    private int number, endCols, endRows, sizeCols, sizeRows, nrOfBlocks;
 
     public LocalHistogram(double _threshold, int _nrOfBins, int _nrOfBlocks,ShotCollection shots): base(shots) {
         this.threshold = _threshold;
         this.nrOfBins = _nrOfBins;
         this.divider = (int)(Math.Ceiling(255.0 / nrOfBins));
-        //this.nrOfBlocks = _nrOfBlocks;
+        this.nrOfBlocks = _nrOfBlocks;
 
         this.previous_histograms = null;
         this.current_histograms = null;
 
-        //calculate this only once
-        this.number = (int)Math.Sqrt((double)_nrOfBlocks);
-        int endCols = videoWidth - (videoWidth % number);//Ignore last x pixels if they don't match
-        int endRows = videoHeight - (videoHeight % number);
-        int sizeCols = endCols / number;
-        int sizeRows = endRows / number;
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen){
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
-        
+
+        this.number = (int)Math.Sqrt((double)nrOfBlocks);
+        this.endCols = videoWidth - (videoWidth % number);//Ignore last x pixels if they don't match
+        this.endRows = videoHeight - (videoHeight % number);
+        this.sizeCols = endCols / number;
+        this.sizeRows = endRows / number;
+
         byte[] current = new byte[(videoHeight * videoWidth) * 3];
         Marshal.Copy(pBuffer, current, 0, BufferLen);
 

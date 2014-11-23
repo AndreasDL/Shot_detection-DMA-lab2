@@ -148,65 +148,65 @@ namespace ShotDetector {
                 dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count -1 ].Cells[0];
             }
         }
-
         //update model
         private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e) {
             if (m_play != null)
                 m_play.setDetectionMethod(cmbMethod.SelectedIndex);
         }
 
-        //ground truth
-        private void compareGroundTruth(object sender, EventArgs e) {
-            if (this.m_play != null) {
-                new Thread(() => { //thread just because more swag & no lagg on GUI while reading file
-                    Thread.CurrentThread.IsBackground = true;
-                    //get groundtruth
-                    ShotCollection truth = new ShotCollection(txtGroundTruthPath.Text);
-                    ShotCollection results = this.m_play.getShotCollection();
+        //export
+        private void exportResultToXmlToolStripMenuItem_Click(object sender, EventArgs e) {
+            String outputPath = "C:\\test.xml";
 
-                    MessageBox.Show("Recall: " + results.calcRecall(truth) + " Precision: " + results.calcPrecision(truth));
-                }).Start();
+            if (this.m_play != null) {
+                sfdBrowse.InitialDirectory = "C:\\";
+                sfdBrowse.Filter = "xml document (*.xml)|*.xml";
+                sfdBrowse.FilterIndex = 2;
+                sfdBrowse.RestoreDirectory = true;
+                sfdBrowse.Title = "Save as";
+
+                if (sfdBrowse.ShowDialog() == DialogResult.OK) {
+                    outputPath = sfdBrowse.FileName;
+                    new Thread(() => { //thread just because more swag & no lagg on GUI while reading file
+                        Thread.CurrentThread.IsBackground = true;
+                        //get groundtruth
+                        ShotCollection results = this.m_play.getShotCollection();
+
+                        results.setLastFrame(this.m_play.getFrameCount());
+                        results.setfile(txtFileName.Text);
+                        results.setLastFrame(m_play.getFrameCount());
+
+                        results.export(outputPath);
+
+                    }).Start();
+                }
             } else {
                 MessageBox.Show("Video hasn't started yet, press Start to start playing!");
             }
         }
-        private void browseGroundTruth(object sender, EventArgs e) {
-            ofdBrowse.InitialDirectory = "C:\\";
-            ofdBrowse.Filter = "video files (*.avi)|*.avi|All files (*.*)|*.*";
-            ofdBrowse.FilterIndex = 2;
-            ofdBrowse.RestoreDirectory = true;
+        //ground truth
+        private void calculateRecallToolStripMenuItem_Click(object sender, EventArgs e) {
+            String groundTruthPath = "C:\\testfiles_dma\\csi_GT.xml";
 
-            if (ofdBrowse.ShowDialog() == DialogResult.OK) {
-                txtGroundTruthPath.Text = ofdBrowse.FileName;
-            }
-        }
-
-        //export
-        private void BrowseOutput(object sender, EventArgs e) {
-            sfdBrowse.InitialDirectory = "C:\\";
-            sfdBrowse.Filter = "xml document (*.xml)|*.xml";
-            sfdBrowse.FilterIndex = 2;
-            sfdBrowse.RestoreDirectory = true;
-
-            if (sfdBrowse.ShowDialog() == DialogResult.OK) {
-                this.txtPathExport.Text = sfdBrowse.FileName;
-            }
-        }
-
-        private void export(object sender, EventArgs e){
             if (this.m_play != null) {
-                new Thread(() => { //thread just because more swag & no lagg on GUI while reading file
-                    Thread.CurrentThread.IsBackground = true;
-                    //get groundtruth
-                    ShotCollection results = this.m_play.getShotCollection();
+                ofdBrowse.InitialDirectory = "C:\\";
+                ofdBrowse.Filter = "video files (*.avi)|*.avi|All files (*.*)|*.*";
+                ofdBrowse.FilterIndex = 2;
+                ofdBrowse.RestoreDirectory = true;
+                ofdBrowse.Title = "Open a ground Truth file (.xml)";
 
-                    results.setLastFrame(this.m_play.getFrameCount());
-                    results.setfile(txtFileName.Text);
-                    results.setLastFrame(m_play.getFrameCount());
+                if (ofdBrowse.ShowDialog() == DialogResult.OK) {
+                    groundTruthPath = ofdBrowse.FileName;
+                    new Thread(() => { //thread just because more swag & no lagg on GUI while reading file
+                        Thread.CurrentThread.IsBackground = true;
+                        //get groundtruth
+                        ShotCollection truth = new ShotCollection(groundTruthPath);
+                        ShotCollection results = this.m_play.getShotCollection();
 
-                    results.export(this.txtPathExport.Text);
+                        MessageBox.Show("Recall: " + results.calcRecall(truth) + " Precision: " + results.calcPrecision(truth));
+                    }).Start();
+                }
 
-                }).Start();
             } else {
                 MessageBox.Show("Video hasn't started yet, press Start to start playing!");
             }
