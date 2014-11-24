@@ -72,7 +72,6 @@ namespace ShotDetector {
             shots.addObserver((IObserver)form);
             factory = new MethodFactory(shots);
             setDetectionMethod(detectionMethod);
-            //method.addObserver((IObserver)form);
 
             this.hwin = hWin;
 
