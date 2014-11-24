@@ -190,4 +190,5 @@ public class MotionMethod : aShotDetectionMethod{
     private int getDifference(byte[] old, byte[] curr){
         return Math.Abs(curr[0] - old[0]) + Math.Abs(curr[1] - old[1]) + Math.Abs(curr[2] - old[2]);
     }
+
 }

@@ -46,14 +46,16 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
             this.dgvResults = new System.Windows.Forms.DataGridView();
+            this.shotNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StartFrame = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tags = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.cmbMethod = new System.Windows.Forms.ComboBox();
             this.btnRewind = new System.Windows.Forms.Button();
             this.sfdBrowse = new System.Windows.Forms.SaveFileDialog();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.shotNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StartFrame = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tags = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.argPanel = new System.Windows.Forms.Panel();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.mnMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -168,7 +170,7 @@
             this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1011, 446);
+            this.panel1.Size = new System.Drawing.Size(1008, 446);
             this.panel1.TabIndex = 4;
             // 
             // btnStart
@@ -210,15 +212,34 @@
             this.dgvResults.Location = new System.Drawing.Point(4, 9);
             this.dgvResults.Margin = new System.Windows.Forms.Padding(4);
             this.dgvResults.Name = "dgvResults";
-            this.dgvResults.Size = new System.Drawing.Size(1011, 135);
+            this.dgvResults.Size = new System.Drawing.Size(1008, 135);
             this.dgvResults.TabIndex = 8;
             this.dgvResults.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridChanged);
+            // 
+            // shotNumber
+            // 
+            this.shotNumber.HeaderText = "ShotNumber";
+            this.shotNumber.Name = "shotNumber";
+            this.shotNumber.ReadOnly = true;
+            // 
+            // StartFrame
+            // 
+            this.StartFrame.HeaderText = "StartFrame";
+            this.StartFrame.Name = "StartFrame";
+            this.StartFrame.ReadOnly = true;
+            this.StartFrame.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // tags
+            // 
+            this.tags.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.tags.HeaderText = "Tags";
+            this.tags.Name = "tags";
             // 
             // label2
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(617, 464);
+            this.label2.Location = new System.Drawing.Point(316, 464);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(55, 17);
@@ -229,10 +250,10 @@
             // 
             this.cmbMethod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbMethod.FormattingEnabled = true;
-            this.cmbMethod.Location = new System.Drawing.Point(680, 460);
+            this.cmbMethod.Location = new System.Drawing.Point(379, 460);
             this.cmbMethod.Margin = new System.Windows.Forms.Padding(4);
             this.cmbMethod.Name = "cmbMethod";
-            this.cmbMethod.Size = new System.Drawing.Size(335, 24);
+            this.cmbMethod.Size = new System.Drawing.Size(208, 24);
             this.cmbMethod.TabIndex = 11;
             this.cmbMethod.SelectedIndexChanged += new System.EventHandler(this.cmbMethod_SelectedIndexChanged);
             // 
@@ -256,6 +277,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.argPanel);
             this.splitContainer1.Panel1.Controls.Add(this.btnStart);
             this.splitContainer1.Panel1.Controls.Add(this.cmbMethod);
             this.splitContainer1.Panel1.Controls.Add(this.btnPause);
@@ -271,24 +293,12 @@
             this.splitContainer1.SplitterDistance = 492;
             this.splitContainer1.TabIndex = 21;
             // 
-            // shotNumber
+            // argPanel
             // 
-            this.shotNumber.HeaderText = "ShotNumber";
-            this.shotNumber.Name = "shotNumber";
-            this.shotNumber.ReadOnly = true;
-            // 
-            // StartFrame
-            // 
-            this.StartFrame.HeaderText = "StartFrame";
-            this.StartFrame.Name = "StartFrame";
-            this.StartFrame.ReadOnly = true;
-            this.StartFrame.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // tags
-            // 
-            this.tags.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.tags.HeaderText = "Tags";
-            this.tags.Name = "tags";
+            this.argPanel.Location = new System.Drawing.Point(595, 457);
+            this.argPanel.Name = "argPanel";
+            this.argPanel.Size = new System.Drawing.Size(417, 26);
+            this.argPanel.TabIndex = 17;
             // 
             // ShotDetector
             // 
@@ -299,6 +309,7 @@
             this.Controls.Add(this.mnMenu);
             this.MainMenuStrip = this.mnMenu;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MinimumSize = new System.Drawing.Size(1063, 100);
             this.Name = "ShotDetector";
             this.Text = "ShotDetector";
             this.mnMenu.ResumeLayout(false);
@@ -342,6 +353,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn shotNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn StartFrame;
         private System.Windows.Forms.DataGridViewTextBoxColumn tags;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Panel argPanel;
     }
 }
 

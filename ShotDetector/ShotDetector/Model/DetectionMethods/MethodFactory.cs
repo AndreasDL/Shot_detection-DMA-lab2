@@ -11,6 +11,29 @@ public class MethodFactory {
     /// table that contains all the methods, the index of the method name is used in the getMethod
     /// </summary>
     public static string[] METHODS = { "Pixel", "Motion", "Global hist", "Local hist", "Generalized", "None" };
+
+    /// <summary>
+    /// list of the param names foreach method:
+    ///     getParamnames()[0] => (first param) => { name, description, type, minValue, maxValue }
+    /// </summary>
+    public static string[][][] METHODINFO = new String[][][]{
+        new String[][] {//pixel
+            new String[] {"delta2" , "difference in pixels needed to generate a 'hit'", "int", "0" , "256"},
+            new String[] {"delta3" , "% of pixels that was hit or had a big enough distance " , "double", "0","1"},
+        },new String[][] {//motion
+            new String[] {"subsize" , "the size of the subblock, higher for less accurate motion searching", "int", "0" , "32"},
+            new String[] {"windowsize" , "the size of the searchWindow, expressed in subblocks, higher for longer searches", "int", "1","4"}
+        },new String[][] {//global hist
+            new String[] {"changedFraction" , "the fraction that ends up in a different bin of the histogram", "double", "0" , "2"},
+            new String[] {"binCount" , "number of different bins" , "int", "1","256"}
+        },new String[][] {//local hist
+            new String[] {"changedFraction" , "the fraction that ends up in a different bin of the histogram", "double", "0" , "2"},
+            new String[] {"binCount" , "number of different bins" , "int", "1","256"},
+            new String[] {"nrOfBlocks", "the number of different blocks used, e.g. 1,2,4,9,16,25,36..." , "int^2", "1", "100"}
+        },new String[0][],//general
+        new String[0][]//empty
+    };
+
     private ShotCollection shots;
 
     /// <summary>

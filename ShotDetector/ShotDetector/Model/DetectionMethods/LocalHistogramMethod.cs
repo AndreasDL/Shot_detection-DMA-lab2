@@ -91,5 +91,4 @@ public class LocalHistogram: aShotDetectionMethod {
 
         return pixel;
     }
-
 }

@@ -117,7 +117,10 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         times += time;
         return 0;
     }
-
+    /// <summary>
+    /// Gets the time the method took to detect the shots
+    /// </summary>
+    /// <returns>timing of the detect shot method</returns>
     public long getTime() {
         return times;
     }
@@ -128,5 +131,4 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     /// <param name="BufferLen">number of bytes in pBuffer</param>
     /// <returns></returns>
     public abstract bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen);
-
 }

@@ -148,8 +148,39 @@ namespace ShotDetector {
         }
         //update model
         private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e) {
-            if (m_play != null)
+            if (m_play != null) {
                 m_play.setDetectionMethod(cmbMethod.SelectedIndex);
+            }
+
+            //TODO event listeners
+            this.argPanel.Controls.Clear();
+            int locX = 0;
+            String[][] args = MethodFactory.METHODINFO[cmbMethod.SelectedIndex];
+            foreach (String[] arg in args) {
+                //label
+                Label argName = new Label();
+                argName.Text = arg[0];
+                argName.AutoSize = true;
+                argName.Location = new Point(locX,3);
+                argName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+                this.argPanel.Controls.Add(argName);
+                locX += argName.Size.Width;
+                
+                if (arg.Length > 1) {
+                    ToolTip tipz = new ToolTip();
+                    tipz.SetToolTip(argName, arg[1]);
+
+                    //textz
+                    TextBox value = new TextBox();
+                    value.Text = "   ";
+                    value.Location = new Point(locX, 0);
+                    value.Size = new Size(35, value.Size.Height);
+                    value.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+                    this.argPanel.Controls.Add(value);
+                    locX += value.Size.Width;
+                }
+
+            }
         }
 
         //export
@@ -218,6 +249,5 @@ namespace ShotDetector {
                 m_play.getShotCollection().getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
             }
         }
-
     }
 }
