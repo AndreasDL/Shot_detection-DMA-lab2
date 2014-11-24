@@ -177,6 +177,7 @@ namespace ShotDetector {
         public void setDetectionMethod(int detectionMethod) {
             this.detectionMethod = detectionMethod;
             method = factory.getMethod(detectionMethod);
+            //TODO use params from gui
         }
         // start playing
         public void Start() {

@@ -148,11 +148,7 @@ namespace ShotDetector {
         }
         //update model
         private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e) {
-            if (m_play != null) {
-                m_play.setDetectionMethod(cmbMethod.SelectedIndex);
-            }
-
-            //TODO event listeners
+            //TODO use these values!
             this.argPanel.Controls.Clear();
             int locX = 0;
             String[][] args = MethodFactory.METHODINFO[cmbMethod.SelectedIndex];
@@ -244,7 +240,7 @@ namespace ShotDetector {
         private void DataGridChanged(object sender, EventArgs e){
             if (e != null && m_play != null) {
                 System.Windows.Forms.DataGridViewCellEventArgs args = (System.Windows.Forms.DataGridViewCellEventArgs)e;
-                //Console.WriteLine("something changed at " + args.ColumnIndex + " " + args.RowIndex);
+
                 //update in model
                 m_play.getShotCollection().getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
             }

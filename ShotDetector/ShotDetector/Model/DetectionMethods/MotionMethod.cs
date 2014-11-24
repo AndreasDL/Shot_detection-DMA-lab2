@@ -17,9 +17,8 @@ public class MotionMethod : aShotDetectionMethod{
     private int windowSize; //size of the search window in SUBBLOCKS
     private byte[,][] currWindow; //current avg values
     private byte[,][] prevWindow; //previous avg values
-    int prevMotion; //total motion of the previous frame
-    int currMotion; //total motion of the current frame
-    int avgMotion;  //average motion (weighted over last few frames)
+    private int avgDiff;
+    private int currDiff;
 
     public MotionMethod(int _subsize, int _windowSize,ShotCollection shots):base(shots) {
         this.subsize = _subsize;
@@ -27,8 +26,6 @@ public class MotionMethod : aShotDetectionMethod{
         this.current = null;
         this.currWindow = null;
         this.prevWindow = null;
-        this.prevMotion = 0;
-        this.avgMotion = 0;
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen){
@@ -38,17 +35,13 @@ public class MotionMethod : aShotDetectionMethod{
 
         prevWindow = currWindow;//keep the avgs that have been calculated before
         currWindow = new byte[videoHeight/subsize,videoWidth/subsize][]; //hold the average pixel values for each subblock
-        prevMotion = currMotion;
-        currMotion = 0;
-
+        currDiff = 0;
         return _DetectShot();
     }
     public bool DetectShotBetween(double SampleTime, byte[] current, byte[] previous, int BufferLen) {
 
         prevWindow = new byte[videoHeight / subsize, videoWidth / subsize][];
         currWindow = new byte[videoHeight / subsize, videoWidth / subsize][];
-        prevMotion = 0;
-        currMotion = 0;
 
         //calculate avg for all subblocks in the previous frame
         int blockX = 0, blockY = 0; //indexes of the subblock (assume that a ++ operation is faster than multiplication)
@@ -67,7 +60,6 @@ public class MotionMethod : aShotDetectionMethod{
     private bool _DetectShot(){
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
         bool isShot = false;
-        currMotion = 0;
 
         //calculate avg for all subblocks in current frame
         int blockX = 0, blockY = 0; //indexes of the subblock (assume that a ++ operation is faster than multiplication)
@@ -88,7 +80,7 @@ public class MotionMethod : aShotDetectionMethod{
             int videoWidthBlocks = videoWidth / subsize; //videowidth in SUBBLOCKS
             int videoHeightBlocks = videoHeight / subsize; //videoheight in SUBBLOCKS
             int blockCount = videoHeightBlocks * videoWidthBlocks; // amount of blocks in a frame, used to calculate average
-            int motionX = 0, motionY = 0; //motionVectors
+           // int motionX = 0, motionY = 0; //motionVectors
 
             for (int y = 0; y < videoHeightBlocks; y++) {
                 for (int x = 0; x < videoWidthBlocks; x++) {
@@ -120,20 +112,16 @@ public class MotionMethod : aShotDetectionMethod{
                         }
                     }
 
-                    //getMotion vector
-                    motionX += Math.Abs(best_X - x);
-                    motionY += Math.Abs(best_Y - y);//abs to avoid that positive and negative movements cancel eachother out
+                    currDiff += bestDifference;
                 }
             }
-            currMotion = motionX + motionY;
-            int difference = Math.Abs(currMotion - prevMotion);
 
-            if (difference > 5 * avgMotion && frameNumber != 1) { //hack to make the firstshot start at position 0 in stead of 1
+            if (currDiff > 5 * avgDiff && frameNumber != 1) { //hack to make the firstshot start at position 0 in stead of 1
                 isShot = true;
-                avgMotion = difference; //assume that motion is somewhat consistent for the duration of a shot
+                avgDiff = currDiff;
             }
 
-            avgMotion = (int)(avgMotion * 0.9 + difference * 0.1);
+            avgDiff = (int)(avgDiff * 0.9 + currDiff * 0.1);
         } else { 
             //first shot
             isShot = true;

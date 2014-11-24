@@ -21,6 +21,7 @@ public class LocalHistogram: aShotDetectionMethod {
     private int nrOfBins;
     private int divider;
     private int number, endCols, endRows, sizeCols, sizeRows, nrOfBlocks;
+    private int lastShot;
 
     public LocalHistogram(double _threshold, int _nrOfBins, int _nrOfBlocks,ShotCollection shots): base(shots) {
         this.threshold = _threshold;
@@ -78,8 +79,14 @@ public class LocalHistogram: aShotDetectionMethod {
                     twoHistsDiff += Math.Abs(current_histograms[k][i] - previous_histograms[k][i]);
                 }
             }
-            return twoHistsDiff > threshold * BufferLen;
+            if (twoHistsDiff > threshold * BufferLen && frameNumber > lastShot + 10 ) {
+                lastShot = frameNumber;
+                return true;
+            } else {
+                return false;
+            }
         }else{
+            lastShot = 0;
             return true;
         }
     }

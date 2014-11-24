@@ -167,10 +167,11 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1008, 446);
+            this.panel1.Size = new System.Drawing.Size(352, 176);
             this.panel1.TabIndex = 4;
             // 
             // btnStart
@@ -270,6 +271,9 @@
             // 
             // splitContainer1
             // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitContainer1.Location = new System.Drawing.Point(12, 42);
             this.splitContainer1.Name = "splitContainer1";
@@ -295,6 +299,7 @@
             // 
             // argPanel
             // 
+            this.argPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.argPanel.Location = new System.Drawing.Point(595, 457);
             this.argPanel.Name = "argPanel";
             this.argPanel.Size = new System.Drawing.Size(417, 26);
