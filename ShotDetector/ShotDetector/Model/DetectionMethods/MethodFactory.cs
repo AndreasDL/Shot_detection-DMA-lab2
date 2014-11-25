@@ -45,7 +45,7 @@ public class MethodFactory {
     /// </summary>
     /// <param name="index">the index that represents the shot detection method</param>
     /// <returns></returns>
-    public aShotDetectionMethod getMethod(int index, ShotCollection shots) {
+    /*public aShotDetectionMethod getMethod(int index, ShotCollection shots) {
         aShotDetectionMethod method = null;
 
         switch (index) {
@@ -92,5 +92,32 @@ public class MethodFactory {
         }
 
         return method;
+    }*/
+
+    public aShotDetectionMethod getPixelMethod(ShotCollection shots, int distance, double fraction) {
+        shots.addParameter(distance);
+        shots.addParameter(fraction);
+        return new PixelMethod(distance, fraction, shots);
     }
+
+    public aShotDetectionMethod getMotionMethod(ShotCollection shots, int subSize, int windowSize) {
+        shots.addParameter(subSize);
+        shots.addParameter(windowSize);
+        return new MotionMethod(subSize, windowSize, shots);
+    }
+
+    public aShotDetectionMethod getGlobalHistogramMethod(ShotCollection shots, int binCount, double fraction) {
+        shots.addParameter(binCount);
+        shots.addParameter(fraction);
+        return new GlobalHistogramMethod(fraction, binCount, shots);
+    }
+
+    public aShotDetectionMethod getLocalHistogramMethod(ShotCollection shots, int binCount, double fraction, int blockCount) {
+        shots.addParameter(binCount);
+        shots.addParameter(fraction);
+        shots.addParameter(blockCount);
+        return new LocalHistogram(fraction, binCount, blockCount, shots);
+    }
+
+
 }

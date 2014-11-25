@@ -29,7 +29,12 @@ namespace ShotDetector {
         public ShotDetector() {
             InitializeComponent();
             this.factory = new MethodFactory();
+            for (int i = 1 ; i <= 20 ; i++){
+                this.cmbLocalHistNrOfBlocks.Items.Add(i * i);
+            }
+            cmbLocalHistNrOfBlocks.SelectedIndex = 2;
 
+            this.txtPixelDistance.TypeValidationCompleted += new TypeValidationEventHandler(distance_check);
         }
 
         //videofile
@@ -41,6 +46,7 @@ namespace ShotDetector {
 
             if (ofdBrowse.ShowDialog() == DialogResult.OK) {
                 fileName = ofdBrowse.FileName;
+                dgvResults.Rows.Clear();
             }
         }
         private void Quit_Click(object sender, EventArgs e) {
@@ -141,6 +147,15 @@ namespace ShotDetector {
                 dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count -1 ].Cells[0];
             }
         }
+        //sync tags with shotCollection
+        private void DataGridChanged(object sender, EventArgs e) {
+            if (e != null && m_play != null) {
+                System.Windows.Forms.DataGridViewCellEventArgs args = (System.Windows.Forms.DataGridViewCellEventArgs)e;
+
+                //update in model
+                m_scan.getMethod().getShotCollection().getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
+            }
+        }
 
         //export
         private void exportXML(object sender, EventArgs e) {
@@ -199,33 +214,80 @@ namespace ShotDetector {
             }
         }
 
-        //sync tags with shotCollection
-        private void DataGridChanged(object sender, EventArgs e){
-            if (e != null && m_play != null) {
-                System.Windows.Forms.DataGridViewCellEventArgs args = (System.Windows.Forms.DataGridViewCellEventArgs)e;
-
-                //update in model
-                m_scan.getMethod().getShotCollection().getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
-            }
-        }
-
+        //start methods
         private void startPixel_Click(object sender, EventArgs e) {
 
             ShotCollection shots = new ShotCollection();
-            shots.addParameter(256);
-            shots.addParameter(0.25);
-            shots.addObserver(this);
+            int distance = Convert.ToInt32(txtPixelDistance.Text);
+            double fraction = Convert.ToDouble(txtPixelFraction.Text);
 
-            aShotDetectionMethod method = factory.getMethod(0, shots);
-
-            DxScan scanner = new DxScan(fileName, method);
+            shots.addObserver(this);//make sure the datagridview gets updated
+            DxScan scanner = new DxScan(fileName, factory.getPixelMethod(shots, distance, fraction) );
 
             var sw = Stopwatch.StartNew();
+            dgvResults.Rows.Clear();
             scanner.Start();
             scanner.WaitUntilDone();
             sw.Stop();
             long time = sw.ElapsedMilliseconds;
-            Console.WriteLine("method took" + time / 1000.0 + "seconds");
+            MessageBox.Show("Pixel method completed in " + time / 1000.0 + " seconds");
+        }
+        private void startMotion_Click(object sender, EventArgs e) {
+            ShotCollection shots = new ShotCollection();
+            int subsize = Convert.ToInt32(txtMotionSubSize.Text);
+            int windowsize = Convert.ToInt32(txtMotionWindowSize.Text);
+
+            shots.addObserver(this);//make sure the datagridview gets updated
+            DxScan scanner = new DxScan(fileName, factory.getMotionMethod(shots, subsize, windowsize));
+
+            var sw = Stopwatch.StartNew();
+            dgvResults.Rows.Clear();
+            scanner.Start();
+            scanner.WaitUntilDone();
+            sw.Stop();
+            long time = sw.ElapsedMilliseconds;
+            MessageBox.Show("Motion method completed in " + time / 1000.0 + " seconds");
+        }
+        private void startGlobalHist_Click(object sender, EventArgs e) {
+            ShotCollection shots = new ShotCollection();
+            int binCount = Convert.ToInt32(txtGlobalBinCount.Text);
+            double fraction = Convert.ToDouble(txtGlobalFraction.Text);
+
+            shots.addObserver(this);//make sure the datagridview gets updated
+            DxScan scanner = new DxScan(fileName, factory.getGlobalHistogramMethod(shots, binCount,fraction));
+
+            var sw = Stopwatch.StartNew();
+            dgvResults.Rows.Clear();
+            scanner.Start();
+            scanner.WaitUntilDone();
+            sw.Stop();
+            long time = sw.ElapsedMilliseconds;
+            MessageBox.Show("Global Histogram method completed in " + time / 1000.0 + " seconds");
+        }
+        private void StartLocalHistogram_Click(object sender, EventArgs e) {
+            ShotCollection shots = new ShotCollection();
+            int binCount = Convert.ToInt32(txtGlobalBinCount.Text);
+            double fraction = Convert.ToDouble(txtGlobalFraction.Text);
+            int nrOfBlocks = Convert.ToInt32(cmbLocalHistNrOfBlocks.SelectedIndex) + 1;
+            nrOfBlocks *= nrOfBlocks;
+
+            shots.addObserver(this);//make sure the datagridview gets updated
+            DxScan scanner = new DxScan(fileName, factory.getLocalHistogramMethod(shots, binCount, fraction, nrOfBlocks));
+
+            var sw = Stopwatch.StartNew();
+            dgvResults.Rows.Clear();
+            scanner.Start();
+            scanner.WaitUntilDone();
+            sw.Stop();
+            long time = sw.ElapsedMilliseconds;
+            MessageBox.Show("Global Histogram method completed in " + time / 1000.0 + " seconds");
+        }
+
+        void distance_check(object sender, TypeValidationEventArgs e) {
+            int distance = Convert.ToInt32(e.ReturnValue);
+            if (distance < 0 || distance > 768) {
+                e.Cancel = true;
+            }
         }
     }
 }

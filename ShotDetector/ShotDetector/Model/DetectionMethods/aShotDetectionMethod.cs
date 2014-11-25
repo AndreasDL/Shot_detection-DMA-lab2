@@ -77,7 +77,6 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     /// <param name="frameNumber">the number of the first frame from the shot</param>
     private void shotDetected(int frameNumber) {
         shots.addShot(new Shot(frameNumber, shots.getShots().Count));
-        Console.WriteLine("Shot! at : " + frameNumber);
     }
 
     /// <Summary>Returns the collected shots</Summary>
@@ -92,7 +91,6 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     /// <param name="bufferLen>number of bytes in pBuffer</param>
     /// <returns>error code if zero then it's all ok</returns>
     public int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
-        Console.WriteLine(frameNumber);
         //call the method
         if (DetectShot(SampleTime, pBuffer, BufferLen))
             shotDetected(frameNumber);

@@ -54,16 +54,40 @@
             this.StartFrame = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tags = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pixel = new System.Windows.Forms.TabPage();
-            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
+            this.txtPixelFraction = new System.Windows.Forms.MaskedTextBox();
+            this.txtPixelDistance = new System.Windows.Forms.MaskedTextBox();
             this.startPixel = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.motion = new System.Windows.Forms.TabPage();
+            this.txtMotionWindowSize = new System.Windows.Forms.MaskedTextBox();
+            this.txtMotionSubSize = new System.Windows.Forms.MaskedTextBox();
+            this.btnStartMotion = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.global = new System.Windows.Forms.TabPage();
+            this.txtGlobalFraction = new System.Windows.Forms.MaskedTextBox();
+            this.txtGlobalBinCount = new System.Windows.Forms.MaskedTextBox();
+            this.btnStartGlobalHist = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.local = new System.Windows.Forms.TabPage();
+            this.cmbLocalHistNrOfBlocks = new System.Windows.Forms.ComboBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.txtLocalHistFraction = new System.Windows.Forms.MaskedTextBox();
+            this.txtLocalHistBinCount = new System.Windows.Forms.MaskedTextBox();
+            this.btnStartLocalHistogram = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.general = new System.Windows.Forms.TabPage();
             this.Shots = new System.Windows.Forms.TabPage();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -76,6 +100,9 @@
             this.annotations.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.pixel.SuspendLayout();
+            this.motion.SuspendLayout();
+            this.global.SuspendLayout();
+            this.local.SuspendLayout();
             this.SuspendLayout();
             // 
             // ofdBrowse
@@ -185,13 +212,13 @@
             this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1066, 354);
+            this.panel1.Size = new System.Drawing.Size(1066, 447);
             this.panel1.TabIndex = 4;
             // 
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnStart.Location = new System.Drawing.Point(4, 366);
+            this.btnStart.Location = new System.Drawing.Point(4, 459);
             this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(100, 28);
@@ -204,7 +231,7 @@
             // 
             this.btnPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnPause.Enabled = false;
-            this.btnPause.Location = new System.Drawing.Point(112, 366);
+            this.btnPause.Location = new System.Drawing.Point(112, 459);
             this.btnPause.Margin = new System.Windows.Forms.Padding(4);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(100, 28);
@@ -233,8 +260,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer1.Panel2MinSize = 70;
-            this.splitContainer1.Size = new System.Drawing.Size(1021, 646);
-            this.splitContainer1.SplitterDistance = 400;
+            this.splitContainer1.Size = new System.Drawing.Size(1021, 738);
+            this.splitContainer1.SplitterDistance = 493;
             this.splitContainer1.TabIndex = 21;
             // 
             // tabControl1
@@ -249,7 +276,7 @@
             this.tabControl1.Location = new System.Drawing.Point(4, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1008, 238);
+            this.tabControl1.Size = new System.Drawing.Size(1008, 224);
             this.tabControl1.TabIndex = 9;
             // 
             // annotations
@@ -258,7 +285,7 @@
             this.annotations.Location = new System.Drawing.Point(4, 25);
             this.annotations.Name = "annotations";
             this.annotations.Padding = new System.Windows.Forms.Padding(3);
-            this.annotations.Size = new System.Drawing.Size(1000, 209);
+            this.annotations.Size = new System.Drawing.Size(1000, 195);
             this.annotations.TabIndex = 1;
             this.annotations.Text = "Annotations";
             this.annotations.UseVisualStyleBackColor = true;
@@ -302,34 +329,43 @@
             // 
             // pixel
             // 
-            this.pixel.Controls.Add(this.maskedTextBox1);
+            this.pixel.Controls.Add(this.txtPixelFraction);
+            this.pixel.Controls.Add(this.txtPixelDistance);
             this.pixel.Controls.Add(this.startPixel);
             this.pixel.Controls.Add(this.label5);
             this.pixel.Controls.Add(this.label4);
-            this.pixel.Controls.Add(this.textBox2);
             this.pixel.Controls.Add(this.label3);
             this.pixel.Controls.Add(this.label1);
             this.pixel.Location = new System.Drawing.Point(4, 25);
             this.pixel.Name = "pixel";
-            this.pixel.Size = new System.Drawing.Size(1000, 209);
+            this.pixel.Size = new System.Drawing.Size(1000, 195);
             this.pixel.TabIndex = 2;
             this.pixel.Text = "Pixel";
             this.pixel.UseVisualStyleBackColor = true;
             // 
-            // maskedTextBox1
+            // txtPixelFraction
             // 
-            this.maskedTextBox1.Location = new System.Drawing.Point(93, 27);
-            this.maskedTextBox1.Mask = "000";
-            this.maskedTextBox1.Name = "maskedTextBox1";
-            this.maskedTextBox1.PromptChar = ' ';
-            this.maskedTextBox1.ReadOnly = true;
-            this.maskedTextBox1.Size = new System.Drawing.Size(100, 22);
-            this.maskedTextBox1.TabIndex = 7;
-            this.maskedTextBox1.Text = "256";
+            this.txtPixelFraction.Location = new System.Drawing.Point(93, 88);
+            this.txtPixelFraction.Mask = "0.000";
+            this.txtPixelFraction.Name = "txtPixelFraction";
+            this.txtPixelFraction.PromptChar = ' ';
+            this.txtPixelFraction.Size = new System.Drawing.Size(100, 22);
+            this.txtPixelFraction.TabIndex = 8;
+            this.txtPixelFraction.Text = "025";
+            // 
+            // txtPixelDistance
+            // 
+            this.txtPixelDistance.Location = new System.Drawing.Point(93, 27);
+            this.txtPixelDistance.Mask = "000";
+            this.txtPixelDistance.Name = "txtPixelDistance";
+            this.txtPixelDistance.PromptChar = ' ';
+            this.txtPixelDistance.Size = new System.Drawing.Size(100, 22);
+            this.txtPixelDistance.TabIndex = 7;
+            this.txtPixelDistance.Text = "256";
             // 
             // startPixel
             // 
-            this.startPixel.Location = new System.Drawing.Point(497, 141);
+            this.startPixel.Location = new System.Drawing.Point(922, 169);
             this.startPixel.Name = "startPixel";
             this.startPixel.Size = new System.Drawing.Size(75, 23);
             this.startPixel.TabIndex = 6;
@@ -349,70 +385,313 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(221, 27);
+            this.label4.Location = new System.Drawing.Point(221, 30);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(301, 34);
             this.label4.TabIndex = 4;
-            this.label4.Text = "Difference in pixels needed to generate a \'hit\'. \r\nMin:0 - Max : 256";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(93, 88);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 22);
-            this.textBox2.TabIndex = 3;
-            this.textBox2.Text = "0.25";
+            this.label4.Text = "Difference in pixels needed to generate a \'hit\'. \r\nMin:0 - Max : 768";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(19, 91);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(47, 17);
+            this.label3.Size = new System.Drawing.Size(59, 17);
             this.label3.TabIndex = 1;
-            this.label3.Text = "delta3";
+            this.label3.Text = "Fraction";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(16, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 17);
+            this.label1.Size = new System.Drawing.Size(63, 17);
             this.label1.TabIndex = 0;
-            this.label1.Text = "delta2";
+            this.label1.Text = "Distance";
             // 
             // motion
             // 
+            this.motion.Controls.Add(this.txtMotionWindowSize);
+            this.motion.Controls.Add(this.txtMotionSubSize);
+            this.motion.Controls.Add(this.btnStartMotion);
+            this.motion.Controls.Add(this.label2);
+            this.motion.Controls.Add(this.label6);
+            this.motion.Controls.Add(this.label7);
+            this.motion.Controls.Add(this.label8);
             this.motion.Location = new System.Drawing.Point(4, 25);
             this.motion.Name = "motion";
-            this.motion.Size = new System.Drawing.Size(1000, 209);
+            this.motion.Size = new System.Drawing.Size(1000, 195);
             this.motion.TabIndex = 3;
             this.motion.Text = "Motion";
             this.motion.UseVisualStyleBackColor = true;
             // 
+            // txtMotionWindowSize
+            // 
+            this.txtMotionWindowSize.Location = new System.Drawing.Point(111, 117);
+            this.txtMotionWindowSize.Mask = "0";
+            this.txtMotionWindowSize.Name = "txtMotionWindowSize";
+            this.txtMotionWindowSize.PromptChar = ' ';
+            this.txtMotionWindowSize.Size = new System.Drawing.Size(100, 22);
+            this.txtMotionWindowSize.TabIndex = 15;
+            this.txtMotionWindowSize.Text = "2";
+            // 
+            // txtMotionSubSize
+            // 
+            this.txtMotionSubSize.Location = new System.Drawing.Point(111, 36);
+            this.txtMotionSubSize.Mask = "00";
+            this.txtMotionSubSize.Name = "txtMotionSubSize";
+            this.txtMotionSubSize.PromptChar = ' ';
+            this.txtMotionSubSize.Size = new System.Drawing.Size(100, 22);
+            this.txtMotionSubSize.TabIndex = 14;
+            this.txtMotionSubSize.Text = "8";
+            // 
+            // btnStartMotion
+            // 
+            this.btnStartMotion.Location = new System.Drawing.Point(922, 169);
+            this.btnStartMotion.Name = "btnStartMotion";
+            this.btnStartMotion.Size = new System.Drawing.Size(75, 23);
+            this.btnStartMotion.TabIndex = 13;
+            this.btnStartMotion.Text = "Run";
+            this.btnStartMotion.UseVisualStyleBackColor = true;
+            this.btnStartMotion.Click += new System.EventHandler(this.startMotion_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(227, 120);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(361, 51);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "The size of the searchWindow, expressed in subblocks, \r\nhigher for longer searche" +
+    "s\r\nMin 1 - Max: 4";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(227, 39);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(269, 51);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "the size of the subblock in pixels\r\nhigher for less accurate motion searching\r\nMi" +
+    "n: 0 - Max: 32";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(22, 120);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(80, 17);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "windowSize";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(22, 39);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(58, 17);
+            this.label8.TabIndex = 9;
+            this.label8.Text = "subSize";
+            // 
             // global
             // 
+            this.global.Controls.Add(this.txtGlobalFraction);
+            this.global.Controls.Add(this.txtGlobalBinCount);
+            this.global.Controls.Add(this.btnStartGlobalHist);
+            this.global.Controls.Add(this.label9);
+            this.global.Controls.Add(this.label10);
+            this.global.Controls.Add(this.label11);
+            this.global.Controls.Add(this.label12);
             this.global.Location = new System.Drawing.Point(4, 25);
             this.global.Name = "global";
-            this.global.Size = new System.Drawing.Size(1000, 209);
+            this.global.Size = new System.Drawing.Size(1000, 195);
             this.global.TabIndex = 4;
             this.global.Text = "Global Hist";
             this.global.UseVisualStyleBackColor = true;
             // 
+            // txtGlobalFraction
+            // 
+            this.txtGlobalFraction.Location = new System.Drawing.Point(102, 100);
+            this.txtGlobalFraction.Mask = "0.000";
+            this.txtGlobalFraction.Name = "txtGlobalFraction";
+            this.txtGlobalFraction.PromptChar = ' ';
+            this.txtGlobalFraction.Size = new System.Drawing.Size(100, 22);
+            this.txtGlobalFraction.TabIndex = 22;
+            this.txtGlobalFraction.Text = "025";
+            // 
+            // txtGlobalBinCount
+            // 
+            this.txtGlobalBinCount.Location = new System.Drawing.Point(102, 19);
+            this.txtGlobalBinCount.Mask = "000";
+            this.txtGlobalBinCount.Name = "txtGlobalBinCount";
+            this.txtGlobalBinCount.PromptChar = ' ';
+            this.txtGlobalBinCount.Size = new System.Drawing.Size(100, 22);
+            this.txtGlobalBinCount.TabIndex = 21;
+            this.txtGlobalBinCount.Text = "51";
+            // 
+            // btnStartGlobalHist
+            // 
+            this.btnStartGlobalHist.Location = new System.Drawing.Point(922, 169);
+            this.btnStartGlobalHist.Name = "btnStartGlobalHist";
+            this.btnStartGlobalHist.Size = new System.Drawing.Size(75, 23);
+            this.btnStartGlobalHist.TabIndex = 20;
+            this.btnStartGlobalHist.Text = "Run";
+            this.btnStartGlobalHist.UseVisualStyleBackColor = true;
+            this.btnStartGlobalHist.Click += new System.EventHandler(this.startGlobalHist_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(218, 103);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(326, 34);
+            this.label9.TabIndex = 19;
+            this.label9.Text = "Fraction of pixels that ends up in a different basket\r\nMin 0 - Max 1\r\n";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(218, 22);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(157, 34);
+            this.label10.TabIndex = 18;
+            this.label10.Text = "Number of baskets/bins\r\nMin: 1 -  Max 256";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(13, 103);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(55, 17);
+            this.label11.TabIndex = 17;
+            this.label11.Text = "fraction";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(13, 22);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(64, 17);
+            this.label12.TabIndex = 16;
+            this.label12.Text = "binCount";
+            // 
             // local
             // 
+            this.local.Controls.Add(this.cmbLocalHistNrOfBlocks);
+            this.local.Controls.Add(this.label18);
+            this.local.Controls.Add(this.label17);
+            this.local.Controls.Add(this.txtLocalHistFraction);
+            this.local.Controls.Add(this.txtLocalHistBinCount);
+            this.local.Controls.Add(this.btnStartLocalHistogram);
+            this.local.Controls.Add(this.label13);
+            this.local.Controls.Add(this.label14);
+            this.local.Controls.Add(this.label15);
+            this.local.Controls.Add(this.label16);
             this.local.Location = new System.Drawing.Point(4, 25);
             this.local.Name = "local";
-            this.local.Size = new System.Drawing.Size(1000, 209);
+            this.local.Size = new System.Drawing.Size(1000, 195);
             this.local.TabIndex = 5;
             this.local.Text = "Local Hist";
             this.local.UseVisualStyleBackColor = true;
+            // 
+            // cmbLocalHistNrOfBlocks
+            // 
+            this.cmbLocalHistNrOfBlocks.FormattingEnabled = true;
+            this.cmbLocalHistNrOfBlocks.Location = new System.Drawing.Point(559, 36);
+            this.cmbLocalHistNrOfBlocks.Name = "cmbLocalHistNrOfBlocks";
+            this.cmbLocalHistNrOfBlocks.Size = new System.Drawing.Size(121, 24);
+            this.cmbLocalHistNrOfBlocks.TabIndex = 33;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(696, 39);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(239, 51);
+            this.label18.TabIndex = 32;
+            this.label18.Text = "the number of different blocks used, \r\ne.g. 1,2,4,9,16,25,36...\r\nMin:1 - Max: 400" +
+    "";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(476, 39);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(77, 17);
+            this.label17.TabIndex = 30;
+            this.label17.Text = "nrOfBlocks";
+            // 
+            // txtLocalHistFraction
+            // 
+            this.txtLocalHistFraction.Location = new System.Drawing.Point(111, 117);
+            this.txtLocalHistFraction.Mask = "0.000";
+            this.txtLocalHistFraction.Name = "txtLocalHistFraction";
+            this.txtLocalHistFraction.PromptChar = ' ';
+            this.txtLocalHistFraction.Size = new System.Drawing.Size(100, 22);
+            this.txtLocalHistFraction.TabIndex = 29;
+            this.txtLocalHistFraction.Text = "04";
+            // 
+            // txtLocalHistBinCount
+            // 
+            this.txtLocalHistBinCount.Location = new System.Drawing.Point(111, 36);
+            this.txtLocalHistBinCount.Mask = "000";
+            this.txtLocalHistBinCount.Name = "txtLocalHistBinCount";
+            this.txtLocalHistBinCount.PromptChar = ' ';
+            this.txtLocalHistBinCount.Size = new System.Drawing.Size(100, 22);
+            this.txtLocalHistBinCount.TabIndex = 28;
+            this.txtLocalHistBinCount.Text = "32";
+            // 
+            // btnStartLocalHistogram
+            // 
+            this.btnStartLocalHistogram.Location = new System.Drawing.Point(922, 169);
+            this.btnStartLocalHistogram.Name = "btnStartLocalHistogram";
+            this.btnStartLocalHistogram.Size = new System.Drawing.Size(75, 23);
+            this.btnStartLocalHistogram.TabIndex = 27;
+            this.btnStartLocalHistogram.Text = "Run";
+            this.btnStartLocalHistogram.UseVisualStyleBackColor = true;
+            this.btnStartLocalHistogram.Click += new System.EventHandler(this.StartLocalHistogram_Click);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(227, 120);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(326, 34);
+            this.label13.TabIndex = 26;
+            this.label13.Text = "Fraction of pixels that ends up in a different basket\r\nMin 0 - Max 1\r\n";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(227, 39);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(157, 34);
+            this.label14.TabIndex = 25;
+            this.label14.Text = "Number of baskets/bins\r\nMin: 1 -  Max 256";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(22, 120);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(55, 17);
+            this.label15.TabIndex = 24;
+            this.label15.Text = "fraction";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(22, 39);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(64, 17);
+            this.label16.TabIndex = 23;
+            this.label16.Text = "binCount";
             // 
             // general
             // 
             this.general.Location = new System.Drawing.Point(4, 25);
             this.general.Name = "general";
-            this.general.Size = new System.Drawing.Size(1000, 209);
+            this.general.Size = new System.Drawing.Size(1000, 195);
             this.general.TabIndex = 6;
             this.general.Text = "General";
             this.general.UseVisualStyleBackColor = true;
@@ -422,7 +701,7 @@
             this.Shots.Location = new System.Drawing.Point(4, 25);
             this.Shots.Name = "Shots";
             this.Shots.Padding = new System.Windows.Forms.Padding(3);
-            this.Shots.Size = new System.Drawing.Size(1000, 209);
+            this.Shots.Size = new System.Drawing.Size(1000, 195);
             this.Shots.TabIndex = 0;
             this.Shots.Text = "Shots";
             this.Shots.UseVisualStyleBackColor = true;
@@ -431,7 +710,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1045, 700);
+            this.ClientSize = new System.Drawing.Size(1045, 805);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.mnMenu);
             this.DoubleBuffered = true;
@@ -451,6 +730,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
             this.pixel.ResumeLayout(false);
             this.pixel.PerformLayout();
+            this.motion.ResumeLayout(false);
+            this.motion.PerformLayout();
+            this.global.ResumeLayout(false);
+            this.global.PerformLayout();
+            this.local.ResumeLayout(false);
+            this.local.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -493,10 +778,34 @@
         private System.Windows.Forms.Button startPixel;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.MaskedTextBox maskedTextBox1;
+        private System.Windows.Forms.MaskedTextBox txtPixelDistance;
+        private System.Windows.Forms.MaskedTextBox txtPixelFraction;
+        private System.Windows.Forms.MaskedTextBox txtMotionWindowSize;
+        private System.Windows.Forms.MaskedTextBox txtMotionSubSize;
+        private System.Windows.Forms.Button btnStartMotion;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.MaskedTextBox txtGlobalFraction;
+        private System.Windows.Forms.MaskedTextBox txtGlobalBinCount;
+        private System.Windows.Forms.Button btnStartGlobalHist;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.MaskedTextBox txtLocalHistFraction;
+        private System.Windows.Forms.MaskedTextBox txtLocalHistBinCount;
+        private System.Windows.Forms.Button btnStartLocalHistogram;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.ComboBox cmbLocalHistNrOfBlocks;
     }
 }
 

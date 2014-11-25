@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Threading;
 
 using DirectShowLib;
+using System.Windows.Forms;
 
 namespace ShotDetector {
     internal class DxScan: IDisposable {
