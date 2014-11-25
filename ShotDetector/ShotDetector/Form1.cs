@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ShotDetector {
-    public partial class ShotDetector : Form, IObserver {
+    public partial class ShotDetector : Form, IShotObserver, IFrameObserver {
         enum State {
             Uninit,
             Stopped,
@@ -25,6 +25,7 @@ namespace ShotDetector {
         private string fileName = "c:\\testfiles_dma\\csi.avi";
         private DxScan m_scan = null;
         private MethodFactory factory;
+        private long frameCount;
 
         public ShotDetector() {
             InitializeComponent();
@@ -33,8 +34,7 @@ namespace ShotDetector {
                 this.cmbLocalHistNrOfBlocks.Items.Add(i * i);
             }
             cmbLocalHistNrOfBlocks.SelectedIndex = 2;
-
-            
+            this.frameCount = 0;
         }
 
         //videofile
@@ -147,6 +147,16 @@ namespace ShotDetector {
                 dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count -1 ].Cells[0];
             }
         }
+
+        delegate void ProgressCallback(long frameNumber);
+        public void updateProgress(long frameNumber) {
+            if (this.dgvResults.InvokeRequired) {
+                ProgressCallback pcb = new ProgressCallback(updateProgress);
+                this.Invoke(pcb, new object[] { frameNumber });
+            } else {
+                this.toolStripProgressBar1.Value = Convert.ToInt32(100*frameNumber / frameCount);
+            }
+        }
         //sync tags with shotCollection
         private void DataGridChanged(object sender, EventArgs e) {
             if (e != null && m_play != null) {
@@ -222,15 +232,9 @@ namespace ShotDetector {
             if (distance > 0 && distance <= 768 && fraction > 0 && fraction <= 1) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(fileName, factory.getPixelMethod(shots, distance, fraction));
+                DxScan scanner = new DxScan(fileName, factory.getPixelMethod(shots,this, distance, fraction));
 
-                var sw = Stopwatch.StartNew();
-                dgvResults.Rows.Clear();
-                scanner.Start();
-                scanner.WaitUntilDone();
-                sw.Stop();
-                long time = sw.ElapsedMilliseconds;
-                MessageBox.Show("Pixel method completed in " + time / 1000.0 + " seconds");
+                RunMethod(scanner , "Pixel");
             } else {
                 MessageBox.Show("Please check your input parameters");
             }
@@ -242,15 +246,9 @@ namespace ShotDetector {
             if (subsize >= 1 && subsize <= 32 && windowsize >= 1 && windowsize <= 4) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(fileName, factory.getMotionMethod(shots, subsize, windowsize));
+                DxScan scanner = new DxScan(fileName, factory.getMotionMethod(shots,this, subsize, windowsize));
 
-                var sw = Stopwatch.StartNew();
-                dgvResults.Rows.Clear();
-                scanner.Start();
-                scanner.WaitUntilDone();
-                sw.Stop();
-                long time = sw.ElapsedMilliseconds;
-                MessageBox.Show("Motion method completed in " + time / 1000.0 + " seconds");
+                RunMethod(scanner, "Motion");
             } else {
                 MessageBox.Show("Please check your input parameters");
             }
@@ -262,15 +260,9 @@ namespace ShotDetector {
             if (binCount > 0 && binCount <= 256 && fraction > 0 && fraction <= 1) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(fileName, factory.getGlobalHistogramMethod(shots, binCount, fraction));
+                DxScan scanner = new DxScan(fileName, factory.getGlobalHistogramMethod(shots,this, binCount, fraction));
 
-                var sw = Stopwatch.StartNew();
-                dgvResults.Rows.Clear();
-                scanner.Start();
-                scanner.WaitUntilDone();
-                sw.Stop();
-                long time = sw.ElapsedMilliseconds;
-                MessageBox.Show("Global Histogram method completed in " + time / 1000.0 + " seconds");
+                RunMethod(scanner, "Global Histogram");
             } else {
                 MessageBox.Show("Please check your input parameters");
             }
@@ -286,20 +278,37 @@ namespace ShotDetector {
 
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(fileName, factory.getLocalHistogramMethod(shots, binCount, fraction, nrOfBlocks));
+                DxScan scanner = new DxScan(fileName, factory.getLocalHistogramMethod(shots,this, binCount, fraction, nrOfBlocks));
 
-                var sw = Stopwatch.StartNew();
-                dgvResults.Rows.Clear();
-                scanner.Start();
-                scanner.WaitUntilDone();
-                sw.Stop();
-                long time = sw.ElapsedMilliseconds;
-                MessageBox.Show("Global Histogram method completed in " + time / 1000.0 + " seconds");
+                RunMethod(scanner, "Local Histogram");
             } else {
                 MessageBox.Show("Please check your input parameters");
             }
         }
 
+        private void RunMethod(DxScan scanner,String methodName) {
+            //cleanup
+            dgvResults.Rows.Clear();
+            //notify user
+            this.toolStripStatusLabel1.Text = "Shot Detection (" + methodName + ") Running ...";
+            this.frameCount = scanner.getFrameCount();
+            this.toolStripProgressBar1.Value = 0;
+            this.toolStripProgressBar1.Visible = true;
+            tabControl1.SelectedIndex = 0; //show annotations
+
+            //run
+            var sw = Stopwatch.StartNew();
+            //start detection
+            scanner.Start();
+            //wait for completion
+            scanner.WaitUntilDone();
+
+            //feedback
+            sw.Stop();
+            long time = sw.ElapsedMilliseconds;
+            this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds";
+            this.toolStripProgressBar1.Visible = false;
+        }
 
     }
 }

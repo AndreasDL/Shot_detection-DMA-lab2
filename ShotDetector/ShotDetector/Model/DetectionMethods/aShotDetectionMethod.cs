@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.IO;
 
 using DirectShowLib;
+using ShotDetector;
 
 public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     //protected => also accesible from child classes
@@ -19,13 +20,13 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     protected int videoHeight; //height of the video in PIXELS
     protected int m_stride;    //width of the frame, in BYTES (each pixel has 3 bytes)
     protected ShotCollection shots; //The collected shots
-    protected List<IObserver> observers; //the observers that need to be modified
+    protected List<IFrameObserver> obs; //the observers that need to be modified
     protected int frameNumber; //the frame number
 
     /// <summary> Constructor that creates the basic needed elements </summary>
     /// <param name="shots">the shotCollection to save the different shots</param>
     public aShotDetectionMethod(ShotCollection shots): base() {
-        this.observers = new List<IObserver>();
+        this.obs = new List<IFrameObserver>();
         this.frameNumber = 0;
 
         AMMediaType media;
@@ -53,7 +54,18 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         ////////////////////////////////////////////////////
         this.shots = shots;
     }
-    
+
+    public void addFrameObserver(IFrameObserver observer) {
+        if (observer != null) {
+            obs.Add(observer);
+        }
+    }
+
+    private void notifyObservers() {
+        foreach (IFrameObserver observer in obs) {
+            observer.updateProgress(frameNumber);
+        }
+    }
     /// <summary>sample callback, NOT USED.</summary>
     /// <param name="SampleTime">the position of the frame in the video in seconds</param>
     /// <param name="pSample">the sample</param>
@@ -96,6 +108,8 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
             shotDetected(frameNumber);
 
         frameNumber++; //keep track of frame number
+        if (frameNumber % 200 ==0) //don't do this for everyframe (causes huge overhead)
+            notifyObservers();
         return 0;
     }
 

@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="DxPlay.cs" />
     <Compile Include="DxScan.cs" />
+    <Compile Include="Model\IFrameObserver.cs" />
     <Compile Include="Model\DetectionMethods\LocalHistogramMethod.cs" />
     <Compile Include="Model\DetectionMethods\MethodFactory.cs" />
     <Compile Include="Model\DetectionMethods\PixelMethod.cs" />

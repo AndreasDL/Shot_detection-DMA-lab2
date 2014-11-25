@@ -91,6 +91,9 @@
             this.general = new System.Windows.Forms.TabPage();
             this.Shots = new System.Windows.Forms.TabPage();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.mnMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -103,6 +106,7 @@
             this.motion.SuspendLayout();
             this.global.SuspendLayout();
             this.local.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // ofdBrowse
@@ -119,7 +123,7 @@
             this.mnMenu.Location = new System.Drawing.Point(0, 0);
             this.mnMenu.Name = "mnMenu";
             this.mnMenu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.mnMenu.Size = new System.Drawing.Size(1045, 28);
+            this.mnMenu.Size = new System.Drawing.Size(1175, 28);
             this.mnMenu.TabIndex = 3;
             this.mnMenu.Text = "menuStrip1";
             // 
@@ -212,13 +216,13 @@
             this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1066, 447);
+            this.panel1.Size = new System.Drawing.Size(1196, 508);
             this.panel1.TabIndex = 4;
             // 
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnStart.Location = new System.Drawing.Point(4, 459);
+            this.btnStart.Location = new System.Drawing.Point(4, 520);
             this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(100, 28);
@@ -231,7 +235,7 @@
             // 
             this.btnPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnPause.Enabled = false;
-            this.btnPause.Location = new System.Drawing.Point(112, 459);
+            this.btnPause.Location = new System.Drawing.Point(112, 520);
             this.btnPause.Margin = new System.Windows.Forms.Padding(4);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(100, 28);
@@ -260,12 +264,15 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer1.Panel2MinSize = 70;
-            this.splitContainer1.Size = new System.Drawing.Size(1021, 738);
-            this.splitContainer1.SplitterDistance = 493;
+            this.splitContainer1.Size = new System.Drawing.Size(1151, 830);
+            this.splitContainer1.SplitterDistance = 554;
             this.splitContainer1.TabIndex = 21;
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.annotations);
             this.tabControl1.Controls.Add(this.pixel);
             this.tabControl1.Controls.Add(this.motion);
@@ -276,7 +283,7 @@
             this.tabControl1.Location = new System.Drawing.Point(4, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1008, 224);
+            this.tabControl1.Size = new System.Drawing.Size(1142, 264);
             this.tabControl1.TabIndex = 9;
             // 
             // annotations
@@ -285,7 +292,7 @@
             this.annotations.Location = new System.Drawing.Point(4, 25);
             this.annotations.Name = "annotations";
             this.annotations.Padding = new System.Windows.Forms.Padding(3);
-            this.annotations.Size = new System.Drawing.Size(1000, 195);
+            this.annotations.Size = new System.Drawing.Size(1134, 235);
             this.annotations.TabIndex = 1;
             this.annotations.Text = "Annotations";
             this.annotations.UseVisualStyleBackColor = true;
@@ -302,10 +309,10 @@
             this.shotNumber,
             this.StartFrame,
             this.tags});
-            this.dgvResults.Location = new System.Drawing.Point(7, 7);
+            this.dgvResults.Location = new System.Drawing.Point(0, 7);
             this.dgvResults.Margin = new System.Windows.Forms.Padding(4);
             this.dgvResults.Name = "dgvResults";
-            this.dgvResults.Size = new System.Drawing.Size(986, 195);
+            this.dgvResults.Size = new System.Drawing.Size(1130, 221);
             this.dgvResults.TabIndex = 9;
             // 
             // shotNumber
@@ -338,7 +345,7 @@
             this.pixel.Controls.Add(this.label1);
             this.pixel.Location = new System.Drawing.Point(4, 25);
             this.pixel.Name = "pixel";
-            this.pixel.Size = new System.Drawing.Size(1000, 195);
+            this.pixel.Size = new System.Drawing.Size(1141, 241);
             this.pixel.TabIndex = 2;
             this.pixel.Text = "Pixel";
             this.pixel.UseVisualStyleBackColor = true;
@@ -365,7 +372,8 @@
             // 
             // startPixel
             // 
-            this.startPixel.Location = new System.Drawing.Point(922, 169);
+            this.startPixel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.startPixel.Location = new System.Drawing.Point(1063, 215);
             this.startPixel.Name = "startPixel";
             this.startPixel.Size = new System.Drawing.Size(75, 23);
             this.startPixel.TabIndex = 6;
@@ -420,7 +428,7 @@
             this.motion.Controls.Add(this.label8);
             this.motion.Location = new System.Drawing.Point(4, 25);
             this.motion.Name = "motion";
-            this.motion.Size = new System.Drawing.Size(1000, 195);
+            this.motion.Size = new System.Drawing.Size(1141, 241);
             this.motion.TabIndex = 3;
             this.motion.Text = "Motion";
             this.motion.UseVisualStyleBackColor = true;
@@ -447,7 +455,8 @@
             // 
             // btnStartMotion
             // 
-            this.btnStartMotion.Location = new System.Drawing.Point(922, 169);
+            this.btnStartMotion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStartMotion.Location = new System.Drawing.Point(1063, 215);
             this.btnStartMotion.Name = "btnStartMotion";
             this.btnStartMotion.Size = new System.Drawing.Size(75, 23);
             this.btnStartMotion.TabIndex = 13;
@@ -504,7 +513,7 @@
             this.global.Controls.Add(this.label12);
             this.global.Location = new System.Drawing.Point(4, 25);
             this.global.Name = "global";
-            this.global.Size = new System.Drawing.Size(1000, 195);
+            this.global.Size = new System.Drawing.Size(1141, 241);
             this.global.TabIndex = 4;
             this.global.Text = "Global Hist";
             this.global.UseVisualStyleBackColor = true;
@@ -531,7 +540,8 @@
             // 
             // btnStartGlobalHist
             // 
-            this.btnStartGlobalHist.Location = new System.Drawing.Point(922, 169);
+            this.btnStartGlobalHist.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStartGlobalHist.Location = new System.Drawing.Point(1063, 215);
             this.btnStartGlobalHist.Name = "btnStartGlobalHist";
             this.btnStartGlobalHist.Size = new System.Drawing.Size(75, 23);
             this.btnStartGlobalHist.TabIndex = 20;
@@ -589,7 +599,7 @@
             this.local.Controls.Add(this.label16);
             this.local.Location = new System.Drawing.Point(4, 25);
             this.local.Name = "local";
-            this.local.Size = new System.Drawing.Size(1000, 195);
+            this.local.Size = new System.Drawing.Size(1141, 241);
             this.local.TabIndex = 5;
             this.local.Text = "Local Hist";
             this.local.UseVisualStyleBackColor = true;
@@ -644,7 +654,8 @@
             // 
             // btnStartLocalHistogram
             // 
-            this.btnStartLocalHistogram.Location = new System.Drawing.Point(922, 169);
+            this.btnStartLocalHistogram.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStartLocalHistogram.Location = new System.Drawing.Point(1063, 215);
             this.btnStartLocalHistogram.Name = "btnStartLocalHistogram";
             this.btnStartLocalHistogram.Size = new System.Drawing.Size(75, 23);
             this.btnStartLocalHistogram.TabIndex = 27;
@@ -707,11 +718,34 @@
             this.Shots.Text = "Shots";
             this.Shots.UseVisualStyleBackColor = true;
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.toolStripProgressBar1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 873);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1175, 24);
+            this.statusStrip1.TabIndex = 22;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 18);
+            this.toolStripProgressBar1.Visible = false;
+            // 
             // ShotDetector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1045, 805);
+            this.ClientSize = new System.Drawing.Size(1175, 897);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.mnMenu);
             this.DoubleBuffered = true;
@@ -737,6 +771,8 @@
             this.global.PerformLayout();
             this.local.ResumeLayout(false);
             this.local.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -807,6 +843,9 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.ComboBox cmbLocalHistNrOfBlocks;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
     }
 }
 

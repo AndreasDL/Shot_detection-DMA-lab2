@@ -10,7 +10,7 @@ using System.Xml;
 /// </summary>
 public class ShotCollection{
     private List<Shot> shots; //list of the shots
-    private List<IObserver> observers; //list of the observers
+    private List<IShotObserver> observers; //list of the observers
     private int method;
     private List<Object> parameters;
     private long lastFrame;
@@ -18,7 +18,7 @@ public class ShotCollection{
 
     public ShotCollection() {
         this.shots = new List<Shot>();
-        this.observers = new List<IObserver>();
+        this.observers = new List<IShotObserver>();
         this.parameters = new List<Object>();
     }
     public ShotCollection(string fileName):this() { 
@@ -137,7 +137,7 @@ public class ShotCollection{
     /// Adds an observer
     /// </summary>
     /// <param name="obs">observer to add</param>
-    public void addObserver(IObserver obs) {
+    public void addObserver(IShotObserver obs) {
         observers.Add(obs);
     }
     /// <summary>
@@ -145,7 +145,7 @@ public class ShotCollection{
     /// </summary>
     /// <param name="shot">the newly detected shot</param>
     private void notifyObservers(Shot shot) {
-        foreach (IObserver o in observers)
+        foreach (IShotObserver o in observers)
             o.updateList(shot);
     }
     /// <summary>
