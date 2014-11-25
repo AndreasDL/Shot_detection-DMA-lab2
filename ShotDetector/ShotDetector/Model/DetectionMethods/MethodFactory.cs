@@ -91,7 +91,9 @@ public class MethodFactory {
                 //method = new Method4(frameBuffer);;
                 //break;
             case 5:
-                method = new EmptyMethod(shots);
+                nrOfBins = 51; //5 values wide
+                shots.addParameter(nrOfBins);
+                method = new TwinComparison(nrOfBins, shots);
                 break;
         }
 

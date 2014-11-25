@@ -66,7 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Capture.cs" />
-    <Compile Include="Model\DetectionMethods\EmptyMethod.cs" />
+    <Compile Include="Model\DetectionMethods\TwinComparison.cs" />
     <Compile Include="Model\DetectionMethods\LocalHistogramMethod.cs" />
     <Compile Include="Model\DetectionMethods\MethodFactory.cs" />
     <Compile Include="Model\DetectionMethods\PixelMethod.cs" />

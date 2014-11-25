@@ -122,6 +122,7 @@ namespace ShotDetector {
             IntPtr p1, p2;
             EventCode ec;
 
+
             do {
                 // Wait for an event
                 m_mre.WaitOne(-1, true);
