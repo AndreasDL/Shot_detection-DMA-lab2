@@ -34,22 +34,18 @@ public class MethodFactory {
         new String[0][]//empty
     };
 
-    private ShotCollection shots;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="shots">the shot collection that must contain all the detected shots</param>
-    public MethodFactory(ShotCollection shots) {
-        this.shots = shots;
-    }
+    public MethodFactory() {}
 
     /// <summary>
     /// Creates a shotDetectionMethod
     /// </summary>
     /// <param name="index">the index that represents the shot detection method</param>
     /// <returns></returns>
-    public aShotDetectionMethod getMethod(int index) {
+    public aShotDetectionMethod getMethod(int index, ShotCollection shots) {
         aShotDetectionMethod method = null;
 
         switch (index) {

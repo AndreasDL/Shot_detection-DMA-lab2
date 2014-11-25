@@ -30,7 +30,7 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen){
-        Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
+        Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64 / run on 32bit pc");
 
         previous = current;
         current = new byte[(videoHeight * videoWidth) * 3];

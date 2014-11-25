@@ -47,10 +47,6 @@ namespace ShotDetector {
         private ManualResetEvent m_mre;
         // Current state of the graph (can change async)
         volatile private GraphState m_State = GraphState.Stopped;
-
-        private int detectionMethod = 0;
-        private aShotDetectionMethod method = null;
-        private MethodFactory factory;
         private Control hwin;
 
         // Event that is called when a clip finishs playing
@@ -67,12 +63,7 @@ namespace ShotDetector {
 
         // Play an avi file into a window.  Allow for snapshots.
         // (Control to show video in, Avi file to play
-        public DxPlay(Control hWin, string FileName, int detectionMethod, Form form) {
-            ShotCollection shots = new ShotCollection();
-            shots.addObserver((IObserver)form);
-            factory = new MethodFactory(shots);
-            setDetectionMethod(detectionMethod);
-
+        public DxPlay(Control hWin, string FileName) {
             this.hwin = hWin;
 
             try {
@@ -173,11 +164,6 @@ namespace ShotDetector {
             }
         }
         
-        public void setDetectionMethod(int detectionMethod) {
-            this.detectionMethod = detectionMethod;
-            method = factory.getMethod(detectionMethod);
-            //TODO use params from gui
-        }
         // start playing
         public void Start() {
             // If we aren't already playing (or shutting down)
@@ -208,20 +194,7 @@ namespace ShotDetector {
                 m_State = GraphState.Stopped;
             }
         }
-        // Reset the clip back to the beginning
-        public void Rewind() {
-            int hr;
 
-            IMediaPosition imp = m_FilterGraph as IMediaPosition;
-            hr = imp.put_CurrentPosition(0);
-
-            Stop();
-
-            setDetectionMethod(detectionMethod);
-            SetupGraph(hwin, m_sFileName);
-
-            Start();
-        }
         
         // Convert a point to the raw pixel data to a .NET bitmap
         public Bitmap IPToBmp(IntPtr ip) {
@@ -261,7 +234,7 @@ namespace ShotDetector {
                 DsError.ThrowExceptionForHR(hr);
 
                 // Get the SampleGrabber interface
-                ISampleGrabber m_sampGrabber = (ISampleGrabber)method;
+                ISampleGrabber m_sampGrabber = new SampleGrabber() as ISampleGrabber;
                 IBaseFilter baseGrabFlt = (IBaseFilter)m_sampGrabber;
 
                 // Add it to the filter
@@ -343,8 +316,6 @@ namespace ShotDetector {
                 m_stride = videoInfoHeader.BmiHeader.ImageSize / m_videoHeight;
                 m_ImageSize = videoInfoHeader.BmiHeader.ImageSize;
 
-                method.setSizes(m_videoHeight, m_videoWidth);
-
             } finally {
                 DsUtils.FreeAMMediaType(media);
                 media = null;
@@ -370,25 +341,12 @@ namespace ShotDetector {
                     m_mediaCtrl = null;
                 }
 
-                if (method != null) {
-                    Marshal.ReleaseComObject(method);
-                    method = null;
-                }
-
                 if (m_FilterGraph != null) {
                     Marshal.ReleaseComObject(m_FilterGraph);
                     m_FilterGraph = null;
                 }
             }
             GC.Collect();
-        }
-
-        public ShotCollection getShotCollection() {
-            if (this.method != null){
-                return this.method.getShotCollection();
-            }else {
-                return null;
-            }
         }
 
         public long getFrameCount() {
@@ -399,8 +357,5 @@ namespace ShotDetector {
             return duration;
         }
 
-        public aShotDetectionMethod getCurrentShotDetectionMethod(){
-            return this.method;
-        }
     }
 }

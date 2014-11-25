@@ -21,14 +21,12 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     protected ShotCollection shots; //The collected shots
     protected List<IObserver> observers; //the observers that need to be modified
     protected int frameNumber; //the frame number
-    private long times;
 
     /// <summary> Constructor that creates the basic needed elements </summary>
     /// <param name="shots">the shotCollection to save the different shots</param>
     public aShotDetectionMethod(ShotCollection shots): base() {
         this.observers = new List<IObserver>();
         this.frameNumber = 0;
-        this.times = 0;
 
         AMMediaType media;
         int hr;
@@ -79,6 +77,7 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     /// <param name="frameNumber">the number of the first frame from the shot</param>
     private void shotDetected(int frameNumber) {
         shots.addShot(new Shot(frameNumber, shots.getShots().Count));
+        Console.WriteLine("Shot! at : " + frameNumber);
     }
 
     /// <Summary>Returns the collected shots</Summary>
@@ -87,42 +86,19 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         return this.shots;
     }
 
-    /// <summary>Add an observer</summary>
-    /// <param name="observer">An observer to add</param>
-    public void addObserver(IObserver observer) {
-        observers.Add(observer);
-    }
-    /// <summary>Notifies all the observers</summary>
-    private void notifyObservers() {
-        /*foreach (IObserver o in observers)
-            o.updateTrackbar(frameNumber);*/
-    }
-
     /// <summary> this function is called for each frame </summary>
     /// <param name="SampleTime">the time of the frame (if you want a frame count, then you must count in the method)</param>
     /// <param name="pBuffer">a pointer to the first byte of the image (each pixel has 3 bytes and the frame is m_strade wide so byte[m_stide*5 + 7*3] is the first component of pixel with y=5, x = 7</param>
     /// <param name="bufferLen>number of bytes in pBuffer</param>
     /// <returns>error code if zero then it's all ok</returns>
     public int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
-        var sw = Stopwatch.StartNew();
-
+        Console.WriteLine(frameNumber);
         //call the method
         if (DetectShot(SampleTime, pBuffer, BufferLen))
             shotDetected(frameNumber);
 
         frameNumber++; //keep track of frame number
-        notifyObservers(); //notify observers (e.g. update the trackbar of the gui)
-        long time = sw.ElapsedMilliseconds;
-        sw.Stop();
-        times += time;
         return 0;
-    }
-    /// <summary>
-    /// Gets the time the method took to detect the shots
-    /// </summary>
-    /// <returns>timing of the detect shot method</returns>
-    public long getTime() {
-        return times;
     }
 
     /// <summary>Put the detection code in this method, the method above is used to keep track of the framenumber and update the gui </summary>

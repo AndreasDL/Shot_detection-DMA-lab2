@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ShotDetector {
     public partial class ShotDetector : Form, IObserver {
@@ -19,14 +20,16 @@ namespace ShotDetector {
             Paused,
             Playing
         }
-        State m_State = State.Uninit;
-        DxPlay m_play = null;
+        private State m_State = State.Uninit;
+        private DxPlay m_play = null;
         private string fileName = "c:\\testfiles_dma\\csi.avi";
+        private DxScan m_scan = null;
+        private MethodFactory factory;
 
         public ShotDetector() {
             InitializeComponent();
-            this.cmbMethod.Items.AddRange(MethodFactory.METHODS ); //set the detection methods
-            cmbMethod.SelectedIndex = 1; //default = motion
+            this.factory = new MethodFactory();
+
         }
 
         //videofile
@@ -61,7 +64,7 @@ namespace ShotDetector {
             if (m_play == null) {
                 try {
                     // Open the file, provide a handle to play it in
-                    m_play = new DxPlay(panel1, fileName, cmbMethod.SelectedIndex, this);
+                    m_play = new DxPlay(panel1, fileName);
                     // Let us know when the file is finished playing
                     m_play.StopPlay += new DxPlay.DxPlayEvent(m_play_StopPlay);
                     m_State = State.Stopped;
@@ -77,6 +80,7 @@ namespace ShotDetector {
                 m_play.Start();
                 btnPause.Enabled = true;
                 m_State = State.Playing;
+                this.btnPause.Enabled = true;
             }
                 // If we are playing or paused, stop
             else if (m_State == State.Playing || m_State == State.Paused) {
@@ -87,9 +91,11 @@ namespace ShotDetector {
                 btnPause.Text = "Pause";
                 pauseToolStripMenuItem.Text = "Pause";
                 m_State = State.Stopped;
+                this.btnPause.Enabled = false;
             }
         }
         private void pause_Click(object sender, System.EventArgs e) {
+            
             // If we are playing, pause
             if (m_State == State.Playing) {
                 m_play.Pause();
@@ -104,12 +110,6 @@ namespace ShotDetector {
                 btnPause.Text = "Pause";
                 pauseToolStripMenuItem.Text = "Pause";
                 m_State = State.Playing;
-            }
-        }
-        private void rewind_Click(object sender, System.EventArgs e) {
-            if (m_play != null) {
-                m_play.Rewind();
-                dgvResults.Rows.Clear();
             }
         }
 
@@ -127,11 +127,6 @@ namespace ShotDetector {
             CheckForIllegalCrossThreadCalls = true;
 
             m_State = State.Stopped;
-
-            // Rewind clip to beginning to allow DxPlay.Start to work again.
-            //m_play.Rewind(); //doesn't work
-
-            MessageBox.Show("Method took: " + m_play.getCurrentShotDetectionMethod().getTime() + " ms");
         }
 
         //update gui
@@ -144,38 +139,6 @@ namespace ShotDetector {
             } else {
                 dgvResults.Rows.Add(new string[] { "" + dgvResults.RowCount, "" + shot.getStartFrame(), shot.getTagString() });
                 dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count -1 ].Cells[0];
-            }
-        }
-        //update model
-        private void cmbMethod_SelectedIndexChanged(object sender, EventArgs e) {
-            //TODO use these values!
-            this.argPanel.Controls.Clear();
-            int locX = 0;
-            String[][] args = MethodFactory.METHODINFO[cmbMethod.SelectedIndex];
-            foreach (String[] arg in args) {
-                //label
-                Label argName = new Label();
-                argName.Text = arg[0];
-                argName.AutoSize = true;
-                argName.Location = new Point(locX,3);
-                argName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-                this.argPanel.Controls.Add(argName);
-                locX += argName.Size.Width;
-                
-                if (arg.Length > 1) {
-                    ToolTip tipz = new ToolTip();
-                    tipz.SetToolTip(argName, arg[1]);
-
-                    //textz
-                    TextBox value = new TextBox();
-                    value.Text = "   ";
-                    value.Location = new Point(locX, 0);
-                    value.Size = new Size(35, value.Size.Height);
-                    value.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-                    this.argPanel.Controls.Add(value);
-                    locX += value.Size.Width;
-                }
-
             }
         }
 
@@ -194,9 +157,9 @@ namespace ShotDetector {
                     outputPath = sfdBrowse.FileName;
                     new Thread(() => { //thread = no lagg on GUI
                         Thread.CurrentThread.IsBackground = true;
-                        ShotCollection results = this.m_play.getShotCollection();
+                        ShotCollection results = this.m_scan.getMethod().getShotCollection();
 
-                        results.setLastFrame(this.m_play.getFrameCount());
+                        results.setLastFrame(this.m_scan.getFrameCount());
                         results.setfile(fileName);
                         results.setLastFrame(m_play.getFrameCount());
 
@@ -225,7 +188,7 @@ namespace ShotDetector {
                         Thread.CurrentThread.IsBackground = true;
                         //get groundtruth
                         ShotCollection truth = new ShotCollection(groundTruthPath);
-                        ShotCollection results = this.m_play.getShotCollection();
+                        ShotCollection results = this.m_scan.getMethod().getShotCollection();
 
                         MessageBox.Show("Recall: " + results.calcRecall(truth) + " Precision: " + results.calcPrecision(truth));
                     }).Start();
@@ -242,8 +205,27 @@ namespace ShotDetector {
                 System.Windows.Forms.DataGridViewCellEventArgs args = (System.Windows.Forms.DataGridViewCellEventArgs)e;
 
                 //update in model
-                m_play.getShotCollection().getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
+                m_scan.getMethod().getShotCollection().getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
             }
+        }
+
+        private void startPixel_Click(object sender, EventArgs e) {
+
+            ShotCollection shots = new ShotCollection();
+            shots.addParameter(256);
+            shots.addParameter(0.25);
+            shots.addObserver(this);
+
+            aShotDetectionMethod method = factory.getMethod(0, shots);
+
+            DxScan scanner = new DxScan(fileName, method);
+
+            var sw = Stopwatch.StartNew();
+            scanner.Start();
+            scanner.WaitUntilDone();
+            sw.Stop();
+            long time = sw.ElapsedMilliseconds;
+            Console.WriteLine("method took" + time / 1000.0 + "seconds");
         }
     }
 }

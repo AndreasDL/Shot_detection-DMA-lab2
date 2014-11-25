@@ -45,31 +45,27 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
-            this.btnRewind = new System.Windows.Forms.Button();
             this.sfdBrowse = new System.Windows.Forms.SaveFileDialog();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.argPanel = new System.Windows.Forms.Panel();
-            this.cmbMethod = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.annotations = new System.Windows.Forms.TabPage();
             this.dgvResults = new System.Windows.Forms.DataGridView();
             this.shotNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StartFrame = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tags = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
+            this.pixel = new System.Windows.Forms.TabPage();
+            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
+            this.startPixel = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.motion = new System.Windows.Forms.TabPage();
+            this.global = new System.Windows.Forms.TabPage();
+            this.local = new System.Windows.Forms.TabPage();
+            this.general = new System.Windows.Forms.TabPage();
+            this.Shots = new System.Windows.Forms.TabPage();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.mnMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -77,9 +73,9 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.annotations.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
-            this.tabPage3.SuspendLayout();
+            this.pixel.SuspendLayout();
             this.SuspendLayout();
             // 
             // ofdBrowse
@@ -189,7 +185,7 @@
             this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(352, 84);
+            this.panel1.Size = new System.Drawing.Size(1066, 354);
             this.panel1.TabIndex = 4;
             // 
             // btnStart
@@ -207,6 +203,7 @@
             // btnPause
             // 
             this.btnPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnPause.Enabled = false;
             this.btnPause.Location = new System.Drawing.Point(112, 366);
             this.btnPause.Margin = new System.Windows.Forms.Padding(4);
             this.btnPause.Name = "btnPause";
@@ -215,17 +212,6 @@
             this.btnPause.Text = "Pause";
             this.btnPause.UseVisualStyleBackColor = true;
             this.btnPause.Click += new System.EventHandler(this.pause_Click);
-            // 
-            // btnRewind
-            // 
-            this.btnRewind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRewind.Location = new System.Drawing.Point(219, 366);
-            this.btnRewind.Name = "btnRewind";
-            this.btnRewind.Size = new System.Drawing.Size(90, 27);
-            this.btnRewind.TabIndex = 16;
-            this.btnRewind.Text = "Rewind";
-            this.btnRewind.UseVisualStyleBackColor = true;
-            this.btnRewind.Click += new System.EventHandler(this.rewind_Click);
             // 
             // splitContainer1
             // 
@@ -239,12 +225,8 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.argPanel);
             this.splitContainer1.Panel1.Controls.Add(this.btnStart);
-            this.splitContainer1.Panel1.Controls.Add(this.cmbMethod);
             this.splitContainer1.Panel1.Controls.Add(this.btnPause);
-            this.splitContainer1.Panel1.Controls.Add(this.label2);
-            this.splitContainer1.Panel1.Controls.Add(this.btnRewind);
             this.splitContainer1.Panel1.Controls.Add(this.panel1);
             // 
             // splitContainer1.Panel2
@@ -255,71 +237,31 @@
             this.splitContainer1.SplitterDistance = 400;
             this.splitContainer1.TabIndex = 21;
             // 
-            // argPanel
-            // 
-            this.argPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.argPanel.Location = new System.Drawing.Point(595, 365);
-            this.argPanel.Name = "argPanel";
-            this.argPanel.Size = new System.Drawing.Size(417, 26);
-            this.argPanel.TabIndex = 17;
-            // 
-            // cmbMethod
-            // 
-            this.cmbMethod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbMethod.FormattingEnabled = true;
-            this.cmbMethod.Location = new System.Drawing.Point(379, 368);
-            this.cmbMethod.Margin = new System.Windows.Forms.Padding(4);
-            this.cmbMethod.Name = "cmbMethod";
-            this.cmbMethod.Size = new System.Drawing.Size(208, 24);
-            this.cmbMethod.TabIndex = 11;
-            this.cmbMethod.SelectedIndexChanged += new System.EventHandler(this.cmbMethod_SelectedIndexChanged);
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(316, 372);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 17);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Method";
-            // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage6);
-            this.tabControl1.Controls.Add(this.tabPage7);
+            this.tabControl1.Controls.Add(this.annotations);
+            this.tabControl1.Controls.Add(this.pixel);
+            this.tabControl1.Controls.Add(this.motion);
+            this.tabControl1.Controls.Add(this.global);
+            this.tabControl1.Controls.Add(this.local);
+            this.tabControl1.Controls.Add(this.general);
+            this.tabControl1.Controls.Add(this.Shots);
             this.tabControl1.Location = new System.Drawing.Point(4, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1008, 238);
             this.tabControl1.TabIndex = 9;
             // 
-            // tabPage1
+            // annotations
             // 
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1000, 209);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Shots";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.dgvResults);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1000, 209);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Annotations";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.annotations.Controls.Add(this.dgvResults);
+            this.annotations.Location = new System.Drawing.Point(4, 25);
+            this.annotations.Name = "annotations";
+            this.annotations.Padding = new System.Windows.Forms.Padding(3);
+            this.annotations.Size = new System.Drawing.Size(1000, 209);
+            this.annotations.TabIndex = 1;
+            this.annotations.Text = "Annotations";
+            this.annotations.UseVisualStyleBackColor = true;
             // 
             // dgvResults
             // 
@@ -358,30 +300,42 @@
             this.tags.HeaderText = "Tags";
             this.tags.Name = "tags";
             // 
-            // tabPage3
+            // pixel
             // 
-            this.tabPage3.Controls.Add(this.button1);
-            this.tabPage3.Controls.Add(this.label5);
-            this.tabPage3.Controls.Add(this.label4);
-            this.tabPage3.Controls.Add(this.textBox2);
-            this.tabPage3.Controls.Add(this.textBox1);
-            this.tabPage3.Controls.Add(this.label3);
-            this.tabPage3.Controls.Add(this.label1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 25);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1000, 209);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Pixel";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.pixel.Controls.Add(this.maskedTextBox1);
+            this.pixel.Controls.Add(this.startPixel);
+            this.pixel.Controls.Add(this.label5);
+            this.pixel.Controls.Add(this.label4);
+            this.pixel.Controls.Add(this.textBox2);
+            this.pixel.Controls.Add(this.label3);
+            this.pixel.Controls.Add(this.label1);
+            this.pixel.Location = new System.Drawing.Point(4, 25);
+            this.pixel.Name = "pixel";
+            this.pixel.Size = new System.Drawing.Size(1000, 209);
+            this.pixel.TabIndex = 2;
+            this.pixel.Text = "Pixel";
+            this.pixel.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // maskedTextBox1
             // 
-            this.button1.Location = new System.Drawing.Point(497, 141);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Run";
-            this.button1.UseVisualStyleBackColor = true;
+            this.maskedTextBox1.Location = new System.Drawing.Point(93, 27);
+            this.maskedTextBox1.Mask = "000";
+            this.maskedTextBox1.Name = "maskedTextBox1";
+            this.maskedTextBox1.PromptChar = ' ';
+            this.maskedTextBox1.ReadOnly = true;
+            this.maskedTextBox1.Size = new System.Drawing.Size(100, 22);
+            this.maskedTextBox1.TabIndex = 7;
+            this.maskedTextBox1.Text = "256";
+            // 
+            // startPixel
+            // 
+            this.startPixel.Location = new System.Drawing.Point(497, 141);
+            this.startPixel.Name = "startPixel";
+            this.startPixel.Size = new System.Drawing.Size(75, 23);
+            this.startPixel.TabIndex = 6;
+            this.startPixel.Text = "Run";
+            this.startPixel.UseVisualStyleBackColor = true;
+            this.startPixel.Click += new System.EventHandler(this.startPixel_Click);
             // 
             // label5
             // 
@@ -409,14 +363,6 @@
             this.textBox2.TabIndex = 3;
             this.textBox2.Text = "0.25";
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(93, 27);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 22);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.Text = "256";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -435,41 +381,51 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "delta2";
             // 
-            // tabPage4
+            // motion
             // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 25);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1000, 209);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Motion";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.motion.Location = new System.Drawing.Point(4, 25);
+            this.motion.Name = "motion";
+            this.motion.Size = new System.Drawing.Size(1000, 209);
+            this.motion.TabIndex = 3;
+            this.motion.Text = "Motion";
+            this.motion.UseVisualStyleBackColor = true;
             // 
-            // tabPage5
+            // global
             // 
-            this.tabPage5.Location = new System.Drawing.Point(4, 25);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(1000, 209);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Global Hist";
-            this.tabPage5.UseVisualStyleBackColor = true;
+            this.global.Location = new System.Drawing.Point(4, 25);
+            this.global.Name = "global";
+            this.global.Size = new System.Drawing.Size(1000, 209);
+            this.global.TabIndex = 4;
+            this.global.Text = "Global Hist";
+            this.global.UseVisualStyleBackColor = true;
             // 
-            // tabPage6
+            // local
             // 
-            this.tabPage6.Location = new System.Drawing.Point(4, 25);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(1000, 209);
-            this.tabPage6.TabIndex = 5;
-            this.tabPage6.Text = "Local Hist";
-            this.tabPage6.UseVisualStyleBackColor = true;
+            this.local.Location = new System.Drawing.Point(4, 25);
+            this.local.Name = "local";
+            this.local.Size = new System.Drawing.Size(1000, 209);
+            this.local.TabIndex = 5;
+            this.local.Text = "Local Hist";
+            this.local.UseVisualStyleBackColor = true;
             // 
-            // tabPage7
+            // general
             // 
-            this.tabPage7.Location = new System.Drawing.Point(4, 25);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Size = new System.Drawing.Size(1000, 209);
-            this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "General";
-            this.tabPage7.UseVisualStyleBackColor = true;
+            this.general.Location = new System.Drawing.Point(4, 25);
+            this.general.Name = "general";
+            this.general.Size = new System.Drawing.Size(1000, 209);
+            this.general.TabIndex = 6;
+            this.general.Text = "General";
+            this.general.UseVisualStyleBackColor = true;
+            // 
+            // Shots
+            // 
+            this.Shots.Location = new System.Drawing.Point(4, 25);
+            this.Shots.Name = "Shots";
+            this.Shots.Padding = new System.Windows.Forms.Padding(3);
+            this.Shots.Size = new System.Drawing.Size(1000, 209);
+            this.Shots.TabIndex = 0;
+            this.Shots.Text = "Shots";
+            this.Shots.UseVisualStyleBackColor = true;
             // 
             // ShotDetector
             // 
@@ -487,15 +443,14 @@
             this.mnMenu.ResumeLayout(false);
             this.mnMenu.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
+            this.annotations.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.pixel.ResumeLayout(false);
+            this.pixel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -516,7 +471,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnPause;
-        private System.Windows.Forms.Button btnRewind;
         private System.Windows.Forms.SaveFileDialog sfdBrowse;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripMenuItem exportResultToXmlToolStripMenuItem;
@@ -525,27 +479,24 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage Shots;
+        private System.Windows.Forms.TabPage annotations;
         private System.Windows.Forms.DataGridView dgvResults;
         private System.Windows.Forms.DataGridViewTextBoxColumn shotNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn StartFrame;
         private System.Windows.Forms.DataGridViewTextBoxColumn tags;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.TabPage tabPage6;
-        private System.Windows.Forms.TabPage tabPage7;
-        private System.Windows.Forms.Panel argPanel;
-        private System.Windows.Forms.ComboBox cmbMethod;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TabPage pixel;
+        private System.Windows.Forms.TabPage motion;
+        private System.Windows.Forms.TabPage global;
+        private System.Windows.Forms.TabPage local;
+        private System.Windows.Forms.TabPage general;
+        private System.Windows.Forms.Button startPixel;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.MaskedTextBox maskedTextBox1;
     }
 }
 

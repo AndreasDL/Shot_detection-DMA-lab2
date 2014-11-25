@@ -19,6 +19,7 @@ public class MotionMethod : aShotDetectionMethod{
     private byte[,][] prevWindow; //previous avg values
     private int avgDiff;
     private int currDiff;
+    private int lastShot;
 
     public MotionMethod(int _subsize, int _windowSize,ShotCollection shots):base(shots) {
         this.subsize = _subsize;
@@ -116,7 +117,7 @@ public class MotionMethod : aShotDetectionMethod{
                 }
             }
 
-            if (currDiff > 5 * avgDiff && frameNumber != 1) { //hack to make the firstshot start at position 0 in stead of 1
+            if (currDiff > 5 * avgDiff && frameNumber != 1 && frameNumber > lastShot + 10) { //hack to make the firstshot start at position 0 in stead of 1
                 isShot = true;
                 avgDiff = currDiff;
             }
@@ -124,6 +125,7 @@ public class MotionMethod : aShotDetectionMethod{
             avgDiff = (int)(avgDiff * 0.9 + currDiff * 0.1);
         } else { 
             //first shot
+            lastShot = 0;
             isShot = true;
         }
 
