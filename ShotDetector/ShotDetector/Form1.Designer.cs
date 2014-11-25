@@ -37,10 +37,6 @@
             this.calculateRecallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmPlay = new System.Windows.Forms.ToolStripMenuItem();
-            this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnStart = new System.Windows.Forms.Button();
@@ -56,7 +52,7 @@
             this.pixel = new System.Windows.Forms.TabPage();
             this.txtPixelFraction = new System.Windows.Forms.MaskedTextBox();
             this.txtPixelDistance = new System.Windows.Forms.MaskedTextBox();
-            this.startPixel = new System.Windows.Forms.Button();
+            this.btnStartPixel = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -94,7 +90,9 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.label19 = new System.Windows.Forms.Label();
             this.mnMenu.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -118,8 +116,7 @@
             // mnMenu
             // 
             this.mnMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.playToolStripMenuItem});
+            this.fileToolStripMenuItem});
             this.mnMenu.Location = new System.Drawing.Point(0, 0);
             this.mnMenu.Name = "mnMenu";
             this.mnMenu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
@@ -154,6 +151,7 @@
             // 
             // exportResultToXmlToolStripMenuItem
             // 
+            this.exportResultToXmlToolStripMenuItem.Enabled = false;
             this.exportResultToXmlToolStripMenuItem.Name = "exportResultToXmlToolStripMenuItem";
             this.exportResultToXmlToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
             this.exportResultToXmlToolStripMenuItem.Text = "Export Results to xml";
@@ -161,6 +159,7 @@
             // 
             // calculateRecallToolStripMenuItem
             // 
+            this.calculateRecallToolStripMenuItem.Enabled = false;
             this.calculateRecallToolStripMenuItem.Name = "calculateRecallToolStripMenuItem";
             this.calculateRecallToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
             this.calculateRecallToolStripMenuItem.Text = "Calculate Precision and Recall";
@@ -178,41 +177,13 @@
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.Quit_Click);
             // 
-            // playToolStripMenuItem
-            // 
-            this.playToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmPlay,
-            this.pauseToolStripMenuItem,
-            this.stopToolStripMenuItem});
-            this.playToolStripMenuItem.Name = "playToolStripMenuItem";
-            this.playToolStripMenuItem.Size = new System.Drawing.Size(48, 24);
-            this.playToolStripMenuItem.Text = "Play";
-            // 
-            // tsmPlay
-            // 
-            this.tsmPlay.Name = "tsmPlay";
-            this.tsmPlay.Size = new System.Drawing.Size(116, 24);
-            this.tsmPlay.Text = "Play";
-            this.tsmPlay.Click += new System.EventHandler(this.start_Click);
-            // 
-            // pauseToolStripMenuItem
-            // 
-            this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(116, 24);
-            this.pauseToolStripMenuItem.Text = "Pause";
-            this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pause_Click);
-            // 
-            // stopToolStripMenuItem
-            // 
-            this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(116, 24);
-            // 
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel1.Controls.Add(this.label19);
             this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
@@ -222,6 +193,7 @@
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnStart.Enabled = false;
             this.btnStart.Location = new System.Drawing.Point(4, 520);
             this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
@@ -338,14 +310,14 @@
             // 
             this.pixel.Controls.Add(this.txtPixelFraction);
             this.pixel.Controls.Add(this.txtPixelDistance);
-            this.pixel.Controls.Add(this.startPixel);
+            this.pixel.Controls.Add(this.btnStartPixel);
             this.pixel.Controls.Add(this.label5);
             this.pixel.Controls.Add(this.label4);
             this.pixel.Controls.Add(this.label3);
             this.pixel.Controls.Add(this.label1);
             this.pixel.Location = new System.Drawing.Point(4, 25);
             this.pixel.Name = "pixel";
-            this.pixel.Size = new System.Drawing.Size(1141, 241);
+            this.pixel.Size = new System.Drawing.Size(1134, 235);
             this.pixel.TabIndex = 2;
             this.pixel.Text = "Pixel";
             this.pixel.UseVisualStyleBackColor = true;
@@ -370,16 +342,17 @@
             this.txtPixelDistance.TabIndex = 7;
             this.txtPixelDistance.Text = "256";
             // 
-            // startPixel
+            // btnStartPixel
             // 
-            this.startPixel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.startPixel.Location = new System.Drawing.Point(1063, 215);
-            this.startPixel.Name = "startPixel";
-            this.startPixel.Size = new System.Drawing.Size(75, 23);
-            this.startPixel.TabIndex = 6;
-            this.startPixel.Text = "Run";
-            this.startPixel.UseVisualStyleBackColor = true;
-            this.startPixel.Click += new System.EventHandler(this.startPixel_Click);
+            this.btnStartPixel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStartPixel.Enabled = false;
+            this.btnStartPixel.Location = new System.Drawing.Point(1056, 209);
+            this.btnStartPixel.Name = "btnStartPixel";
+            this.btnStartPixel.Size = new System.Drawing.Size(75, 23);
+            this.btnStartPixel.TabIndex = 6;
+            this.btnStartPixel.Text = "Run";
+            this.btnStartPixel.UseVisualStyleBackColor = true;
+            this.btnStartPixel.Click += new System.EventHandler(this.startPixel_Click);
             // 
             // label5
             // 
@@ -428,7 +401,7 @@
             this.motion.Controls.Add(this.label8);
             this.motion.Location = new System.Drawing.Point(4, 25);
             this.motion.Name = "motion";
-            this.motion.Size = new System.Drawing.Size(1141, 241);
+            this.motion.Size = new System.Drawing.Size(1134, 235);
             this.motion.TabIndex = 3;
             this.motion.Text = "Motion";
             this.motion.UseVisualStyleBackColor = true;
@@ -456,7 +429,8 @@
             // btnStartMotion
             // 
             this.btnStartMotion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStartMotion.Location = new System.Drawing.Point(1063, 215);
+            this.btnStartMotion.Enabled = false;
+            this.btnStartMotion.Location = new System.Drawing.Point(1056, 209);
             this.btnStartMotion.Name = "btnStartMotion";
             this.btnStartMotion.Size = new System.Drawing.Size(75, 23);
             this.btnStartMotion.TabIndex = 13;
@@ -513,7 +487,7 @@
             this.global.Controls.Add(this.label12);
             this.global.Location = new System.Drawing.Point(4, 25);
             this.global.Name = "global";
-            this.global.Size = new System.Drawing.Size(1141, 241);
+            this.global.Size = new System.Drawing.Size(1134, 235);
             this.global.TabIndex = 4;
             this.global.Text = "Global Hist";
             this.global.UseVisualStyleBackColor = true;
@@ -541,7 +515,8 @@
             // btnStartGlobalHist
             // 
             this.btnStartGlobalHist.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStartGlobalHist.Location = new System.Drawing.Point(1063, 215);
+            this.btnStartGlobalHist.Enabled = false;
+            this.btnStartGlobalHist.Location = new System.Drawing.Point(1056, 209);
             this.btnStartGlobalHist.Name = "btnStartGlobalHist";
             this.btnStartGlobalHist.Size = new System.Drawing.Size(75, 23);
             this.btnStartGlobalHist.TabIndex = 20;
@@ -599,7 +574,7 @@
             this.local.Controls.Add(this.label16);
             this.local.Location = new System.Drawing.Point(4, 25);
             this.local.Name = "local";
-            this.local.Size = new System.Drawing.Size(1141, 241);
+            this.local.Size = new System.Drawing.Size(1134, 235);
             this.local.TabIndex = 5;
             this.local.Text = "Local Hist";
             this.local.UseVisualStyleBackColor = true;
@@ -655,7 +630,8 @@
             // btnStartLocalHistogram
             // 
             this.btnStartLocalHistogram.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStartLocalHistogram.Location = new System.Drawing.Point(1063, 215);
+            this.btnStartLocalHistogram.Enabled = false;
+            this.btnStartLocalHistogram.Location = new System.Drawing.Point(1056, 209);
             this.btnStartLocalHistogram.Name = "btnStartLocalHistogram";
             this.btnStartLocalHistogram.Size = new System.Drawing.Size(75, 23);
             this.btnStartLocalHistogram.TabIndex = 27;
@@ -703,7 +679,7 @@
             // 
             this.general.Location = new System.Drawing.Point(4, 25);
             this.general.Name = "general";
-            this.general.Size = new System.Drawing.Size(1000, 195);
+            this.general.Size = new System.Drawing.Size(1134, 235);
             this.general.TabIndex = 6;
             this.general.Text = "General";
             this.general.UseVisualStyleBackColor = true;
@@ -713,7 +689,7 @@
             this.Shots.Location = new System.Drawing.Point(4, 25);
             this.Shots.Name = "Shots";
             this.Shots.Padding = new System.Windows.Forms.Padding(3);
-            this.Shots.Size = new System.Drawing.Size(1000, 195);
+            this.Shots.Size = new System.Drawing.Size(1134, 235);
             this.Shots.TabIndex = 0;
             this.Shots.Text = "Shots";
             this.Shots.UseVisualStyleBackColor = true;
@@ -723,9 +699,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 873);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 875);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1175, 24);
+            this.statusStrip1.Size = new System.Drawing.Size(1175, 22);
             this.statusStrip1.TabIndex = 22;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -740,6 +716,18 @@
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 18);
             this.toolStripProgressBar1.Visible = false;
             // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.ForeColor = System.Drawing.Color.White;
+            this.label19.Location = new System.Drawing.Point(21, 16);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(463, 92);
+            this.label19.TabIndex = 0;
+            this.label19.Text = "No file open!\r\nClick here to open a file";
+            this.label19.Click += new System.EventHandler(this.label19_Click);
+            // 
             // ShotDetector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -749,13 +737,17 @@
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.mnMenu);
             this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MainMenuStrip = this.mnMenu;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(1063, 100);
             this.Name = "ShotDetector";
             this.Text = "ShotDetector";
             this.mnMenu.ResumeLayout(false);
             this.mnMenu.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -785,10 +777,6 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tsmPlay;
-        private System.Windows.Forms.ToolStripMenuItem pauseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
         private System.ServiceProcess.ServiceController serviceController1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnStart;
@@ -812,7 +800,7 @@
         private System.Windows.Forms.TabPage global;
         private System.Windows.Forms.TabPage local;
         private System.Windows.Forms.TabPage general;
-        private System.Windows.Forms.Button startPixel;
+        private System.Windows.Forms.Button btnStartPixel;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
@@ -846,6 +834,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.Label label19;
     }
 }
 

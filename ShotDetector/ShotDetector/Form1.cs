@@ -35,6 +35,7 @@ namespace ShotDetector {
             }
             cmbLocalHistNrOfBlocks.SelectedIndex = 2;
             this.frameCount = 0;
+            this.tabControl1.SelectedIndex = 1;
         }
 
         //videofile
@@ -47,6 +48,15 @@ namespace ShotDetector {
             if (ofdBrowse.ShowDialog() == DialogResult.OK) {
                 fileName = ofdBrowse.FileName;
                 dgvResults.Rows.Clear();
+                btnStart.Enabled = true;
+
+                btnStartPixel.Enabled = true;
+                btnStartMotion.Enabled = true;
+                btnStartLocalHistogram.Enabled = true;
+                btnStartGlobalHist.Enabled = true;
+
+                label19.Visible = false;
+                start_Click(sender, e);
             }
         }
         private void Quit_Click(object sender, EventArgs e) {
@@ -82,20 +92,16 @@ namespace ShotDetector {
             // If we were stopped, start
             if (m_State == State.Stopped) {
                 btnStart.Text = "Stop";
-                tsmPlay.Text = "Stop";
                 m_play.Start();
                 btnPause.Enabled = true;
                 m_State = State.Playing;
-                this.btnPause.Enabled = true;
             }
                 // If we are playing or paused, stop
             else if (m_State == State.Playing || m_State == State.Paused) {
                 m_play.Stop();
                 btnPause.Enabled = false;
                 btnStart.Text = "Start";
-                tsmPlay.Text = "Start";
                 btnPause.Text = "Pause";
-                pauseToolStripMenuItem.Text = "Pause";
                 m_State = State.Stopped;
                 this.btnPause.Enabled = false;
             }
@@ -106,15 +112,12 @@ namespace ShotDetector {
             if (m_State == State.Playing) {
                 m_play.Pause();
                 btnPause.Text = "Resume";
-                pauseToolStripMenuItem.Text = "Resume";
                 m_State = State.Paused;
             }
                 // If we are paused, start
             else {
                 m_play.Start();
-                pauseToolStripMenuItem.Text = "Pause";
                 btnPause.Text = "Pause";
-                pauseToolStripMenuItem.Text = "Pause";
                 m_State = State.Playing;
             }
         }
@@ -126,9 +129,7 @@ namespace ShotDetector {
 
             btnPause.Enabled = false;
             btnStart.Text = "Start";
-            tsmPlay.Text = "Start";
             btnPause.Text = "Pause";
-            pauseToolStripMenuItem.Text = "Pause";
 
             CheckForIllegalCrossThreadCalls = true;
 
@@ -287,6 +288,13 @@ namespace ShotDetector {
         }
 
         private void RunMethod(DxScan scanner,String methodName) {
+            //disable other start buttons
+            btnStartGlobalHist.Enabled = false;
+            btnStartLocalHistogram.Enabled = false;
+            btnStartMotion.Enabled = false;
+            btnStartPixel.Enabled = false;
+            openToolStripMenuItem.Enabled = false;
+
             //cleanup
             dgvResults.Rows.Clear();
             //notify user
@@ -308,7 +316,19 @@ namespace ShotDetector {
             long time = sw.ElapsedMilliseconds;
             this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds";
             this.toolStripProgressBar1.Visible = false;
+
+            //enable other buttons
+            btnStartPixel.Enabled = true;
+            btnStartMotion.Enabled = true;
+            btnStartLocalHistogram.Enabled = true;
+            btnStartGlobalHist.Enabled = true;
+            openToolStripMenuItem.Enabled = true;
+            calculateRecallToolStripMenuItem.Enabled = true;
+            exportResultToXmlToolStripMenuItem.Enabled = true;
         }
 
+        private void label19_Click(object sender, EventArgs e) {
+            browseFile(sender, e);
+        }
     }
 }
