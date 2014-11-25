@@ -351,7 +351,7 @@
             this.txtPixelFraction.PromptChar = ' ';
             this.txtPixelFraction.Size = new System.Drawing.Size(100, 22);
             this.txtPixelFraction.TabIndex = 8;
-            this.txtPixelFraction.Text = "025";
+            this.txtPixelFraction.Text = "0125";
             // 
             // txtPixelDistance
             // 
@@ -378,9 +378,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(221, 91);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(351, 34);
+            this.label5.Size = new System.Drawing.Size(287, 34);
             this.label5.TabIndex = 5;
-            this.label5.Text = "% of pixels that was hit or had a big enough distance . \r\nMin 0 - Max: 1";
+            this.label5.Text = "% of pixels that had a big enough distance . \r\nMin 0 - Max: 1";
             // 
             // label4
             // 
@@ -473,7 +473,7 @@
             this.label6.Size = new System.Drawing.Size(269, 51);
             this.label6.TabIndex = 11;
             this.label6.Text = "the size of the subblock in pixels\r\nhigher for less accurate motion searching\r\nMi" +
-    "n: 0 - Max: 32";
+    "n: 1 - Max: 32";
             // 
             // label7
             // 
@@ -596,6 +596,7 @@
             // 
             // cmbLocalHistNrOfBlocks
             // 
+            this.cmbLocalHistNrOfBlocks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbLocalHistNrOfBlocks.FormattingEnabled = true;
             this.cmbLocalHistNrOfBlocks.Location = new System.Drawing.Point(559, 36);
             this.cmbLocalHistNrOfBlocks.Name = "cmbLocalHistNrOfBlocks";

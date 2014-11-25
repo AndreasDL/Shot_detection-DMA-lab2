@@ -62,7 +62,7 @@ public class GlobalHistogramMethod: aShotDetectionMethod, ISampleGrabberCB {
                 twoHistsDiff += Math.Abs(current_histogram[i + 2] - previous_histogram[i + 2]);
             }
 
-            if (twoHistsDiff > threshold * BufferLen && frameNumber > lastShot + 10 ) {
+            if (twoHistsDiff > 2 * threshold * BufferLen && frameNumber > lastShot + 10 ) {
                 lastShot = frameNumber;
                 return true;
             } else {

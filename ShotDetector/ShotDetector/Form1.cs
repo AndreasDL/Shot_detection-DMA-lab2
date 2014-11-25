@@ -34,7 +34,7 @@ namespace ShotDetector {
             }
             cmbLocalHistNrOfBlocks.SelectedIndex = 2;
 
-            this.txtPixelDistance.TypeValidationCompleted += new TypeValidationEventHandler(distance_check);
+            
         }
 
         //videofile
@@ -216,78 +216,90 @@ namespace ShotDetector {
 
         //start methods
         private void startPixel_Click(object sender, EventArgs e) {
-
-            ShotCollection shots = new ShotCollection();
             int distance = Convert.ToInt32(txtPixelDistance.Text);
             double fraction = Convert.ToDouble(txtPixelFraction.Text);
 
-            shots.addObserver(this);//make sure the datagridview gets updated
-            DxScan scanner = new DxScan(fileName, factory.getPixelMethod(shots, distance, fraction) );
+            if (distance > 0 && distance <= 768 && fraction > 0 && fraction <= 1) {
+                ShotCollection shots = new ShotCollection();
+                shots.addObserver(this);//make sure the datagridview gets updated
+                DxScan scanner = new DxScan(fileName, factory.getPixelMethod(shots, distance, fraction));
 
-            var sw = Stopwatch.StartNew();
-            dgvResults.Rows.Clear();
-            scanner.Start();
-            scanner.WaitUntilDone();
-            sw.Stop();
-            long time = sw.ElapsedMilliseconds;
-            MessageBox.Show("Pixel method completed in " + time / 1000.0 + " seconds");
+                var sw = Stopwatch.StartNew();
+                dgvResults.Rows.Clear();
+                scanner.Start();
+                scanner.WaitUntilDone();
+                sw.Stop();
+                long time = sw.ElapsedMilliseconds;
+                MessageBox.Show("Pixel method completed in " + time / 1000.0 + " seconds");
+            } else {
+                MessageBox.Show("Please check your input parameters");
+            }
         }
         private void startMotion_Click(object sender, EventArgs e) {
-            ShotCollection shots = new ShotCollection();
             int subsize = Convert.ToInt32(txtMotionSubSize.Text);
             int windowsize = Convert.ToInt32(txtMotionWindowSize.Text);
 
-            shots.addObserver(this);//make sure the datagridview gets updated
-            DxScan scanner = new DxScan(fileName, factory.getMotionMethod(shots, subsize, windowsize));
+            if (subsize >= 1 && subsize <= 32 && windowsize >= 1 && windowsize <= 4) {
+                ShotCollection shots = new ShotCollection();
+                shots.addObserver(this);//make sure the datagridview gets updated
+                DxScan scanner = new DxScan(fileName, factory.getMotionMethod(shots, subsize, windowsize));
 
-            var sw = Stopwatch.StartNew();
-            dgvResults.Rows.Clear();
-            scanner.Start();
-            scanner.WaitUntilDone();
-            sw.Stop();
-            long time = sw.ElapsedMilliseconds;
-            MessageBox.Show("Motion method completed in " + time / 1000.0 + " seconds");
-        }
-        private void startGlobalHist_Click(object sender, EventArgs e) {
-            ShotCollection shots = new ShotCollection();
-            int binCount = Convert.ToInt32(txtGlobalBinCount.Text);
-            double fraction = Convert.ToDouble(txtGlobalFraction.Text);
-
-            shots.addObserver(this);//make sure the datagridview gets updated
-            DxScan scanner = new DxScan(fileName, factory.getGlobalHistogramMethod(shots, binCount,fraction));
-
-            var sw = Stopwatch.StartNew();
-            dgvResults.Rows.Clear();
-            scanner.Start();
-            scanner.WaitUntilDone();
-            sw.Stop();
-            long time = sw.ElapsedMilliseconds;
-            MessageBox.Show("Global Histogram method completed in " + time / 1000.0 + " seconds");
-        }
-        private void StartLocalHistogram_Click(object sender, EventArgs e) {
-            ShotCollection shots = new ShotCollection();
-            int binCount = Convert.ToInt32(txtGlobalBinCount.Text);
-            double fraction = Convert.ToDouble(txtGlobalFraction.Text);
-            int nrOfBlocks = Convert.ToInt32(cmbLocalHistNrOfBlocks.SelectedIndex) + 1;
-            nrOfBlocks *= nrOfBlocks;
-
-            shots.addObserver(this);//make sure the datagridview gets updated
-            DxScan scanner = new DxScan(fileName, factory.getLocalHistogramMethod(shots, binCount, fraction, nrOfBlocks));
-
-            var sw = Stopwatch.StartNew();
-            dgvResults.Rows.Clear();
-            scanner.Start();
-            scanner.WaitUntilDone();
-            sw.Stop();
-            long time = sw.ElapsedMilliseconds;
-            MessageBox.Show("Global Histogram method completed in " + time / 1000.0 + " seconds");
-        }
-
-        void distance_check(object sender, TypeValidationEventArgs e) {
-            int distance = Convert.ToInt32(e.ReturnValue);
-            if (distance < 0 || distance > 768) {
-                e.Cancel = true;
+                var sw = Stopwatch.StartNew();
+                dgvResults.Rows.Clear();
+                scanner.Start();
+                scanner.WaitUntilDone();
+                sw.Stop();
+                long time = sw.ElapsedMilliseconds;
+                MessageBox.Show("Motion method completed in " + time / 1000.0 + " seconds");
+            } else {
+                MessageBox.Show("Please check your input parameters");
             }
         }
+        private void startGlobalHist_Click(object sender, EventArgs e) {
+            int binCount = Convert.ToInt32(txtGlobalBinCount.Text);
+            double fraction = Convert.ToDouble(txtGlobalFraction.Text);
+
+            if (binCount > 0 && binCount <= 256 && fraction > 0 && fraction <= 1) {
+                ShotCollection shots = new ShotCollection();
+                shots.addObserver(this);//make sure the datagridview gets updated
+                DxScan scanner = new DxScan(fileName, factory.getGlobalHistogramMethod(shots, binCount, fraction));
+
+                var sw = Stopwatch.StartNew();
+                dgvResults.Rows.Clear();
+                scanner.Start();
+                scanner.WaitUntilDone();
+                sw.Stop();
+                long time = sw.ElapsedMilliseconds;
+                MessageBox.Show("Global Histogram method completed in " + time / 1000.0 + " seconds");
+            } else {
+                MessageBox.Show("Please check your input parameters");
+            }
+        }
+        private void StartLocalHistogram_Click(object sender, EventArgs e) {
+            int binCount = Convert.ToInt32(txtGlobalBinCount.Text);
+            double fraction = Convert.ToDouble(txtGlobalFraction.Text);
+
+            if (binCount > 0 && binCount <= 256 && fraction > 0 && fraction <= 1) {
+                //always right, since it comes from combobox
+                int nrOfBlocks = Convert.ToInt32(cmbLocalHistNrOfBlocks.SelectedIndex) + 1;
+                nrOfBlocks *= nrOfBlocks;
+
+                ShotCollection shots = new ShotCollection();
+                shots.addObserver(this);//make sure the datagridview gets updated
+                DxScan scanner = new DxScan(fileName, factory.getLocalHistogramMethod(shots, binCount, fraction, nrOfBlocks));
+
+                var sw = Stopwatch.StartNew();
+                dgvResults.Rows.Clear();
+                scanner.Start();
+                scanner.WaitUntilDone();
+                sw.Stop();
+                long time = sw.ElapsedMilliseconds;
+                MessageBox.Show("Global Histogram method completed in " + time / 1000.0 + " seconds");
+            } else {
+                MessageBox.Show("Please check your input parameters");
+            }
+        }
+
+
     }
 }

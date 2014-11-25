@@ -49,7 +49,7 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
                 if (twoPixDiff > delta2) threshReached++;
             }
 
-            if (threshReached * 3.0 / (BufferLen * 1.0) > delta3) {
+            if (threshReached * 3.0 / (BufferLen * 1.0) > (2*delta3)) {
                 return true;
             } else {
                 return false;

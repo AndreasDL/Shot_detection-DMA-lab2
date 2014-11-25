@@ -79,7 +79,7 @@ public class LocalHistogram: aShotDetectionMethod {
                     twoHistsDiff += Math.Abs(current_histograms[k][i] - previous_histograms[k][i]);
                 }
             }
-            if (twoHistsDiff > threshold * BufferLen && frameNumber > lastShot + 10 ) {
+            if (twoHistsDiff > 2* threshold * BufferLen && frameNumber > lastShot + 10 ) {
                 lastShot = frameNumber;
                 return true;
             } else {
