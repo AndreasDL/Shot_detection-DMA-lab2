@@ -136,8 +136,50 @@ public class TwinComparison: aShotDetectionMethod {
         double thresh_low = 9.0 * mean; // Might be better if this is changed into max(mean,median)
         double thresh_high = mean + 5.0 * stdev;
 
+        long diffToStart = 0;
+        int startIndex = 0;
+        bool checkingtransition = false;
+        
+        for (int i = 0; i < differences.Count; i++)
+        {
+            if (differences.ElementAt(i) > thresh_high && !checkingtransition)
+            {
+                // (Hard) cut detected
+                cutFrameNumbers.Add(i);
+            }
+            else if (differences.ElementAt(i) > thresh_low)
+            {
+                if(!checkingtransition){
+                // Possible start of gradual cut
+                    checkingtransition = true;
+                    startIndex = i;
+                } else {
+
+                    diffToStart = 0;
+                    for (int j = 0; j < nrOfBins * 3 - 3; j += 3)
+                    {
+                        diffToStart += Math.Abs(histograms.ElementAt(startIndex)[i] - Math.Abs(histograms.ElementAt(j)[i]);
+                        diffToStart += Math.Abs(histograms.ElementAt(startIndex)[i + 1] - Math.Abs(histograms.ElementAt(j)[i + 1]);
+                        diffToStart += Math.Abs(histograms.ElementAt(startIndex)[i + 2] - Math.Abs(histograms.ElementAt(j)[i + 2]);
+                    }
+
+                    if(diffToStart > thresh_high){  // Maybe && i-5 > startIndex to make sure a gradual transition is long enough
+                        // Detect cut
+                        cutFrameNumbers.Add(i);
+                        checkingtransition = false;
+                    } else if(diffToStart < thresh_low){
+                        // Discard cut
+                        checkingtransition = false;
+                    }
+
+                }
 
 
-        return cutFrameNumbers;
+            }
+        }
+
+
+
+            return cutFrameNumbers;
     }
 }
