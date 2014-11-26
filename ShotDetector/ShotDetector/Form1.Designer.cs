@@ -46,6 +46,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.annotations = new System.Windows.Forms.TabPage();
+            this.label20 = new System.Windows.Forms.Label();
             this.btnCalc = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
             this.dgvResults = new System.Windows.Forms.DataGridView();
@@ -93,7 +94,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.label20 = new System.Windows.Forms.Label();
             this.mnMenu.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -207,7 +207,6 @@
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnStart.Enabled = false;
             this.btnStart.Location = new System.Drawing.Point(4, 520);
             this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
@@ -285,6 +284,15 @@
             this.annotations.TabIndex = 1;
             this.annotations.Text = "Annotations";
             this.annotations.UseVisualStyleBackColor = true;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(3, 216);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(173, 16);
+            this.label20.TabIndex = 1;
+            this.label20.Text = "Double click a shot to play it";
             // 
             // btnCalc
             // 
@@ -755,15 +763,6 @@
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 18);
             this.toolStripProgressBar1.Visible = false;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(3, 216);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(173, 16);
-            this.label20.TabIndex = 1;
-            this.label20.Text = "Double click a shot to play it";
             // 
             // ShotDetector
             // 

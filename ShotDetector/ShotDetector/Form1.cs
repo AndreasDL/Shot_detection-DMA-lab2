@@ -22,7 +22,7 @@ namespace ShotDetector {
         }
         private State m_State = State.Uninit;
         private DxPlay m_play = null;
-        private string fileName;
+        private string videoFileName = "";
         private DxScan m_scan = null;
         private MethodFactory factory;
         private long frameCount;
@@ -47,7 +47,7 @@ namespace ShotDetector {
             ofdBrowse.RestoreDirectory = true;
 
             if (ofdBrowse.ShowDialog() == DialogResult.OK) {
-                fileName = ofdBrowse.FileName;
+                videoFileName = ofdBrowse.FileName;
                 dgvResults.Rows.Clear();
                 btnStart.Enabled = true;
 
@@ -66,46 +66,54 @@ namespace ShotDetector {
 
         //Start - Stop - Rewind
         private void start_Click(object sender, EventArgs e) {
-            // If necessary, close the old file
-            if (m_State == State.Stopped) {
-                // Did the filename change?
-                if (fileName != m_play.FileName) {
-                    // File name changed, close the old file
-                    m_play.Dispose();
-                    m_play = null;
-                    m_State = State.Uninit;
+            if (videoFileName == "") {
+                browseFile(sender, e);//will start the playing
+                //start_Click(sender, e);
+            } else { 
+           
+                // If necessary, close the old file
+                if (m_State == State.Stopped) {
+                    // Did the filename change?
+                    if (videoFileName != m_play.FileName) {
+                        // File name changed, close the old file
+                        m_play.Dispose();
+                        m_play = null;
+                        m_State = State.Uninit;
+                    }
                 }
-            }
 
-            // If we have no file open
-            if (m_play == null) {
-                try {
-                    // Open the file, provide a handle to play it in
-                    m_play = new DxPlay(panel1, fileName);
-                    // Let us know when the file is finished playing
-                    m_play.StopPlay += new DxPlay.DxPlayEvent(m_play_StopPlay);
+                // If we have no file open
+                if (m_play == null) {
+                    try {
+                        // Open the file, provide a handle to play it in
+                        m_play = new DxPlay(panel1, videoFileName);
+                        // Let us know when the file is finished playing
+                        m_play.StopPlay += new DxPlay.DxPlayEvent(m_play_StopPlay);
+                        m_State = State.Stopped;
+                    } catch (COMException ce) {
+                        MessageBox.Show("Failed to open file: " + ce.Message, "Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+                // If we were stopped, start
+                if (m_State == State.Stopped) {
+                    btnStart.Text = "Stop";
+                    //m_play.Start();
+                    m_play.playShot(0, m_play.getFrameCount());
+                    btnPause.Enabled = true;
+                    m_State = State.Playing;
+                }
+                    // If we are playing or paused, stop
+                else if (m_State == State.Playing || m_State == State.Paused) {
+                    m_play.Stop();
+                    btnPause.Enabled = false;
+                    btnStart.Text = "Start";
+                    btnPause.Text = "Pause";
                     m_State = State.Stopped;
-                } catch (COMException ce) {
-                    MessageBox.Show("Failed to open file: " + ce.Message, "Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.btnPause.Enabled = false;
                 }
             }
 
-            // If we were stopped, start
-            if (m_State == State.Stopped) {
-                btnStart.Text = "Stop";
-                m_play.Start();
-                btnPause.Enabled = true;
-                m_State = State.Playing;
-            }
-                // If we are playing or paused, stop
-            else if (m_State == State.Playing || m_State == State.Paused) {
-                m_play.Stop();
-                btnPause.Enabled = false;
-                btnStart.Text = "Start";
-                btnPause.Text = "Pause";
-                m_State = State.Stopped;
-                this.btnPause.Enabled = false;
-            }
         }
         private void pause_Click(object sender, System.EventArgs e) {
             
@@ -187,7 +195,7 @@ namespace ShotDetector {
                         ShotCollection results = this.m_scan.getMethod().getShotCollection();
 
                         results.setLastFrame(this.m_scan.getFrameCount());
-                        results.setfile(fileName);
+                        results.setfile(outputPath);
                         results.setLastFrame(m_play.getFrameCount());
 
                         results.export(outputPath);
@@ -234,7 +242,7 @@ namespace ShotDetector {
             if (distance > 0 && distance <= 768 && fraction > 0 && fraction <= 1) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(fileName, factory.getPixelMethod(shots,this, distance, fraction));
+                DxScan scanner = new DxScan(videoFileName, factory.getPixelMethod(shots,this, distance, fraction));
 
                 RunMethod(scanner , "Pixel");
             } else {
@@ -248,7 +256,7 @@ namespace ShotDetector {
             if (subsize >= 1 && subsize <= 32 && windowsize >= 1 && windowsize <= 4) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(fileName, factory.getMotionMethod(shots,this, subsize, windowsize));
+                DxScan scanner = new DxScan(videoFileName, factory.getMotionMethod(shots,this, subsize, windowsize));
 
                 RunMethod(scanner, "Motion");
             } else {
@@ -262,7 +270,7 @@ namespace ShotDetector {
             if (binCount > 0 && binCount <= 256 && fraction > 0 && fraction <= 1) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(fileName, factory.getGlobalHistogramMethod(shots,this, binCount, fraction));
+                DxScan scanner = new DxScan(videoFileName, factory.getGlobalHistogramMethod(shots,this, binCount, fraction));
 
                 RunMethod(scanner, "Global Histogram");
             } else {
@@ -280,7 +288,7 @@ namespace ShotDetector {
 
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(fileName, factory.getLocalHistogramMethod(shots,this, binCount, fraction, nrOfBlocks));
+                DxScan scanner = new DxScan(videoFileName, factory.getLocalHistogramMethod(shots,this, binCount, fraction, nrOfBlocks));
 
                 RunMethod(scanner, "Local Histogram");
             } else {
@@ -340,14 +348,28 @@ namespace ShotDetector {
         private void cellClick(object sender, DataGridViewCellEventArgs e) {
             long startFrame =(long)(Convert.ToInt32(dgvResults.Rows[e.RowIndex].Cells[1].Value));//startframe
             long stopFrame = m_play.getFrameCount();
-            if (dgvResults.Rows.Count > e.RowIndex) {//if stopframe is determined
+            if (dgvResults.Rows.Count > e.RowIndex +1 ) {//if stopframe is determined
                 stopFrame = (long)(Convert.ToInt32(dgvResults.Rows[e.RowIndex + 1].Cells[1].Value)) - 1;
             }
 
             Console.WriteLine("Click in " + e.RowIndex + " as row! shot starts at: " + startFrame);
-            if (m_play != null){
-                m_play.playShot(startFrame,stopFrame);
+            if (m_play == null) {
+                try {
+                    // Open the file, provide a handle to play it in
+                    m_play = new DxPlay(panel1, videoFileName);
+                    // Let us know when the file is finished playing
+                    m_play.StopPlay += new DxPlay.DxPlayEvent(m_play_StopPlay);
+                    m_State = State.Stopped;
+                } catch (COMException ce) {
+                    MessageBox.Show("Failed to open file: " + ce.Message, "Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
+
+            m_State = State.Playing;
+            btnStart.Text = "Stop";
+            m_play.playShot(startFrame, stopFrame);
+            btnPause.Enabled = true;
+            m_State = State.Stopped;
         }
 
     }
