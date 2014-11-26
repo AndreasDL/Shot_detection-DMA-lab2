@@ -21,6 +21,7 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
     private byte[] previous;
     private int delta2;
     private double delta3;
+    private int lastShot;
 
     public PixelMethod(int _delta2, double _delta3, ShotCollection shots): base(shots){
         this.delta2 = _delta2;
@@ -49,12 +50,14 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
                 if (twoPixDiff > delta2) threshReached++;
             }
 
-            if (threshReached * 3.0 / (BufferLen * 1.0) > (2*delta3)) {
+            if (threshReached * 3.0 / (BufferLen * 1.0) > (2*delta3) && frameNumber > lastShot + 10) {
+                lastShot = frameNumber;
                 return true;
             } else {
                 return false;
             }
         } else {
+            lastShot = 0;
             return true;
         }
     }

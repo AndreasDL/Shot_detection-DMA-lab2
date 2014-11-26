@@ -22,10 +22,11 @@ namespace ShotDetector {
         }
         private State m_State = State.Uninit;
         private DxPlay m_play = null;
-        private string fileName = "c:\\testfiles_dma\\csi.avi";
+        private string fileName;
         private DxScan m_scan = null;
         private MethodFactory factory;
         private long frameCount;
+        private ShotCollection results = null;
 
         public ShotDetector() {
             InitializeComponent();
@@ -214,7 +215,7 @@ namespace ShotDetector {
                         Thread.CurrentThread.IsBackground = true;
                         //get groundtruth
                         ShotCollection truth = new ShotCollection(groundTruthPath);
-                        ShotCollection results = this.m_scan.getMethod().getShotCollection();
+                        ShotCollection results = this.results;// this.m_scan.getMethod().getShotCollection();
 
                         MessageBox.Show("Recall: " + results.calcRecall(truth) + " Precision: " + results.calcPrecision(truth));
                     }).Start();
@@ -294,6 +295,8 @@ namespace ShotDetector {
             btnStartMotion.Enabled = false;
             btnStartPixel.Enabled = false;
             openToolStripMenuItem.Enabled = false;
+            btnCalc.Enabled = false;
+            btnExport.Enabled = false;
 
             //cleanup
             dgvResults.Rows.Clear();
@@ -310,7 +313,8 @@ namespace ShotDetector {
             scanner.Start();
             //wait for completion
             scanner.WaitUntilDone();
-
+            this.results = scanner.getMethod().getShotCollection();
+            
             //feedback
             sw.Stop();
             long time = sw.ElapsedMilliseconds;
@@ -325,10 +329,26 @@ namespace ShotDetector {
             openToolStripMenuItem.Enabled = true;
             calculateRecallToolStripMenuItem.Enabled = true;
             exportResultToXmlToolStripMenuItem.Enabled = true;
+            btnCalc.Enabled = true;
+            btnExport.Enabled = true;
         }
 
         private void label19_Click(object sender, EventArgs e) {
             browseFile(sender, e);
         }
+
+        private void cellClick(object sender, DataGridViewCellEventArgs e) {
+            long startFrame =(long)(Convert.ToInt32(dgvResults.Rows[e.RowIndex].Cells[1].Value));//startframe
+            long stopFrame = m_play.getFrameCount();
+            if (dgvResults.Rows.Count > e.RowIndex) {//if stopframe is determined
+                stopFrame = (long)(Convert.ToInt32(dgvResults.Rows[e.RowIndex + 1].Cells[1].Value)) - 1;
+            }
+
+            Console.WriteLine("Click in " + e.RowIndex + " as row! shot starts at: " + startFrame);
+            if (m_play != null){
+                m_play.playShot(startFrame,stopFrame);
+            }
+        }
+
     }
 }

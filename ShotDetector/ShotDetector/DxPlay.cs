@@ -357,5 +357,15 @@ namespace ShotDetector {
             return duration;
         }
 
+        public void playShot(long startFrame,long stopFrame) {
+
+            IMediaSeeking ims = m_FilterGraph as IMediaSeeking;
+            ims.SetTimeFormat(TimeFormat.Frame);
+            Stop();
+            DsLong start = new DsLong(startFrame);
+            DsLong stop = new DsLong(stopFrame);
+            ims.SetPositions(start,AMSeekingSeekingFlags.AbsolutePositioning, stopFrame, AMSeekingSeekingFlags.ReturnTime);
+            Start();
+        }
     }
 }
