@@ -60,6 +60,7 @@ public class Shot {
     }
 
     public void setTagString(String tags) {
+        tags = tags.Replace("\n","");//remove newlines
         this.tags = new List<String>(tags.Split(';'));
     }
 }

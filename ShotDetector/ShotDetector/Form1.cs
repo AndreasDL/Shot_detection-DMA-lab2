@@ -158,6 +158,22 @@ namespace ShotDetector {
             }
         }
 
+        delegate void UpdateSearchCallback(List<Shot> shots);
+        public void updateSearch(List<Shot> shots) {
+            //updates the datagrid view
+            if (this.dgvSearch.InvokeRequired) {
+                UpdateSearchCallback u = new UpdateSearchCallback(updateSearch);
+                this.Invoke(u, new object[] { shots });
+            } else {
+                foreach (Shot shot in shots) {
+                    dgvSearch.Rows.Add(new string[] { "" + dgvSearch.RowCount, "" + shot.getStartFrame(), shot.getTagString() });
+                }
+                if (dgvSearch.Rows.Count > 0) {
+                    dgvSearch.FirstDisplayedCell = dgvSearch.Rows[dgvSearch.Rows.Count - 1].Cells[0];
+                }
+            }
+        }
+
         delegate void ProgressCallback(long frameNumber);
         public void updateProgress(long frameNumber) {
             if (this.dgvResults.InvokeRequired) {
@@ -169,11 +185,11 @@ namespace ShotDetector {
         }
         //sync tags with shotCollection
         private void DataGridChanged(object sender, EventArgs e) {
-            if (e != null && m_play != null) {
+            if (e != null && this.results != null) {
                 System.Windows.Forms.DataGridViewCellEventArgs args = (System.Windows.Forms.DataGridViewCellEventArgs)e;
 
                 //update in model
-                m_scan.getMethod().getShotCollection().getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
+                this.results.getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
             }
         }
 
@@ -372,5 +388,15 @@ namespace ShotDetector {
             m_State = State.Stopped;
         }
 
+        private void searchTag(object sender, EventArgs e) {
+            if (this.results != null) {
+                new Thread(()=>{
+                    dgvSearch.Rows.Clear();
+                    updateSearch(results.searchShots(txtSearch.Text));
+                }).Start();
+            }
+        }
+
+        
     }
 }

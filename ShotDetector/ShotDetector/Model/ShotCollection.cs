@@ -220,4 +220,25 @@ public class ShotCollection{
     public void clear() {
         shots.Clear();
     }
+
+    public List<Shot> searchShots(string tag) {
+        List<Shot> results = new List<Shot>();
+
+        //lineair search, check which frames have the tag, can be optimized using more complex data structures, however i think this overkill.
+        //The focus of this application is to do the shot detection on small clips, managing a huge collection of movie requires databases and semantics to search for the tags
+        foreach( Shot s in this.shots){
+            List<String> tags = s.getTagArray();
+            int j = 0;
+            while (j < tags.Count && tags[j] != tag) { //while not found
+                j++;
+            }
+
+            //if found, save
+            if (j != tags.Count) {
+                results.Add(s);
+            }
+        }
+
+        return results;
+    }
 }
