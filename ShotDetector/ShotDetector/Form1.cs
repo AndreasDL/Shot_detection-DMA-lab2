@@ -21,12 +21,14 @@ namespace ShotDetector {
             Playing
         }
         private State m_State = State.Uninit;
-        private DxPlay m_play = null;
-        private string videoFileName = "";
-        private DxScan m_scan = null;
+        private DxPlay m_play;
+        private DxScan m_scan;
+
+        private string videoFileName;
         private MethodFactory factory;
+        private ShotCollection results;
         private long frameCount;
-        private ShotCollection results = null;
+        private int currRow;
 
         public ShotDetector() {
             InitializeComponent();
@@ -37,6 +39,11 @@ namespace ShotDetector {
             cmbLocalHistNrOfBlocks.SelectedIndex = 2;
             this.frameCount = 0;
             this.tabControl1.SelectedIndex = 1;
+            this.results = null;
+            this.m_play = null;
+            this.m_scan = null;
+            this.videoFileName = "";
+            this.currRow = -1; //selected row in dgvResults
         }
 
         //videofile
@@ -129,7 +136,6 @@ namespace ShotDetector {
                 m_State = State.Playing;
             }
         }
-
         // Called when the video is finished playing
         private void m_play_StopPlay(Object sender) {
             // This isn't the right way to do this, but heck, it's only a sample
@@ -142,54 +148,6 @@ namespace ShotDetector {
             CheckForIllegalCrossThreadCalls = true;
 
             m_State = State.Stopped;
-        }
-
-        //update gui
-        delegate void UpdateGridCallback(Shot shot);
-        public void updateList(Shot shot) { 
-            //updates the datagrid view
-            if (this.dgvResults.InvokeRequired) {
-                UpdateGridCallback u = new UpdateGridCallback(updateList);
-                this.Invoke(u, new object[] {shot});
-            } else {
-                dgvResults.Rows.Add(new string[] { "" + dgvResults.RowCount, "" + shot.getStartFrame(), shot.getTagString() });
-                dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count -1 ].Cells[0];
-            }
-        }
-
-        delegate void UpdateSearchCallback(List<Shot> shots);
-        public void updateSearch(List<Shot> shots) {
-            //updates the datagrid view
-            if (this.dgvSearch.InvokeRequired) {
-                UpdateSearchCallback u = new UpdateSearchCallback(updateSearch);
-                this.Invoke(u, new object[] { shots });
-            } else {
-                foreach (Shot shot in shots) {
-                    dgvSearch.Rows.Add(new string[] { "" + dgvSearch.RowCount, "" + shot.getStartFrame(), shot.getTagString() });
-                }
-                if (dgvSearch.Rows.Count > 0) {
-                    dgvSearch.FirstDisplayedCell = dgvSearch.Rows[dgvSearch.Rows.Count - 1].Cells[0];
-                }
-            }
-        }
-
-        delegate void ProgressCallback(long frameNumber);
-        public void updateProgress(long frameNumber) {
-            if (this.dgvResults.InvokeRequired) {
-                ProgressCallback pcb = new ProgressCallback(updateProgress);
-                this.Invoke(pcb, new object[] { frameNumber });
-            } else {
-                this.toolStripProgressBar1.Value = Convert.ToInt32(100*frameNumber / frameCount);
-            }
-        }
-        //sync tags with shotCollection
-        private void DataGridChanged(object sender, EventArgs e) {
-            if (e != null && this.results != null) {
-                System.Windows.Forms.DataGridViewCellEventArgs args = (System.Windows.Forms.DataGridViewCellEventArgs)e;
-
-                //update in model
-                this.results.getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
-            }
         }
 
         //export
@@ -326,6 +284,8 @@ namespace ShotDetector {
 
                 //cleanup
                 dgvResults.Rows.Clear();
+                this.results = new ShotCollection(); //temp used while video is playing
+
                 //notify user
                 this.toolStripStatusLabel1.Text = "Shot Detection (" + methodName + ") Running ...";
                 this.frameCount = scanner.getFrameCount();
@@ -341,7 +301,7 @@ namespace ShotDetector {
 
                 //wait for completion
                 scanner.WaitUntilDone();
-                this.results = scanner.getMethod().getShotCollection();
+                this.results = scanner.getMethod().getShotCollection();//replaced with this one , which also contains the parameters
 
                 //feedback
                 sw.Stop();
@@ -362,8 +322,19 @@ namespace ShotDetector {
             
             }
         }
+        //progressbar
+        delegate void ProgressCallback(long frameNumber);
+        public void updateProgress(long frameNumber) {
+            if (this.dgvResults.InvokeRequired) {
+                ProgressCallback pcb = new ProgressCallback(updateProgress);
+                this.Invoke(pcb, new object[] { frameNumber });
+            } else {
+                this.toolStripProgressBar1.Value = Convert.ToInt32(100 * frameNumber / frameCount);
+            }
+        }
 
-        private void cellClick(object sender, DataGridViewCellEventArgs e) {
+        //datagrids
+        private void cellDoubleClick(object sender, DataGridViewCellEventArgs e) {
             long startFrame =(long)(Convert.ToInt32(dgvResults.Rows[e.RowIndex].Cells[1].Value));//startframe
             long stopFrame = m_play.getFrameCount();
             if (dgvResults.Rows.Count > e.RowIndex +1 ) {//if stopframe is determined
@@ -389,16 +360,84 @@ namespace ShotDetector {
             btnPause.Enabled = true;
             m_State = State.Stopped;
         }
+        private void resultSelectedIndexChanged(object sender, EventArgs e) {
+            int newRow = this.dgvResults.CurrentRow.Index;
 
+            if (newRow != this.currRow) {//only if the row changed
+                Shot s = this.results.getShot(newRow);
+
+                //update the picture
+                this.pictureBox1.Image = new Bitmap(s.getFrameShot(),new Size(this.pictureBox1.Width,this.pictureBox1.Height));
+
+                this.currRow = newRow;
+            }
+        }
         private void searchTag(object sender, EventArgs e) {
             if (this.results != null) {
-                new Thread(()=>{
+                new Thread(() => {
                     dgvSearch.Rows.Clear();
                     updateSearch(results.searchShots(txtSearch.Text));
                 }).Start();
             }
         }
+        //update gui
+        delegate void UpdateGridCallback(Shot shot);
+        public void updateList(Shot shot) {
+            //updates the datagrid view
+            if (this.dgvResults.InvokeRequired) {
+                UpdateGridCallback u = new UpdateGridCallback(updateList);
+                this.Invoke(u, new object[] { shot });
+            } else {
+                this.results.addShot(shot);
+                dgvResults.Rows.Add(new string[] { "" + dgvResults.RowCount, "" + shot.getStartFrame(), shot.getTagString() });
+                dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count - 1].Cells[0];
+            }
+        }
+        //get search results in gui
+        delegate void UpdateSearchCallback(List<Shot> shots);
+        public void updateSearch(List<Shot> shots) {
+            //updates the datagrid view
+            if (this.dgvSearch.InvokeRequired) {
+                UpdateSearchCallback u = new UpdateSearchCallback(updateSearch);
+                this.Invoke(u, new object[] { shots });
+            } else {
+                foreach (Shot shot in shots) {
+                    dgvSearch.Rows.Add(new string[] { "" + dgvSearch.RowCount, "" + shot.getStartFrame(), shot.getTagString() });
+                }
+                if (dgvSearch.Rows.Count > 0) {
+                    dgvSearch.FirstDisplayedCell = dgvSearch.Rows[dgvSearch.Rows.Count - 1].Cells[0];
+                }
+            }
+        }
+        //sync tags with shotCollection
+        private void DataGridChanged(object sender, EventArgs e) {
+            if (e != null && this.results != null) {
+                System.Windows.Forms.DataGridViewCellEventArgs args = (System.Windows.Forms.DataGridViewCellEventArgs)e;
 
-        
+                //update in model
+                this.results.getShot(args.RowIndex).setTagString(Convert.ToString(this.dgvResults.Rows[args.RowIndex].Cells[args.ColumnIndex].Value));
+            }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e) {
+            String outputPath = "";
+            sfdBrowse.InitialDirectory = "C:\\";
+            sfdBrowse.Filter = "bitmap (*.bmp)|*.bmp";
+            sfdBrowse.FilterIndex = 2;
+            sfdBrowse.RestoreDirectory = true;
+            sfdBrowse.Title = "Save as";
+
+            if (sfdBrowse.ShowDialog() == DialogResult.OK) {
+                outputPath = sfdBrowse.FileName;
+
+                new Thread(() => { //thread = no lagg on GUI
+                    Thread.CurrentThread.IsBackground = true;
+                    results.getShot(this.dgvResults.CurrentRow.Index).getFrameShot().Save(outputPath);
+                }).Start();
+
+            }
+
+        }
+
     }
 }

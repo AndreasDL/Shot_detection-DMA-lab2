@@ -23,6 +23,9 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     protected List<IFrameObserver> obs; //the observers that need to be modified
     protected int frameNumber; //the frame number
 
+    [DllImport("kernel32.dll", EntryPoint = "CopyMemory", SetLastError = false)]
+    public static extern void CopyMemory(IntPtr dest, IntPtr src, uint count);
+
     /// <summary> Constructor that creates the basic needed elements </summary>
     /// <param name="shots">the shotCollection to save the different shots</param>
     public aShotDetectionMethod(ShotCollection shots): base() {
@@ -84,13 +87,6 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         this.m_stride = videoWidth * 3;
     }
 
-    /// <summary>this method is called when a shot is detected </summary>
-    /// <param name="sampleTime">the time of the shot</param>
-    /// <param name="frameNumber">the number of the first frame from the shot</param>
-    private void shotDetected(int frameNumber) {
-        shots.addShot(new Shot(frameNumber, shots.getShots().Count));
-    }
-
     /// <Summary>Returns the collected shots</Summary>
     /// <returns>the collected shots</returns>
     public ShotCollection getShotCollection() {
@@ -104,8 +100,19 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     /// <returns>error code if zero then it's all ok</returns>
     public int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
         //call the method
-        if (DetectShot(SampleTime, pBuffer, BufferLen))
-            shotDetected(frameNumber);
+        if (DetectShot(SampleTime, pBuffer, BufferLen)) {
+
+            IntPtr temp = Marshal.AllocHGlobal(BufferLen);
+            CopyMemory(temp,pBuffer, (uint)BufferLen);
+
+            Bitmap frameShot = new Bitmap(
+                this.videoWidth, this.videoHeight, -m_stride, PixelFormat.Format24bppRgb, 
+                (IntPtr)(temp.ToInt32() + BufferLen - m_stride) 
+            );
+
+            Shot s = new Shot(frameNumber, shots.getShots().Count, frameShot);
+            shots.addShot(s);
+        }
 
         frameNumber++; //keep track of frame number
         if (frameNumber % 200 ==0) //don't do this for everyframe (causes huge overhead)
@@ -119,4 +126,5 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     /// <param name="BufferLen">number of bytes in pBuffer</param>
     /// <returns></returns>
     public abstract bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen);
+
 }

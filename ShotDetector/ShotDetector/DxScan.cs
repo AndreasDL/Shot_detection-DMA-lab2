@@ -53,13 +53,11 @@ namespace ShotDetector {
             CloseInterfaces();
         }
 
-
         /// <summary> capture the next image </summary>
         public void Start() {
             int hr = m_mediaCtrl.Run();
             DsError.ThrowExceptionForHR(hr);
         }
-
 
         public void WaitUntilDone() {
             int hr;
@@ -231,6 +229,17 @@ namespace ShotDetector {
 
         public aShotDetectionMethod getMethod(){
             return this.method;
+        }
+
+        public void extractFrame(long frame) {
+            IMediaSeeking ims = m_FilterGraph as IMediaSeeking;
+            ims.SetTimeFormat(TimeFormat.Frame);
+
+            DsLong start = new DsLong(frame);
+            DsLong stop = new DsLong(frame);
+
+            ims.SetPositions(start, AMSeekingSeekingFlags.AbsolutePositioning, stop, AMSeekingSeekingFlags.AbsolutePositioning);
+            Start();
         }
     }
 }

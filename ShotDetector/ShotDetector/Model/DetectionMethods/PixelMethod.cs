@@ -15,7 +15,7 @@ using DirectShowLib;
 /// <summary>
 /// This method compares pixels to detect shots
 /// </summary>
-public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
+public class PixelMethod : aShotDetectionMethod {
 
     private byte[] current;
     private byte[] previous;
@@ -25,7 +25,7 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
 
     public PixelMethod(int _delta2, double _delta3, ShotCollection shots): base(shots){
         this.delta2 = _delta2;
-        this.delta3 = _delta3;
+        this.delta3 = 2 * _delta3;//delta3 is between 0 and 2, since difference are counted twice (because of absolute values), rescaled to 0->1, so reverse scaling here
         this.current = null;
         this.previous = null;
     }
@@ -50,8 +50,7 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
                 if (twoPixDiff > delta2) threshReached++;
             }
 
-            if (threshReached * 3.0 / (BufferLen * 1.0) > (2*delta3) //delta3 is between 0 and 2, since difference are counted twice (because of absolute values), rescaled to 0->1
-                //bufferlen = videoWidth * videoHeight * 3
+            if (threshReached * 3.0 / (BufferLen * 1.0) > (delta3) //bufferlen = videoWidth * videoHeight * 3
                 && frameNumber > lastShot + 10)  //ignore bursts
             {
                 lastShot = frameNumber;
