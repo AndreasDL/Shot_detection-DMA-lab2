@@ -29,6 +29,7 @@ namespace ShotDetector {
         private ShotCollection results;
         private long frameCount;
         private int currRow;
+        private Thread searchTread;
 
         public ShotDetector() {
             InitializeComponent();
@@ -373,11 +374,25 @@ namespace ShotDetector {
             }
         }
         private void searchTag(object sender, EventArgs e) {
+            
             if (this.results != null) {
-                new Thread(() => {
-                    dgvSearch.Rows.Clear();
-                    updateSearch(results.searchShots(txtSearch.Text));
-                }).Start();
+                String tag = txtSearch.Text;
+                if (tag != "") {
+                    //searchTread = new Thread(() => {
+                        dgvResults.Rows.Clear();
+                        updateSearch(results.searchShots(tag));
+                    //});
+                    //searchTread.Start();
+                } else {
+                    /*if (searchTread != null) {
+                        searchTread.Abort();
+                        searchTread = null;
+                    }*/
+                    foreach (Shot shot in this.results.getShots()) {
+                        dgvResults.Rows.Add(new string[] { "" + dgvResults.RowCount, "" + shot.getStartFrame(), shot.getTagString() });
+                    }
+                    dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count - 1].Cells[0];
+                }
             }
         }
         //update gui
@@ -397,15 +412,15 @@ namespace ShotDetector {
         delegate void UpdateSearchCallback(List<Shot> shots);
         public void updateSearch(List<Shot> shots) {
             //updates the datagrid view
-            if (this.dgvSearch.InvokeRequired) {
+            if (this.dgvResults.InvokeRequired) {
                 UpdateSearchCallback u = new UpdateSearchCallback(updateSearch);
                 this.Invoke(u, new object[] { shots });
             } else {
                 foreach (Shot shot in shots) {
-                    dgvSearch.Rows.Add(new string[] { "" + dgvSearch.RowCount, "" + shot.getStartFrame(), shot.getTagString() });
+                    dgvResults.Rows.Add(new string[] { "" + dgvResults.RowCount, "" + shot.getStartFrame(), shot.getTagString() });
                 }
-                if (dgvSearch.Rows.Count > 0) {
-                    dgvSearch.FirstDisplayedCell = dgvSearch.Rows[dgvSearch.Rows.Count - 1].Cells[0];
+                if (dgvResults.Rows.Count > 0) {
+                    dgvResults.FirstDisplayedCell = dgvResults.Rows[dgvResults.Rows.Count - 1].Cells[0];
                 }
             }
         }
