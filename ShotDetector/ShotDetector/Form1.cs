@@ -56,7 +56,6 @@ namespace ShotDetector {
                 btnStartLocalHistogram.Enabled = true;
                 btnStartGlobalHist.Enabled = true;
 
-                label19.Visible = false;
                 start_Click(sender, e);
             }
         }
@@ -313,52 +312,55 @@ namespace ShotDetector {
         }
 
         private void RunMethod(DxScan scanner,String methodName) {
-            //disable other start buttons
-            btnStartGlobalHist.Enabled = false;
-            btnStartLocalHistogram.Enabled = false;
-            btnStartMotion.Enabled = false;
-            btnStartPixel.Enabled = false;
-            openToolStripMenuItem.Enabled = false;
-            btnCalc.Enabled = false;
-            btnExport.Enabled = false;
+            if ( this.results == null 
+                || MessageBox.Show("Running this method will clear the results. Are you sure you cant to continue ?", "Are you sure", MessageBoxButtons.YesNoCancel) == DialogResult.Yes ) {
 
-            //cleanup
-            dgvResults.Rows.Clear();
-            //notify user
-            this.toolStripStatusLabel1.Text = "Shot Detection (" + methodName + ") Running ...";
-            this.frameCount = scanner.getFrameCount();
-            this.toolStripProgressBar1.Value = 0;
-            this.toolStripProgressBar1.Visible = true;
-            tabControl1.SelectedIndex = 0; //show annotations
+                //disable other start buttons
+                btnStartGlobalHist.Enabled = false;
+                btnStartLocalHistogram.Enabled = false;
+                btnStartMotion.Enabled = false;
+                btnStartPixel.Enabled = false;
+                openToolStripMenuItem.Enabled = false;
+                btnCalc.Enabled = false;
+                btnExport.Enabled = false;
 
-            //run
-            var sw = Stopwatch.StartNew();
-            //start detection
-            scanner.Start();
-            //wait for completion
-            scanner.WaitUntilDone();
-            this.results = scanner.getMethod().getShotCollection();
+                //cleanup
+                dgvResults.Rows.Clear();
+                //notify user
+                this.toolStripStatusLabel1.Text = "Shot Detection (" + methodName + ") Running ...";
+                this.frameCount = scanner.getFrameCount();
+                this.toolStripProgressBar1.Value = 0;
+                this.toolStripProgressBar1.Visible = true;
+                tabControl1.SelectedIndex = 0; //show annotations
+
+                //run
+                var sw = Stopwatch.StartNew();
+
+                //start detection
+                scanner.Start();
+
+                //wait for completion
+                scanner.WaitUntilDone();
+                this.results = scanner.getMethod().getShotCollection();
+
+                //feedback
+                sw.Stop();
+                long time = sw.ElapsedMilliseconds;
+                this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds";
+                this.toolStripProgressBar1.Visible = false;
+
+                //enable other buttons
+                btnStartPixel.Enabled = true;
+                btnStartMotion.Enabled = true;
+                btnStartLocalHistogram.Enabled = true;
+                btnStartGlobalHist.Enabled = true;
+                openToolStripMenuItem.Enabled = true;
+                calculateRecallToolStripMenuItem.Enabled = true;
+                exportResultToXmlToolStripMenuItem.Enabled = true;
+                btnCalc.Enabled = true;
+                btnExport.Enabled = true;
             
-            //feedback
-            sw.Stop();
-            long time = sw.ElapsedMilliseconds;
-            this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds";
-            this.toolStripProgressBar1.Visible = false;
-
-            //enable other buttons
-            btnStartPixel.Enabled = true;
-            btnStartMotion.Enabled = true;
-            btnStartLocalHistogram.Enabled = true;
-            btnStartGlobalHist.Enabled = true;
-            openToolStripMenuItem.Enabled = true;
-            calculateRecallToolStripMenuItem.Enabled = true;
-            exportResultToXmlToolStripMenuItem.Enabled = true;
-            btnCalc.Enabled = true;
-            btnExport.Enabled = true;
-        }
-
-        private void label19_Click(object sender, EventArgs e) {
-            browseFile(sender, e);
+            }
         }
 
         private void cellClick(object sender, DataGridViewCellEventArgs e) {

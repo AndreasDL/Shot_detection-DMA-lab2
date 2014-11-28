@@ -81,7 +81,6 @@ public class MotionMethod : aShotDetectionMethod{
             int videoWidthBlocks = videoWidth / subsize; //videowidth in SUBBLOCKS
             int videoHeightBlocks = videoHeight / subsize; //videoheight in SUBBLOCKS
             int blockCount = videoHeightBlocks * videoWidthBlocks; // amount of blocks in a frame, used to calculate average
-           // int motionX = 0, motionY = 0; //motionVectors
 
             for (int y = 0; y < videoHeightBlocks; y++) {
                 for (int x = 0; x < videoWidthBlocks; x++) {
@@ -117,7 +116,7 @@ public class MotionMethod : aShotDetectionMethod{
                 }
             }
 
-            if (currDiff > 5 * avgDiff && frameNumber != 1 && frameNumber > lastShot + 10) { //hack to make the firstshot start at position 0 in stead of 1
+            if (currDiff > 5 * avgDiff && frameNumber > lastShot + 10) {
                 isShot = true;
                 avgDiff = currDiff;
             }

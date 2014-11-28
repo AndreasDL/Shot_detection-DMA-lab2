@@ -50,13 +50,16 @@ public class PixelMethod : aShotDetectionMethod,ISampleGrabberCB {
                 if (twoPixDiff > delta2) threshReached++;
             }
 
-            if (threshReached * 3.0 / (BufferLen * 1.0) > (2*delta3) && frameNumber > lastShot + 10) {
+            if (threshReached * 3.0 / (BufferLen * 1.0) > (2*delta3) //delta3 is between 0 and 2, since difference are counted twice (because of absolute values), rescaled to 0->1
+                //bufferlen = videoWidth * videoHeight * 3
+                && frameNumber > lastShot + 10)  //ignore bursts
+            {
                 lastShot = frameNumber;
                 return true;
             } else {
                 return false;
             }
-        } else {
+        } else { //first shot starts ate frame 0
             lastShot = 0;
             return true;
         }

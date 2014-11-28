@@ -41,7 +41,6 @@
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label19 = new System.Windows.Forms.Label();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
             this.sfdBrowse = new System.Windows.Forms.SaveFileDialog();
@@ -104,7 +103,6 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.mnMenu.SuspendLayout();
-            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -134,7 +132,7 @@
             this.mnMenu.Location = new System.Drawing.Point(0, 0);
             this.mnMenu.Name = "mnMenu";
             this.mnMenu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.mnMenu.Size = new System.Drawing.Size(1175, 28);
+            this.mnMenu.Size = new System.Drawing.Size(1175, 24);
             this.mnMenu.TabIndex = 3;
             this.mnMenu.Text = "menuStrip1";
             // 
@@ -148,26 +146,26 @@
             this.toolStripMenuItem1,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.openToolStripMenuItem.Text = "Open Video File";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.browseFile);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(272, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(228, 6);
             // 
             // exportResultToXmlToolStripMenuItem
             // 
             this.exportResultToXmlToolStripMenuItem.Enabled = false;
             this.exportResultToXmlToolStripMenuItem.Name = "exportResultToXmlToolStripMenuItem";
-            this.exportResultToXmlToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.exportResultToXmlToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.exportResultToXmlToolStripMenuItem.Text = "Export Results to xml";
             this.exportResultToXmlToolStripMenuItem.Click += new System.EventHandler(this.exportXML);
             // 
@@ -175,19 +173,19 @@
             // 
             this.calculateRecallToolStripMenuItem.Enabled = false;
             this.calculateRecallToolStripMenuItem.Name = "calculateRecallToolStripMenuItem";
-            this.calculateRecallToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.calculateRecallToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.calculateRecallToolStripMenuItem.Text = "Calculate Precision and Recall";
             this.calculateRecallToolStripMenuItem.Click += new System.EventHandler(this.calcRecallandPrecision);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(272, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(228, 6);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.Quit_Click);
             // 
@@ -197,23 +195,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.panel1.Controls.Add(this.label19);
             this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1196, 508);
             this.panel1.TabIndex = 4;
-            // 
-            // label19
-            // 
-            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.ForeColor = System.Drawing.Color.White;
-            this.label19.Location = new System.Drawing.Point(-5, 0);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(1151, 508);
-            this.label19.TabIndex = 0;
-            this.label19.Text = "No file open!\r\nClick here to open a file";
-            this.label19.Click += new System.EventHandler(this.label19_Click);
             // 
             // btnStart
             // 
@@ -302,7 +288,7 @@
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(3, 212);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(184, 17);
+            this.label20.Size = new System.Drawing.Size(173, 16);
             this.label20.TabIndex = 1;
             this.label20.Text = "Double click a shot to play it";
             // 
@@ -430,7 +416,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(221, 91);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(287, 34);
+            this.label5.Size = new System.Drawing.Size(266, 32);
             this.label5.TabIndex = 5;
             this.label5.Text = "% of pixels that had a big enough distance . \r\nMin 0 - Max: 1";
             // 
@@ -439,7 +425,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(221, 30);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(301, 34);
+            this.label4.Size = new System.Drawing.Size(280, 32);
             this.label4.TabIndex = 4;
             this.label4.Text = "Difference in pixels needed to generate a \'hit\'. \r\nMin:0 - Max : 768";
             // 
@@ -448,7 +434,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(19, 91);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 17);
+            this.label3.Size = new System.Drawing.Size(56, 16);
             this.label3.TabIndex = 1;
             this.label3.Text = "Fraction";
             // 
@@ -457,7 +443,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(16, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 17);
+            this.label1.Size = new System.Drawing.Size(61, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "Distance";
             // 
@@ -514,7 +500,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(227, 120);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(361, 51);
+            this.label2.Size = new System.Drawing.Size(340, 48);
             this.label2.TabIndex = 12;
             this.label2.Text = "The size of the searchWindow, expressed in subblocks, \r\nhigher for longer searche" +
     "s\r\nMin 1 - Max: 4";
@@ -524,7 +510,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(227, 39);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(269, 51);
+            this.label6.Size = new System.Drawing.Size(251, 48);
             this.label6.TabIndex = 11;
             this.label6.Text = "the size of the subblock in pixels\r\nhigher for less accurate motion searching\r\nMi" +
     "n: 1 - Max: 32";
@@ -534,7 +520,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(22, 120);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(80, 17);
+            this.label7.Size = new System.Drawing.Size(78, 16);
             this.label7.TabIndex = 10;
             this.label7.Text = "windowSize";
             // 
@@ -543,7 +529,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(22, 39);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(58, 17);
+            this.label8.Size = new System.Drawing.Size(56, 16);
             this.label8.TabIndex = 9;
             this.label8.Text = "subSize";
             // 
@@ -600,7 +586,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(218, 103);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(326, 34);
+            this.label9.Size = new System.Drawing.Size(301, 32);
             this.label9.TabIndex = 19;
             this.label9.Text = "Fraction of pixels that ends up in a different basket\r\nMin 0 - Max 1\r\n";
             // 
@@ -609,7 +595,7 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(218, 22);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(157, 34);
+            this.label10.Size = new System.Drawing.Size(150, 32);
             this.label10.TabIndex = 18;
             this.label10.Text = "Number of baskets/bins\r\nMin: 1 -  Max 256";
             // 
@@ -618,7 +604,7 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(13, 103);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(55, 17);
+            this.label11.Size = new System.Drawing.Size(51, 16);
             this.label11.TabIndex = 17;
             this.label11.Text = "fraction";
             // 
@@ -627,7 +613,7 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(13, 22);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(64, 17);
+            this.label12.Size = new System.Drawing.Size(60, 16);
             this.label12.TabIndex = 16;
             this.label12.Text = "binCount";
             // 
@@ -664,7 +650,7 @@
             this.label18.AutoSize = true;
             this.label18.Location = new System.Drawing.Point(696, 39);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(239, 51);
+            this.label18.Size = new System.Drawing.Size(220, 48);
             this.label18.TabIndex = 32;
             this.label18.Text = "the number of different blocks used, \r\ne.g. 1,2,4,9,16,25,36...\r\nMin:1 - Max: 400" +
     "";
@@ -674,7 +660,7 @@
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(476, 39);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(77, 17);
+            this.label17.Size = new System.Drawing.Size(73, 16);
             this.label17.TabIndex = 30;
             this.label17.Text = "nrOfBlocks";
             // 
@@ -715,7 +701,7 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(227, 120);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(326, 34);
+            this.label13.Size = new System.Drawing.Size(301, 32);
             this.label13.TabIndex = 26;
             this.label13.Text = "Fraction of pixels that ends up in a different basket\r\nMin 0 - Max 1\r\n";
             // 
@@ -724,7 +710,7 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(227, 39);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(157, 34);
+            this.label14.Size = new System.Drawing.Size(150, 32);
             this.label14.TabIndex = 25;
             this.label14.Text = "Number of baskets/bins\r\nMin: 1 -  Max 256";
             // 
@@ -733,7 +719,7 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(22, 120);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(55, 17);
+            this.label15.Size = new System.Drawing.Size(51, 16);
             this.label15.TabIndex = 24;
             this.label15.Text = "fraction";
             // 
@@ -742,7 +728,7 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(22, 39);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(64, 17);
+            this.label16.Size = new System.Drawing.Size(60, 16);
             this.label16.TabIndex = 23;
             this.label16.Text = "binCount";
             // 
@@ -818,7 +804,7 @@
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(15, 15);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(53, 17);
+            this.label21.Size = new System.Drawing.Size(51, 16);
             this.label21.TabIndex = 2;
             this.label21.Text = "Search";
             // 
@@ -879,7 +865,6 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.mnMenu.ResumeLayout(false);
             this.mnMenu.PerformLayout();
-            this.panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -969,7 +954,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
-        private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button btnCalc;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Label label20;
