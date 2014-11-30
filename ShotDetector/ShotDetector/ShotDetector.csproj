@@ -75,6 +75,7 @@
     <Compile Include="DxScan.cs" />
     <Compile Include="Model\DetectionMethods\LogMotionMethod.cs" />
     <Compile Include="Model\IFrameObserver.cs" />
+    <Compile Include="Model\DetectionMethods\TwinComparison.cs" />
     <Compile Include="Model\DetectionMethods\LocalHistogramMethod.cs" />
     <Compile Include="Model\DetectionMethods\MethodFactory.cs" />
     <Compile Include="Model\DetectionMethods\PixelMethod.cs" />

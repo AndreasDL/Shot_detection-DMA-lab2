@@ -10,7 +10,7 @@ public class MethodFactory {
     /// <summary>
     /// table that contains all the methods, the index of the method name is used in the getMethod
     /// </summary>
-    public static string[] METHODS = { "Pixel", "Motion", "Global hist", "Local hist", "Generalized", "None" };
+    public static string[] METHODS = { "Pixel", "Motion", "Global hist", "Local hist", "Twin Comparison", "None" };
 
     /// <summary>
     /// Constructor
@@ -50,5 +50,11 @@ public class MethodFactory {
         return method;
     }
 
+    public aShotDetectionMethod getTwinComparisonMethod(ShotCollection shots, IFrameObserver fo,int nrOfBins) {
+        shots.addParameter(nrOfBins);
+        aShotDetectionMethod method = new TwinComparison(nrOfBins, shots);
+        method.addFrameObserver(fo);
+        return method;
+    }
 
 }

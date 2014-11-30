@@ -45,6 +45,7 @@ namespace ShotDetector {
             this.m_scan = null;
             this.videoFileName = "";
             this.currRow = -1; //selected row in dgvResults
+
         }
 
         //videofile
@@ -269,6 +270,19 @@ namespace ShotDetector {
                 MessageBox.Show("Please check your input parameters");
             }
         }
+        private void StartTwinComp_Click(object sender, EventArgs e) {
+            int binCount = Convert.ToInt32(txtTwinCompBins.Text);
+
+            if (binCount > 0 && binCount <= 256) {
+                ShotCollection shots = new ShotCollection();
+                shots.addObserver(this);//make sure the datagridview gets updated
+                DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount));
+
+                RunMethod(scanner, "Twin Comparison Histogram");
+            } else {
+                MessageBox.Show("Please check your input parameters");
+            }
+        }
 
         private void RunMethod(DxScan scanner,String methodName) {
             if ( this.results == null 
@@ -368,7 +382,8 @@ namespace ShotDetector {
                 Shot s = this.results.getShot(newRow);
 
                 //update the picture
-                this.pictureBox1.Image = new Bitmap(s.getFrameShot(),new Size(this.pictureBox1.Width,this.pictureBox1.Height));
+                if (s.getFrameShot() != null)
+                    this.pictureBox1.Image = new Bitmap(s.getFrameShot(),new Size(this.pictureBox1.Width,this.pictureBox1.Height));
 
                 this.currRow = newRow;
             }

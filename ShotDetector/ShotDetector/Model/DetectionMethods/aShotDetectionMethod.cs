@@ -126,5 +126,4 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     /// <param name="BufferLen">number of bytes in pBuffer</param>
     /// <returns></returns>
     public abstract bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen);
-
 }
