@@ -12,7 +12,6 @@ using System.Runtime.InteropServices;
 /// </summary>
 public class MotionMethod : aShotDetectionMethod{
     private byte[] current; //current frame
-
     private int subsize;    //size of a subblock
     private int windowSize; //size of the search window in SUBBLOCKS
     private byte[,][] currWindow; //current avg values
@@ -73,19 +72,18 @@ public class MotionMethod : aShotDetectionMethod{
             blockY++;
         }
 
-
         //skip first frame
         if (prevWindow != null) {
 
             //Estimate motion for each subblock
             int videoWidthBlocks = videoWidth / subsize; //videowidth in SUBBLOCKS
             int videoHeightBlocks = videoHeight / subsize; //videoheight in SUBBLOCKS
-            int blockCount = videoHeightBlocks * videoWidthBlocks; // amount of blocks in a frame, used to calculate average
+            //int blockCount = videoHeightBlocks * videoWidthBlocks; // amount of blocks in a frame, used to calculate average
 
             for (int y = 0; y < videoHeightBlocks; y++) {
                 for (int x = 0; x < videoWidthBlocks; x++) {
 
-                    //calculate the average of the subblock (from previous frame)
+                    //get average of the subblock (from previous frame)
                     byte[] avgToFind = prevWindow[y, x];
 
                     //determine the start and stop position of the window in SUBBLOCKS

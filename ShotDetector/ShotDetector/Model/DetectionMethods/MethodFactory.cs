@@ -28,7 +28,7 @@ public class MethodFactory {
     public aShotDetectionMethod getMotionMethod(ShotCollection shots,IFrameObserver fo, int subSize, int windowSize) {
         shots.addParameter(subSize);
         shots.addParameter(windowSize);
-        aShotDetectionMethod method = new MotionMethod(subSize, windowSize, shots);
+        aShotDetectionMethod method = new LogMotionMethod(subSize, windowSize, shots);
         method.addFrameObserver(fo);
         return method;
     }

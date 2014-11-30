@@ -50,7 +50,7 @@ namespace ShotDetector {
         //videofile
         private void browseFile(object sender, EventArgs e) {
             ofdBrowse.InitialDirectory = "C:\\";
-            ofdBrowse.Filter = "video files (*.avi)|*.avi|All files (*.*)|*.*";
+            ofdBrowse.Filter = "video files (*.avi)|*.avi";
             ofdBrowse.FilterIndex = 2;
             ofdBrowse.RestoreDirectory = true;
 
@@ -182,11 +182,11 @@ namespace ShotDetector {
         }
         //ground truth
         private void calcRecallandPrecision(object sender, EventArgs e) {
-            String groundTruthPath = "C:\\testfiles_dma\\csi_GT.xml";
+            String groundTruthPath; //= "C:\\testfiles_dma\\csi_GT.xml";
 
             if (this.m_play != null) {
                 ofdBrowse.InitialDirectory = "C:\\";
-                ofdBrowse.Filter = "video files (*.avi)|*.avi|All files (*.*)|*.*";
+                ofdBrowse.Filter = "video files (*.xml)|*.xml";
                 ofdBrowse.FilterIndex = 2;
                 ofdBrowse.RestoreDirectory = true;
                 ofdBrowse.Title = "Open a ground Truth file (.xml)";
