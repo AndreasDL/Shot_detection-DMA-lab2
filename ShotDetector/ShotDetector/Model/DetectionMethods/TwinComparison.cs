@@ -93,7 +93,7 @@ public class TwinComparison: aShotDetectionMethod {
             return true;
         }
 
-        if (frameNumber == 2675)
+        if (frameNumber == 2672)
         {
             List<int> dummy = new List<int>();
             Console.WriteLine("Will now process data");
@@ -130,12 +130,18 @@ public class TwinComparison: aShotDetectionMethod {
         stdev = Math.Pow(stdev, 1.0 / 2.0);
         Console.WriteLine("Calculated standard deviation: " + stdev);
 
+        List<long> sorted = differences;
+        sorted.OrderBy(l => l).ToList();
+        double median = sorted.ElementAt(sorted.Count / 2);
+
+
         /////////////////////////////////////////////////
         ////// Determine cuts (hard and gradual)
         /////////////////////////////////////////////////
-  
-        double thresh_low = 9.0 * mean; // Might be better if this is changed into max(mean,median)
-        double thresh_high = mean + 2.0 * stdev;
+
+        double thresh_low = Math.Max(mean, median);//9.0 * mean; // Might be better if this is changed into max(mean,median)
+        
+        double thresh_high = mean + 5 * stdev;
 
         long diffToStart = 0;
         int startIndex = 0;
@@ -143,7 +149,7 @@ public class TwinComparison: aShotDetectionMethod {
         
         for (int i = 0; i < differences.Count; i++)
         {
-            if (differences.ElementAt(i) > thresh_high && !checkingtransition && i-cutFrameNumbers.ElementAt(cutFrameNumbers.Count-1) >= 10)    // We suppose a shot doesn't come in the next 10 frames.
+            if (differences.ElementAt(i) > thresh_high && !checkingtransition && (cutFrameNumbers.Count == 0 || i-cutFrameNumbers.ElementAt(cutFrameNumbers.Count-1) >= 10) )    // We suppose a shot doesn't come in the next 10 frames.
             {
                 // (Hard) cut detected
                 cutFrameNumbers.Add(i);
@@ -164,9 +170,9 @@ public class TwinComparison: aShotDetectionMethod {
                         diffToStart += Math.Abs(histograms.ElementAt(startIndex)[j + 2] - Math.Abs(histograms.ElementAt(i)[j + 2]));
                     }
 
-                    if(diffToStart > thresh_high){  // Maybe && i-5 > startIndex to make sure a gradual transition is long enough
+                    if(diffToStart > thresh_high && i-5 >= startIndex){  // Maybe && i-5 > startIndex to make sure a gradual transition is long enough
                         // Detect cut
-                        cutFrameNumbers.Add(i);     // should be startindex.
+                        cutFrameNumbers.Add(startIndex);     // should be startindex.
                         checkingtransition = false;
                     } else if(diffToStart < thresh_low){
                         // Discard cut
