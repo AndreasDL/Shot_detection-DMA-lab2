@@ -271,11 +271,12 @@ namespace ShotDetector {
         }
         private void StartTwinComp_Click(object sender, EventArgs e) {
             int binCount = Convert.ToInt32(txtTwinCompBins.Text);
+            int nrOfBlock = 9;
 
             if (binCount > 0 && binCount <= 256) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount));
+                DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount, nrOfBlock));
 
                 RunMethod(scanner, "Twin Comparison Histogram");
             } else {
