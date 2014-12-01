@@ -72,5 +72,9 @@ public class Shot {
     public Bitmap getFrameShot() {
         return this.frameShot;
     }
+
+    public void setBitmap(Bitmap frameShot) {
+        this.frameShot = frameShot;
+    }
 }
 

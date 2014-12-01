@@ -167,9 +167,8 @@ namespace ShotDetector {
                     outputPath = sfdBrowse.FileName;
                     new Thread(() => { //thread = no lagg on GUI
                         Thread.CurrentThread.IsBackground = true;
-                        ShotCollection results = this.m_scan.getMethod().getShotCollection();
+                        //ShotCollection results = this.results;// m_scan.getMethod().getShotCollection();
 
-                        results.setLastFrame(this.m_scan.getFrameCount());
                         results.setfile(outputPath);
                         results.setLastFrame(m_play.getFrameCount());
 
@@ -287,6 +286,7 @@ namespace ShotDetector {
         private void RunMethod(DxScan scanner,String methodName) {
             if ( this.results == null 
                 || MessageBox.Show("Running this method will clear the results. Are you sure you cant to continue ?", "Are you sure", MessageBoxButtons.YesNoCancel) == DialogResult.Yes ) {
+                    this.results = new ShotCollection();
 
                 //disable other start buttons
                 btnStartGlobalHist.Enabled = false;
@@ -321,7 +321,14 @@ namespace ShotDetector {
                 //feedback
                 sw.Stop();
                 long time = sw.ElapsedMilliseconds;
-                this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds";
+                this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds ... Gathering frames";
+                //this.toolStripProgressBar1.Visible = false;
+
+                //get frameShots
+                scanner = new DxScan(videoFileName, new frameShotGrabber(this.results));
+                scanner.loopOverFrames(this.results);
+
+                this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds ...";
                 this.toolStripProgressBar1.Visible = false;
 
                 //enable other buttons
@@ -381,7 +388,7 @@ namespace ShotDetector {
             if (newRow != this.currRow) {//only if the row changed
                 Shot s = this.results.getShot(newRow);
 
-                //update the picture
+                //update the picture if it exists
                 if (s.getFrameShot() != null)
                     this.pictureBox1.Image = new Bitmap(s.getFrameShot(),new Size(this.pictureBox1.Width,this.pictureBox1.Height));
 
@@ -450,23 +457,24 @@ namespace ShotDetector {
         }
 
         private void pictureBox1_Click(object sender, EventArgs e) {
-            String outputPath = "";
-            sfdBrowse.InitialDirectory = "C:\\";
-            sfdBrowse.Filter = "bitmap (*.bmp)|*.bmp";
-            sfdBrowse.FilterIndex = 2;
-            sfdBrowse.RestoreDirectory = true;
-            sfdBrowse.Title = "Save as";
+            if (pictureBox1.Image != null) {
+                String outputPath = "";
+                sfdBrowse.InitialDirectory = "C:\\";
+                sfdBrowse.Filter = "bitmap (*.bmp)|*.bmp";
+                sfdBrowse.FilterIndex = 2;
+                sfdBrowse.RestoreDirectory = true;
+                sfdBrowse.Title = "Save as";
 
-            if (sfdBrowse.ShowDialog() == DialogResult.OK) {
-                outputPath = sfdBrowse.FileName;
+                if (sfdBrowse.ShowDialog() == DialogResult.OK) {
+                    outputPath = sfdBrowse.FileName;
 
-                new Thread(() => { //thread = no lagg on GUI
-                    Thread.CurrentThread.IsBackground = true;
-                    results.getShot(this.dgvResults.CurrentRow.Index).getFrameShot().Save(outputPath);
-                }).Start();
+                    new Thread(() => { //thread = no lagg on GUI
+                        Thread.CurrentThread.IsBackground = true;
+                        results.getShot(this.dgvResults.CurrentRow.Index).getFrameShot().Save(outputPath);
+                    }).Start();
 
+                }
             }
-
         }
 
     }

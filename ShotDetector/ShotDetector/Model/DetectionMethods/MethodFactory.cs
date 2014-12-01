@@ -57,4 +57,12 @@ public class MethodFactory {
         return method;
     }
 
+    public aShotDetectionMethod getEmptyMethod() {
+        return new EmptyMethod();
+    }
+
+    public aShotDetectionMethod GrabFrames(ShotCollection shots) {
+        return new frameShotGrabber(shots);
+    }
+
 }

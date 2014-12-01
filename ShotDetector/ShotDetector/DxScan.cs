@@ -31,7 +31,7 @@ namespace ShotDetector {
         private aShotDetectionMethod method = null;
 
         /// <summary> File name to scan</summary>
-        public DxScan(string fileName, aShotDetectionMethod method){
+        public DxScan(string fileName, aShotDetectionMethod method) {
             this.method = method;
 
             try {
@@ -227,19 +227,32 @@ namespace ShotDetector {
             return duration;
         }
 
-        public aShotDetectionMethod getMethod(){
+        public aShotDetectionMethod getMethod() {
             return this.method;
         }
 
-        public void extractFrame(long frame) {
+
+        public void loopOverFrames(ShotCollection shots) {
             IMediaSeeking ims = m_FilterGraph as IMediaSeeking;
             ims.SetTimeFormat(TimeFormat.Frame);
 
-            DsLong start = new DsLong(frame);
-            DsLong stop = new DsLong(frame);
+            int i = 0;
+            long frame;
+            while (i < shots.getShots().Count - 1) {
+                frame = shots.getShot(i).getStartFrame() + 10;
+                
+                if (frame + 10 > getFrameCount()) {
+                    frame -= 10; //take original frame if the frame count is too high
+                }
 
-            ims.SetPositions(start, AMSeekingSeekingFlags.AbsolutePositioning, stop, AMSeekingSeekingFlags.AbsolutePositioning);
-            Start();
+                DsLong start = new DsLong(frame);
+                ims.SetPositions(start, AMSeekingSeekingFlags.AbsolutePositioning, start, AMSeekingSeekingFlags.AbsolutePositioning);
+                Start();
+                WaitUntilDone();
+
+                //next
+                i++;
+            }
         }
     }
 }

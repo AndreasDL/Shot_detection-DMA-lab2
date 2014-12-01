@@ -44,7 +44,7 @@ public class ShotCollection{
     public void setLastFrame(long frameCount) {
         //fix for the last shot
         lastFrame = frameCount;
-        addShot(new Shot((int)frameCount , shots.Count));
+        shots.Add(new Shot((int)frameCount , shots.Count));
     }
 
     public void setfile(string videoFileName) {

@@ -73,6 +73,8 @@
   <ItemGroup>
     <Compile Include="DxPlay.cs" />
     <Compile Include="DxScan.cs" />
+    <Compile Include="Model\DetectionMethods\EmptyMethod.cs" />
+    <Compile Include="Model\DetectionMethods\GrabFrames.cs" />
     <Compile Include="Model\DetectionMethods\LogMotionMethod.cs" />
     <Compile Include="Model\IFrameObserver.cs" />
     <Compile Include="Model\DetectionMethods\TwinComparison.cs" />

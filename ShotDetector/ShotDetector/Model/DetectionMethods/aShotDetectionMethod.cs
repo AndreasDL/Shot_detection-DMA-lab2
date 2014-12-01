@@ -102,15 +102,12 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         //call the method
         if (DetectShot(SampleTime, pBuffer, BufferLen)) {
 
+            /*
             IntPtr temp = Marshal.AllocHGlobal(BufferLen);
             CopyMemory(temp,pBuffer, (uint)BufferLen);
-
-            Bitmap frameShot = new Bitmap(
-                this.videoWidth, this.videoHeight, -m_stride, PixelFormat.Format24bppRgb, 
-                (IntPtr)(temp.ToInt32() + BufferLen - m_stride) 
-            );
-
-            Shot s = new Shot(frameNumber, shots.getShots().Count, frameShot);
+            Bitmap frameShot = new Bitmap(this.videoWidth, this.videoHeight, -m_stride, PixelFormat.Format24bppRgb, (IntPtr)(temp.ToInt32() + BufferLen - m_stride) );
+            */
+            Shot s = new Shot(frameNumber, shots.getShots().Count);//, frameShot);
             shots.addShot(s);
         }
 
