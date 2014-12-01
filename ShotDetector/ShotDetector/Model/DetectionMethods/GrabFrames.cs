@@ -7,12 +7,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-class frameShotGrabber: aShotDetectionMethod {
+class GrabFrameMethods: aShotDetectionMethod {
     int i;
 
-    public frameShotGrabber(ShotCollection shots):base(shots) {
+    public GrabFrameMethods(ShotCollection shots):base(shots) {
         i = 0;
-        //next = shots.getShot(0).getStartFrame() + 10;
     }
 
 

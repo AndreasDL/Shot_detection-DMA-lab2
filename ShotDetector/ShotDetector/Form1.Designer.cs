@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.ofdBrowse = new System.Windows.Forms.OpenFileDialog();
             this.mnMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,6 +62,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.motion = new System.Windows.Forms.TabPage();
+            this.label28 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.txtMotionThres = new System.Windows.Forms.MaskedTextBox();
+            this.txtMotionFraction = new System.Windows.Forms.MaskedTextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
             this.txtMotionWindowSize = new System.Windows.Forms.MaskedTextBox();
             this.txtMotionSubSize = new System.Windows.Forms.MaskedTextBox();
             this.btnStartMotion = new System.Windows.Forms.Button();
@@ -89,10 +97,18 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.general = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnStartTwin = new System.Windows.Forms.Button();
             this.txtTwinCompBins = new System.Windows.Forms.MaskedTextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
+            this.FastMotion = new System.Windows.Forms.TabPage();
+            this.btnStartFastMotion = new System.Windows.Forms.Button();
+            this.txtFastMotionWindowSize = new System.Windows.Forms.MaskedTextBox();
+            this.txtFastMotionSubSize = new System.Windows.Forms.MaskedTextBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -111,6 +127,7 @@
             this.global.SuspendLayout();
             this.local.SuspendLayout();
             this.general.SuspendLayout();
+            this.FastMotion.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -127,7 +144,7 @@
             this.mnMenu.Location = new System.Drawing.Point(0, 0);
             this.mnMenu.Name = "mnMenu";
             this.mnMenu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.mnMenu.Size = new System.Drawing.Size(1153, 28);
+            this.mnMenu.Size = new System.Drawing.Size(1153, 24);
             this.mnMenu.TabIndex = 3;
             this.mnMenu.Text = "menuStrip1";
             // 
@@ -141,26 +158,26 @@
             this.toolStripMenuItem1,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.openToolStripMenuItem.Text = "Open Video File";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.browseFile);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(272, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(228, 6);
             // 
             // exportResultToXmlToolStripMenuItem
             // 
             this.exportResultToXmlToolStripMenuItem.Enabled = false;
             this.exportResultToXmlToolStripMenuItem.Name = "exportResultToXmlToolStripMenuItem";
-            this.exportResultToXmlToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.exportResultToXmlToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.exportResultToXmlToolStripMenuItem.Text = "Export Results to xml";
             this.exportResultToXmlToolStripMenuItem.Click += new System.EventHandler(this.exportXML);
             // 
@@ -168,19 +185,19 @@
             // 
             this.calculateRecallToolStripMenuItem.Enabled = false;
             this.calculateRecallToolStripMenuItem.Name = "calculateRecallToolStripMenuItem";
-            this.calculateRecallToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.calculateRecallToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.calculateRecallToolStripMenuItem.Text = "Calculate Precision and Recall";
             this.calculateRecallToolStripMenuItem.Click += new System.EventHandler(this.calcRecallandPrecision);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(272, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(228, 6);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(275, 24);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.Quit_Click);
             // 
@@ -257,6 +274,7 @@
             this.tabControl1.Controls.Add(this.global);
             this.tabControl1.Controls.Add(this.local);
             this.tabControl1.Controls.Add(this.general);
+            this.tabControl1.Controls.Add(this.FastMotion);
             this.tabControl1.Location = new System.Drawing.Point(5, 2);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
@@ -290,7 +308,7 @@
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(5, 151);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(165, 17);
+            this.label19.Size = new System.Drawing.Size(154, 16);
             this.label19.TabIndex = 13;
             this.label19.Text = "Click on picture to save it";
             // 
@@ -300,7 +318,7 @@
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(455, 151);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(53, 17);
+            this.label21.Size = new System.Drawing.Size(51, 16);
             this.label21.TabIndex = 2;
             this.label21.Text = "Search";
             // 
@@ -334,7 +352,7 @@
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(269, 151);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(184, 17);
+            this.label20.Size = new System.Drawing.Size(173, 16);
             this.label20.TabIndex = 1;
             this.label20.Text = "Double click a shot to play it";
             // 
@@ -388,14 +406,14 @@
             this.shotNumber,
             this.StartFrame,
             this.tags});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvResults.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvResults.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvResults.Location = new System.Drawing.Point(264, 7);
             this.dgvResults.Margin = new System.Windows.Forms.Padding(4);
             this.dgvResults.Name = "dgvResults";
@@ -450,7 +468,7 @@
             this.txtPixelFraction.PromptChar = ' ';
             this.txtPixelFraction.Size = new System.Drawing.Size(100, 22);
             this.txtPixelFraction.TabIndex = 8;
-            this.txtPixelFraction.Text = "0125";
+            this.txtPixelFraction.Text = "0250";
             // 
             // txtPixelDistance
             // 
@@ -461,7 +479,7 @@
             this.txtPixelDistance.PromptChar = ' ';
             this.txtPixelDistance.Size = new System.Drawing.Size(100, 22);
             this.txtPixelDistance.TabIndex = 7;
-            this.txtPixelDistance.Text = "256";
+            this.txtPixelDistance.Text = "50";
             // 
             // btnStartPixel
             // 
@@ -481,7 +499,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(221, 91);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(287, 34);
+            this.label5.Size = new System.Drawing.Size(266, 32);
             this.label5.TabIndex = 5;
             this.label5.Text = "% of pixels that had a big enough distance . \r\nMin 0 - Max: 1";
             // 
@@ -490,7 +508,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(221, 30);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(301, 34);
+            this.label4.Size = new System.Drawing.Size(280, 32);
             this.label4.TabIndex = 4;
             this.label4.Text = "Difference in pixels needed to generate a \'hit\'. \r\nMin:0 - Max : 768";
             // 
@@ -499,7 +517,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(19, 91);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 17);
+            this.label3.Size = new System.Drawing.Size(56, 16);
             this.label3.TabIndex = 1;
             this.label3.Text = "Fraction";
             // 
@@ -508,12 +526,20 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(16, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 17);
+            this.label1.Size = new System.Drawing.Size(61, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "Distance";
             // 
             // motion
             // 
+            this.motion.Controls.Add(this.label28);
+            this.motion.Controls.Add(this.checkBox1);
+            this.motion.Controls.Add(this.label27);
+            this.motion.Controls.Add(this.txtMotionThres);
+            this.motion.Controls.Add(this.txtMotionFraction);
+            this.motion.Controls.Add(this.label26);
+            this.motion.Controls.Add(this.label25);
+            this.motion.Controls.Add(this.label24);
             this.motion.Controls.Add(this.txtMotionWindowSize);
             this.motion.Controls.Add(this.txtMotionSubSize);
             this.motion.Controls.Add(this.btnStartMotion);
@@ -524,10 +550,94 @@
             this.motion.Location = new System.Drawing.Point(4, 25);
             this.motion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.motion.Name = "motion";
-            this.motion.Size = new System.Drawing.Size(1133, 246);
+            this.motion.Size = new System.Drawing.Size(1111, 184);
             this.motion.TabIndex = 3;
             this.motion.Text = "Motion";
             this.motion.UseVisualStyleBackColor = true;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(577, 121);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(35, 16);
+            this.label28.TabIndex = 23;
+            this.label28.Text = "Auto";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(627, 119);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(287, 36);
+            this.checkBox1.TabIndex = 22;
+            this.checkBox1.Text = "Auto: use averages to determine the cuts\r\nThis ignore the threshold and fraction " +
+    "above";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(709, 36);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(285, 32);
+            this.label27.TabIndex = 21;
+            this.label27.Text = "distance between two blocks that results in a hit\r\nMin: 1 Max: 3*256 * subSize*su" +
+    "bSize";
+            // 
+            // txtMotionThres
+            // 
+            this.txtMotionThres.Enabled = false;
+            this.txtMotionThres.Location = new System.Drawing.Point(646, 33);
+            this.txtMotionThres.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtMotionThres.Mask = "000000";
+            this.txtMotionThres.Name = "txtMotionThres";
+            this.txtMotionThres.PromptChar = ' ';
+            this.txtMotionThres.Size = new System.Drawing.Size(57, 22);
+            this.txtMotionThres.TabIndex = 20;
+            this.txtMotionThres.Text = "4000";
+            // 
+            // txtMotionFraction
+            // 
+            this.txtMotionFraction.Enabled = false;
+            this.txtMotionFraction.Location = new System.Drawing.Point(646, 78);
+            this.txtMotionFraction.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtMotionFraction.Mask = "0.000";
+            this.txtMotionFraction.Name = "txtMotionFraction";
+            this.txtMotionFraction.PromptChar = ' ';
+            this.txtMotionFraction.Size = new System.Drawing.Size(57, 22);
+            this.txtMotionFraction.TabIndex = 19;
+            this.txtMotionFraction.Text = "0500";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(709, 81);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(200, 32);
+            this.label26.TabIndex = 18;
+            this.label26.Text = "% of pixels that differes too much\r\nMin 0 - Max: 1";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(577, 81);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(51, 16);
+            this.label25.TabIndex = 17;
+            this.label25.Text = "fraction";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(577, 36);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(63, 16);
+            this.label24.TabIndex = 16;
+            this.label24.Text = "threshold";
             // 
             // txtMotionWindowSize
             // 
@@ -555,7 +665,7 @@
             // 
             this.btnStartMotion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStartMotion.Enabled = false;
-            this.btnStartMotion.Location = new System.Drawing.Point(1039, 201);
+            this.btnStartMotion.Location = new System.Drawing.Point(1022, 141);
             this.btnStartMotion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnStartMotion.Name = "btnStartMotion";
             this.btnStartMotion.Size = new System.Drawing.Size(75, 28);
@@ -569,7 +679,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(227, 121);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(361, 51);
+            this.label2.Size = new System.Drawing.Size(340, 48);
             this.label2.TabIndex = 12;
             this.label2.Text = "The size of the searchWindow, expressed in subblocks, \r\nhigher for longer searche" +
     "s\r\nMin 1 - Max: 4";
@@ -579,17 +689,17 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(227, 39);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(269, 51);
+            this.label6.Size = new System.Drawing.Size(279, 48);
             this.label6.TabIndex = 11;
-            this.label6.Text = "the size of the subblock in pixels\r\nhigher for less accurate motion searching\r\nMi" +
-    "n: 1 - Max: 32";
+            this.label6.Text = "the length of the edge of the subblock in pixels\r\nhigher for less accurate motion" +
+    " searching\r\nMin: 1 - Max: 32";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(21, 121);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(80, 17);
+            this.label7.Size = new System.Drawing.Size(78, 16);
             this.label7.TabIndex = 10;
             this.label7.Text = "windowSize";
             // 
@@ -598,7 +708,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(21, 39);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(58, 17);
+            this.label8.Size = new System.Drawing.Size(56, 16);
             this.label8.TabIndex = 9;
             this.label8.Text = "subSize";
             // 
@@ -614,7 +724,7 @@
             this.global.Location = new System.Drawing.Point(4, 25);
             this.global.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.global.Name = "global";
-            this.global.Size = new System.Drawing.Size(1133, 246);
+            this.global.Size = new System.Drawing.Size(1111, 184);
             this.global.TabIndex = 4;
             this.global.Text = "Global Hist";
             this.global.UseVisualStyleBackColor = true;
@@ -645,7 +755,7 @@
             // 
             this.btnStartGlobalHist.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStartGlobalHist.Enabled = false;
-            this.btnStartGlobalHist.Location = new System.Drawing.Point(1039, 202);
+            this.btnStartGlobalHist.Location = new System.Drawing.Point(1021, 142);
             this.btnStartGlobalHist.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnStartGlobalHist.Name = "btnStartGlobalHist";
             this.btnStartGlobalHist.Size = new System.Drawing.Size(75, 28);
@@ -659,7 +769,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(219, 103);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(326, 34);
+            this.label9.Size = new System.Drawing.Size(301, 32);
             this.label9.TabIndex = 19;
             this.label9.Text = "Fraction of pixels that ends up in a different basket\r\nMin 0 - Max 1\r\n";
             // 
@@ -668,7 +778,7 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(219, 22);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(157, 34);
+            this.label10.Size = new System.Drawing.Size(150, 32);
             this.label10.TabIndex = 18;
             this.label10.Text = "Number of baskets/bins\r\nMin: 1 -  Max 256";
             // 
@@ -677,7 +787,7 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(13, 103);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(55, 17);
+            this.label11.Size = new System.Drawing.Size(51, 16);
             this.label11.TabIndex = 17;
             this.label11.Text = "fraction";
             // 
@@ -686,7 +796,7 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(13, 22);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(64, 17);
+            this.label12.Size = new System.Drawing.Size(60, 16);
             this.label12.TabIndex = 16;
             this.label12.Text = "binCount";
             // 
@@ -705,7 +815,7 @@
             this.local.Location = new System.Drawing.Point(4, 25);
             this.local.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.local.Name = "local";
-            this.local.Size = new System.Drawing.Size(1133, 246);
+            this.local.Size = new System.Drawing.Size(1111, 184);
             this.local.TabIndex = 5;
             this.local.Text = "Local Hist";
             this.local.UseVisualStyleBackColor = true;
@@ -725,7 +835,7 @@
             this.label18.AutoSize = true;
             this.label18.Location = new System.Drawing.Point(696, 39);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(239, 51);
+            this.label18.Size = new System.Drawing.Size(220, 48);
             this.label18.TabIndex = 32;
             this.label18.Text = "the number of different blocks used, \r\ne.g. 1,2,4,9,16,25,36...\r\nMin:1 - Max: 400" +
     "";
@@ -735,7 +845,7 @@
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(476, 39);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(77, 17);
+            this.label17.Size = new System.Drawing.Size(73, 16);
             this.label17.TabIndex = 30;
             this.label17.Text = "nrOfBlocks";
             // 
@@ -765,7 +875,7 @@
             // 
             this.btnStartLocalHistogram.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStartLocalHistogram.Enabled = false;
-            this.btnStartLocalHistogram.Location = new System.Drawing.Point(1040, 203);
+            this.btnStartLocalHistogram.Location = new System.Drawing.Point(1022, 143);
             this.btnStartLocalHistogram.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnStartLocalHistogram.Name = "btnStartLocalHistogram";
             this.btnStartLocalHistogram.Size = new System.Drawing.Size(75, 28);
@@ -779,7 +889,7 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(227, 121);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(326, 34);
+            this.label13.Size = new System.Drawing.Size(301, 32);
             this.label13.TabIndex = 26;
             this.label13.Text = "Fraction of pixels that ends up in a different basket\r\nMin 0 - Max 1\r\n";
             // 
@@ -788,7 +898,7 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(227, 39);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(157, 34);
+            this.label14.Size = new System.Drawing.Size(150, 32);
             this.label14.TabIndex = 25;
             this.label14.Text = "Number of baskets/bins\r\nMin: 1 -  Max 256";
             // 
@@ -797,7 +907,7 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(21, 121);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(55, 17);
+            this.label15.Size = new System.Drawing.Size(51, 16);
             this.label15.TabIndex = 24;
             this.label15.Text = "fraction";
             // 
@@ -806,13 +916,13 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(21, 39);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(64, 17);
+            this.label16.Size = new System.Drawing.Size(60, 16);
             this.label16.TabIndex = 23;
             this.label16.Text = "binCount";
             // 
             // general
             // 
-            this.general.Controls.Add(this.button1);
+            this.general.Controls.Add(this.btnStartTwin);
             this.general.Controls.Add(this.txtTwinCompBins);
             this.general.Controls.Add(this.label22);
             this.general.Controls.Add(this.label23);
@@ -824,15 +934,16 @@
             this.general.Text = "General";
             this.general.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnStartTwin
             // 
-            this.button1.Location = new System.Drawing.Point(1016, 144);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 32;
-            this.button1.Text = "run";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.StartTwinComp_Click);
+            this.btnStartTwin.Enabled = false;
+            this.btnStartTwin.Location = new System.Drawing.Point(1016, 144);
+            this.btnStartTwin.Name = "btnStartTwin";
+            this.btnStartTwin.Size = new System.Drawing.Size(75, 23);
+            this.btnStartTwin.TabIndex = 32;
+            this.btnStartTwin.Text = "run";
+            this.btnStartTwin.UseVisualStyleBackColor = true;
+            this.btnStartTwin.Click += new System.EventHandler(this.StartTwinComp_Click);
             // 
             // txtTwinCompBins
             // 
@@ -850,7 +961,7 @@
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(217, 28);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(157, 34);
+            this.label22.Size = new System.Drawing.Size(150, 32);
             this.label22.TabIndex = 30;
             this.label22.Text = "Number of baskets/bins\r\nMin: 1 -  Max 256";
             // 
@@ -859,9 +970,98 @@
             this.label23.AutoSize = true;
             this.label23.Location = new System.Drawing.Point(11, 28);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(64, 17);
+            this.label23.Size = new System.Drawing.Size(60, 16);
             this.label23.TabIndex = 29;
             this.label23.Text = "binCount";
+            // 
+            // FastMotion
+            // 
+            this.FastMotion.Controls.Add(this.btnStartFastMotion);
+            this.FastMotion.Controls.Add(this.txtFastMotionWindowSize);
+            this.FastMotion.Controls.Add(this.txtFastMotionSubSize);
+            this.FastMotion.Controls.Add(this.label29);
+            this.FastMotion.Controls.Add(this.label30);
+            this.FastMotion.Controls.Add(this.label31);
+            this.FastMotion.Controls.Add(this.label32);
+            this.FastMotion.Location = new System.Drawing.Point(4, 25);
+            this.FastMotion.Name = "FastMotion";
+            this.FastMotion.Size = new System.Drawing.Size(1111, 184);
+            this.FastMotion.TabIndex = 7;
+            this.FastMotion.Text = "FastMotion";
+            this.FastMotion.UseVisualStyleBackColor = true;
+            // 
+            // btnStartFastMotion
+            // 
+            this.btnStartFastMotion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStartFastMotion.Enabled = false;
+            this.btnStartFastMotion.Location = new System.Drawing.Point(1013, 143);
+            this.btnStartFastMotion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnStartFastMotion.Name = "btnStartFastMotion";
+            this.btnStartFastMotion.Size = new System.Drawing.Size(75, 28);
+            this.btnStartFastMotion.TabIndex = 22;
+            this.btnStartFastMotion.Text = "Run";
+            this.btnStartFastMotion.UseVisualStyleBackColor = true;
+            this.btnStartFastMotion.Click += new System.EventHandler(this.StartFastMotion_Click);
+            // 
+            // txtFastMotionWindowSize
+            // 
+            this.txtFastMotionWindowSize.Location = new System.Drawing.Point(105, 105);
+            this.txtFastMotionWindowSize.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtFastMotionWindowSize.Mask = "0";
+            this.txtFastMotionWindowSize.Name = "txtFastMotionWindowSize";
+            this.txtFastMotionWindowSize.PromptChar = ' ';
+            this.txtFastMotionWindowSize.Size = new System.Drawing.Size(100, 22);
+            this.txtFastMotionWindowSize.TabIndex = 21;
+            this.txtFastMotionWindowSize.Text = "2";
+            // 
+            // txtFastMotionSubSize
+            // 
+            this.txtFastMotionSubSize.Location = new System.Drawing.Point(105, 24);
+            this.txtFastMotionSubSize.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtFastMotionSubSize.Mask = "00";
+            this.txtFastMotionSubSize.Name = "txtFastMotionSubSize";
+            this.txtFastMotionSubSize.PromptChar = ' ';
+            this.txtFastMotionSubSize.Size = new System.Drawing.Size(100, 22);
+            this.txtFastMotionSubSize.TabIndex = 20;
+            this.txtFastMotionSubSize.Text = "8";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(221, 109);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(340, 48);
+            this.label29.TabIndex = 19;
+            this.label29.Text = "The size of the searchWindow, expressed in subblocks, \r\nhigher for longer searche" +
+    "s\r\nMin 1 - Max: 4";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(221, 27);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(279, 48);
+            this.label30.TabIndex = 18;
+            this.label30.Text = "the length of the edge of the subblock in pixels\r\nhigher for less accurate motion" +
+    " searching\r\nMin: 1 - Max: 32";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(15, 109);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(78, 16);
+            this.label31.TabIndex = 17;
+            this.label31.Text = "windowSize";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(15, 27);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(56, 16);
+            this.label32.TabIndex = 16;
+            this.label32.Text = "subSize";
             // 
             // statusStrip1
             // 
@@ -921,6 +1121,8 @@
             this.local.PerformLayout();
             this.general.ResumeLayout(false);
             this.general.PerformLayout();
+            this.FastMotion.ResumeLayout(false);
+            this.FastMotion.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -999,9 +1201,25 @@
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnStartTwin;
         private System.Windows.Forms.MaskedTextBox txtTwinCompBins;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.MaskedTextBox txtMotionThres;
+        private System.Windows.Forms.MaskedTextBox txtMotionFraction;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TabPage FastMotion;
+        private System.Windows.Forms.Button btnStartFastMotion;
+        private System.Windows.Forms.MaskedTextBox txtFastMotionWindowSize;
+        private System.Windows.Forms.MaskedTextBox txtFastMotionSubSize;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label32;
     }
 }

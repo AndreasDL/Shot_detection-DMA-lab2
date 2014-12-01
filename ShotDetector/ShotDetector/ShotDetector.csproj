@@ -75,6 +75,7 @@
     <Compile Include="DxScan.cs" />
     <Compile Include="Model\DetectionMethods\EmptyMethod.cs" />
     <Compile Include="Model\DetectionMethods\GrabFrames.cs" />
+    <Compile Include="Model\DetectionMethods\AutoLogMotionMethod.cs" />
     <Compile Include="Model\DetectionMethods\LogMotionMethod.cs" />
     <Compile Include="Model\IFrameObserver.cs" />
     <Compile Include="Model\DetectionMethods\TwinComparison.cs" />
@@ -89,7 +90,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model\DetectionMethods\MotionMethod.cs" />
+    <Compile Include="Model\DetectionMethods\FastMotionMethod.cs" />
     <Compile Include="Model\IObserver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

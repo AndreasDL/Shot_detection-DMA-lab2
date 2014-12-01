@@ -364,8 +364,8 @@ namespace ShotDetector {
             ims.SetTimeFormat(TimeFormat.Frame);
             Stop();
             DsLong start = new DsLong(startFrame);
-            //DsLong stop = new DsLong(stopFrame);
-            ims.SetPositions(start,AMSeekingSeekingFlags.AbsolutePositioning, stopFrame, AMSeekingSeekingFlags.AbsolutePositioning);
+            DsLong stop = new DsLong(stopFrame);
+            ims.SetPositions(start,AMSeekingSeekingFlags.AbsolutePositioning, stop, AMSeekingSeekingFlags.AbsolutePositioning);
             Start();
         }
     }

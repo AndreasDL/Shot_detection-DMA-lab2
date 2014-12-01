@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ShotDetector {
-    public partial class ShotDetector : Form, IShotObserver, IFrameObserver {
+    public partial class ShotDetector: Form, IShotObserver, IFrameObserver {
         enum State {
             Uninit,
             Stopped,
@@ -22,19 +22,17 @@ namespace ShotDetector {
         }
         private State m_State = State.Uninit;
         private DxPlay m_play;
-        private DxScan m_scan;
 
         private string videoFileName;
         private MethodFactory factory;
         private ShotCollection results;
         private long frameCount;
         private int currRow;
-        private Thread searchTread;
 
         public ShotDetector() {
             InitializeComponent();
             this.factory = new MethodFactory();
-            for (int i = 1 ; i <= 20 ; i++){
+            for (int i = 1; i <= 20; i++) {
                 this.cmbLocalHistNrOfBlocks.Items.Add(i * i);
             }
             cmbLocalHistNrOfBlocks.SelectedIndex = 2;
@@ -42,7 +40,6 @@ namespace ShotDetector {
             this.tabControl1.SelectedIndex = 1;
             this.results = null;
             this.m_play = null;
-            this.m_scan = null;
             this.videoFileName = "";
             this.currRow = -1; //selected row in dgvResults
 
@@ -53,7 +50,6 @@ namespace ShotDetector {
             ofdBrowse.InitialDirectory = "C:\\";
             ofdBrowse.Filter = "video files (*.avi)|*.avi";
             ofdBrowse.FilterIndex = 2;
-            ofdBrowse.RestoreDirectory = true;
 
             if (ofdBrowse.ShowDialog() == DialogResult.OK) {
                 videoFileName = ofdBrowse.FileName;
@@ -64,6 +60,8 @@ namespace ShotDetector {
                 btnStartMotion.Enabled = true;
                 btnStartLocalHistogram.Enabled = true;
                 btnStartGlobalHist.Enabled = true;
+                btnStartTwin.Enabled = true;
+                btnStartFastMotion.Enabled = true;
 
                 start_Click(sender, e);
             }
@@ -77,8 +75,8 @@ namespace ShotDetector {
             if (videoFileName == "") {
                 browseFile(sender, e);//will start the playing
                 //start_Click(sender, e);
-            } else { 
-           
+            } else {
+
                 // If necessary, close the old file
                 if (m_State == State.Stopped) {
                     // Did the filename change?
@@ -124,7 +122,7 @@ namespace ShotDetector {
 
         }
         private void pause_Click(object sender, System.EventArgs e) {
-            
+
             // If we are playing, pause
             if (m_State == State.Playing) {
                 m_play.Pause();
@@ -154,20 +152,18 @@ namespace ShotDetector {
 
         //export
         private void exportXML(object sender, EventArgs e) {
-            String outputPath = "C:\\test.xml";
+            String outputPath;
 
             if (this.m_play != null) {
                 sfdBrowse.InitialDirectory = "C:\\";
                 sfdBrowse.Filter = "xml document (*.xml)|*.xml";
                 sfdBrowse.FilterIndex = 2;
-                sfdBrowse.RestoreDirectory = true;
                 sfdBrowse.Title = "Save as";
 
                 if (sfdBrowse.ShowDialog() == DialogResult.OK) {
                     outputPath = sfdBrowse.FileName;
                     new Thread(() => { //thread = no lagg on GUI
                         Thread.CurrentThread.IsBackground = true;
-                        //ShotCollection results = this.results;// m_scan.getMethod().getShotCollection();
 
                         results.setfile(outputPath);
                         results.setLastFrame(m_play.getFrameCount());
@@ -188,7 +184,6 @@ namespace ShotDetector {
                 ofdBrowse.InitialDirectory = "C:\\";
                 ofdBrowse.Filter = "video files (*.xml)|*.xml";
                 ofdBrowse.FilterIndex = 2;
-                ofdBrowse.RestoreDirectory = true;
                 ofdBrowse.Title = "Open a ground Truth file (.xml)";
 
                 if (ofdBrowse.ShowDialog() == DialogResult.OK) {
@@ -216,9 +211,9 @@ namespace ShotDetector {
             if (distance > 0 && distance <= 768 && fraction > 0 && fraction <= 1) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getPixelMethod(shots,this, distance, fraction));
+                DxScan scanner = new DxScan(videoFileName, factory.getPixelMethod(shots, this, distance, fraction));
 
-                RunMethod(scanner , "Pixel");
+                RunMethod(scanner, "Pixel");
             } else {
                 MessageBox.Show("Please check your input parameters");
             }
@@ -227,14 +222,32 @@ namespace ShotDetector {
             int subsize = Convert.ToInt32(txtMotionSubSize.Text);
             int windowsize = Convert.ToInt32(txtMotionWindowSize.Text);
 
-            if (subsize >= 1 && subsize <= 32 && windowsize >= 1 && windowsize <= 4) {
-                ShotCollection shots = new ShotCollection();
-                shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getMotionMethod(shots,this, subsize, windowsize));
+            ShotCollection shots = new ShotCollection();
+            shots.addObserver(this);
 
-                RunMethod(scanner, "Motion");
-            } else {
+            aShotDetectionMethod method = null;
+            bool paramsFailed = true;
+
+            if (subsize >= 1 && subsize <= 32 && windowsize >= 1 && windowsize <= 4) {
+                if (checkBox1.Checked) {//auto
+                    paramsFailed = false;
+                    method = factory.getAutoLogMotionMethod(shots, this, subsize, windowsize);
+                } else { //not auto
+                    int distance = Convert.ToInt32(txtMotionThres.Text);
+                    double fraction = Convert.ToDouble(txtMotionFraction.Text);
+
+                    if (distance >= 1 && distance <= 3 * 256 * subsize * subsize && fraction >= 0 && fraction <= 1) {
+                        paramsFailed = false;
+                        method = factory.getLogMotionMethod(shots, this, subsize, windowsize, distance, fraction);
+                    }
+                }
+            }
+
+            if (paramsFailed) {
                 MessageBox.Show("Please check your input parameters");
+            } else {
+                DxScan scanner = new DxScan(videoFileName, method);
+                RunMethod(scanner, "Motion");
             }
         }
         private void startGlobalHist_Click(object sender, EventArgs e) {
@@ -244,7 +257,7 @@ namespace ShotDetector {
             if (binCount > 0 && binCount <= 256 && fraction > 0 && fraction <= 1) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getGlobalHistogramMethod(shots,this, binCount, fraction));
+                DxScan scanner = new DxScan(videoFileName, factory.getGlobalHistogramMethod(shots, this, binCount, fraction));
 
                 RunMethod(scanner, "Global Histogram");
             } else {
@@ -262,7 +275,7 @@ namespace ShotDetector {
 
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getLocalHistogramMethod(shots,this, binCount, fraction, nrOfBlocks));
+                DxScan scanner = new DxScan(videoFileName, factory.getLocalHistogramMethod(shots, this, binCount, fraction, nrOfBlocks));
 
                 RunMethod(scanner, "Local Histogram");
             } else {
@@ -282,17 +295,31 @@ namespace ShotDetector {
                 MessageBox.Show("Please check your input parameters");
             }
         }
+        private void StartFastMotion_Click(object sender, EventArgs e) {
+            int subsize = Convert.ToInt32(txtMotionSubSize.Text);
+            int windowsize = Convert.ToInt32(txtMotionWindowSize.Text);
 
-        private void RunMethod(DxScan scanner,String methodName) {
-            if ( this.results == null 
-                || MessageBox.Show("Running this method will clear the results. Are you sure you cant to continue ?", "Are you sure", MessageBoxButtons.YesNoCancel) == DialogResult.Yes ) {
-                    this.results = new ShotCollection();
+            if (subsize >= 1 && subsize <= 32 && windowsize >= 1 && windowsize <= 4) {
+                ShotCollection shots = new ShotCollection();
+                shots.addObserver(this);
+                DxScan scanner = new DxScan(videoFileName, factory.getFastMotion(shots, this, subsize, windowsize));
+                RunMethod(scanner, "Fast Motion");
+            } else {
+                MessageBox.Show("Please check your input parameters");
+            }
+        }
+        private void RunMethod(DxScan scanner, String methodName) {
+            if (this.results == null
+                || MessageBox.Show("Running this method will clear the results. Are you sure you cant to continue ?", "Are you sure", MessageBoxButtons.YesNoCancel) == DialogResult.Yes) {
+                this.results = new ShotCollection();
 
                 //disable other start buttons
                 btnStartGlobalHist.Enabled = false;
                 btnStartLocalHistogram.Enabled = false;
                 btnStartMotion.Enabled = false;
                 btnStartPixel.Enabled = false;
+                btnStartTwin.Enabled = false;
+                btnStartFastMotion.Enabled = false;
                 openToolStripMenuItem.Enabled = false;
                 btnCalc.Enabled = false;
                 btnExport.Enabled = false;
@@ -322,11 +349,16 @@ namespace ShotDetector {
                 sw.Stop();
                 long time = sw.ElapsedMilliseconds;
                 this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds ... Gathering frames";
-                //this.toolStripProgressBar1.Visible = false;
 
                 //get frameShots
-                scanner = new DxScan(videoFileName, new frameShotGrabber(this.results));
+                scanner = new DxScan(videoFileName, new GrabFrameMethods(this.results));
                 scanner.loopOverFrames(this.results);
+                dgvResults.FirstDisplayedCell = dgvResults.Rows[0].Cells[0];
+                Shot s = this.results.getShot(0);
+                //update the picture if it exists
+                if (s.getFrameShot() != null)
+                    this.pictureBox1.Image = new Bitmap(s.getFrameShot(), new Size(this.pictureBox1.Width, this.pictureBox1.Height));
+                this.currRow = 0;
 
                 this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds ...";
                 this.toolStripProgressBar1.Visible = false;
@@ -336,12 +368,14 @@ namespace ShotDetector {
                 btnStartMotion.Enabled = true;
                 btnStartLocalHistogram.Enabled = true;
                 btnStartGlobalHist.Enabled = true;
+                btnStartTwin.Enabled = true;
+                btnStartFastMotion.Enabled = true;
                 openToolStripMenuItem.Enabled = true;
                 calculateRecallToolStripMenuItem.Enabled = true;
                 exportResultToXmlToolStripMenuItem.Enabled = true;
                 btnCalc.Enabled = true;
                 btnExport.Enabled = true;
-            
+
             }
         }
         //progressbar
@@ -357,9 +391,10 @@ namespace ShotDetector {
 
         //datagrids
         private void cellDoubleClick(object sender, DataGridViewCellEventArgs e) {
-            long startFrame =(long)(Convert.ToInt32(dgvResults.Rows[e.RowIndex].Cells[1].Value));//startframe
+            long startFrame = (long)(Convert.ToInt32(dgvResults.Rows[e.RowIndex].Cells[1].Value));//startframe
             long stopFrame = m_play.getFrameCount();
-            if (dgvResults.Rows.Count > e.RowIndex +1 ) {//if stopframe is determined
+
+            if (dgvResults.Rows.Count > e.RowIndex + 1) {//if stopframe is determined
                 stopFrame = (long)(Convert.ToInt32(dgvResults.Rows[e.RowIndex + 1].Cells[1].Value)) - 1;
             }
 
@@ -385,24 +420,24 @@ namespace ShotDetector {
         private void resultSelectedIndexChanged(object sender, EventArgs e) {
             int newRow = this.dgvResults.CurrentRow.Index;
 
-            if (newRow != this.currRow) {//only if the row changed
+            if (newRow != this.currRow && dgvResults.RowCount > 0) {//only if the row changed
                 Shot s = this.results.getShot(newRow);
 
                 //update the picture if it exists
                 if (s.getFrameShot() != null)
-                    this.pictureBox1.Image = new Bitmap(s.getFrameShot(),new Size(this.pictureBox1.Width,this.pictureBox1.Height));
+                    this.pictureBox1.Image = new Bitmap(s.getFrameShot(), new Size(this.pictureBox1.Width, this.pictureBox1.Height));
 
                 this.currRow = newRow;
             }
         }
         private void searchTag(object sender, EventArgs e) {
-            
+
             if (this.results != null) {
                 String tag = txtSearch.Text;
                 if (tag != "") {
                     //searchTread = new Thread(() => {
-                        dgvResults.Rows.Clear();
-                        updateSearch(results.searchShots(tag));
+                    dgvResults.Rows.Clear();
+                    updateSearch(results.searchShots(tag));
                     //});
                     //searchTread.Start();
                 } else {
@@ -475,6 +510,11 @@ namespace ShotDetector {
 
                 }
             }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e) {
+            txtMotionFraction.Enabled = !checkBox1.Checked;
+            txtMotionThres.Enabled = !checkBox1.Checked;
         }
 
     }

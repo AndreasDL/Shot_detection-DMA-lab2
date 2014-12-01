@@ -1,59 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-class LogMotionMethod : aShotDetectionMethod {
+using DirectShowLib;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+/// <summary>
+/// This method uses motion estimation to detect shots
+/// </summary>
+public class AutoLogMotionMethod: aShotDetectionMethod {
     private byte[] current; //current frame
     private byte[] previous;
     private int subsize;    //size of a subblock
     private int windowSize; //size of the search window in SUBBLOCKS
-
+    private long avgDiff;
     private int lastShot;
-    private int threshold;
-    private double fraction;
 
-    public LogMotionMethod(int _subsize, int _windowSize, ShotCollection shots, double fraction, int threshold)
+    public AutoLogMotionMethod(int _subsize, int _windowSize, ShotCollection shots)
         : base(shots) {
         this.subsize = _subsize;
         this.windowSize = _windowSize * _subsize; //save the window size in pixels
         this.current = null;
         this.previous = null;
-        this.fraction = fraction;
-        this.threshold = threshold;
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen) {
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
-        if (frameNumber >= lastShot + 10) {
-            //move through
-            previous = current;
+        //move through
+        previous = current;
 
-            //new frame
-            current = new byte[(videoHeight * videoWidth) * 3];
-            Marshal.Copy(pBuffer, current, 0, BufferLen);
-        }
+        //new frame
+        current = new byte[(videoHeight * videoWidth) * 3];
+        Marshal.Copy(pBuffer, current, 0, BufferLen);
 
-        if (frameNumber > lastShot + 10) {
-            return _DetectShot();
-        } else {
-            return false;
-        }
+        return _DetectShot();
     }
 
     private bool _DetectShot() {
         bool isShot = false;
-        int TooFarCount = 0;
 
         if (previous != null) {
             //init
             int offset = windowSize / 4;
             int[] offsetX = { 0, -offset, 0, offset, -offset, offset, -offset, 0, offset }; //start with center block, because it always exists, no checks required for init
             int[] offsetY = { 0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
+            long currDiff = 0;
             
             for (int y = 0; y < videoHeight; y += subsize) {
                 for (int x = 0; x < videoWidth; x += subsize) {
@@ -61,7 +55,7 @@ class LogMotionMethod : aShotDetectionMethod {
                     int searchX = x, searchY = y;
                     int bestoffset = 0;
                     long bestDifference = 0;
-                    byte[] avg = getAvg(x, y, current); //use averages for the motion estimation since that it a LOT faster and has almost the same results
+                    byte[] avg = getAvg(x, y, current);
 
                     //find best match using log search
                     while (offset > 1) {
@@ -100,16 +94,19 @@ class LogMotionMethod : aShotDetectionMethod {
                         offsetY = new int[] {0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
                     }
 
-                    if (getDifference(x, y, searchX, searchY)> threshold) {
-                        TooFarCount+=3;
-                    }
+                    currDiff += getDifference(x, y, searchX, searchY);
                 }
             }
 
-            if (TooFarCount / m_stride > fraction && frameNumber > lastShot + 10) {
+
+            if (currDiff > 5 * avgDiff && frameNumber > lastShot + 10) {
                 isShot = true;
                 lastShot = frameNumber;
+                avgDiff = currDiff;
             }
+
+            avgDiff = (int) ((avgDiff * 9 + currDiff ) / 10);
+
 
             return isShot;
         } else {

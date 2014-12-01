@@ -25,10 +25,28 @@ public class MethodFactory {
         return method;
     }
 
-    public aShotDetectionMethod getMotionMethod(ShotCollection shots,IFrameObserver fo, int subSize, int windowSize) {
+    public aShotDetectionMethod getAutoLogMotionMethod(ShotCollection shots,IFrameObserver fo, int subSize, int windowSize) {
         shots.addParameter(subSize);
         shots.addParameter(windowSize);
-        aShotDetectionMethod method = new LogMotionMethod(subSize, windowSize, shots);
+        aShotDetectionMethod method = new AutoLogMotionMethod(subSize, windowSize, shots);
+        method.addFrameObserver(fo);
+        return method;
+    }
+
+    public aShotDetectionMethod getLogMotionMethod(ShotCollection shots, IFrameObserver fo, int subSize, int windowSize, int threshold, double fraction) {
+        shots.addParameter(subSize);
+        shots.addParameter(windowSize);
+        shots.addParameter(threshold);
+        shots.addParameter(fraction);
+        aShotDetectionMethod method = new LogMotionMethod(subSize, windowSize, shots, fraction, threshold);
+        method.addFrameObserver(fo);
+        return method;
+    }
+
+    public aShotDetectionMethod getFastMotion(ShotCollection shots, IFrameObserver fo, int subsize, int windowSize) {
+        shots.addParameter(subsize);
+        shots.addParameter(windowSize);
+        aShotDetectionMethod method = new FastMotionMethod(subsize, windowSize, shots);
         method.addFrameObserver(fo);
         return method;
     }
@@ -62,7 +80,7 @@ public class MethodFactory {
     }
 
     public aShotDetectionMethod GrabFrames(ShotCollection shots) {
-        return new frameShotGrabber(shots);
+        return new GrabFrameMethods(shots);
     }
 
 }
