@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.ofdBrowse = new System.Windows.Forms.OpenFileDialog();
             this.mnMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,6 +108,9 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.cmbTwinNrOfBlocks = new System.Windows.Forms.ComboBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
             this.mnMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -399,14 +402,14 @@
             this.shotNumber,
             this.StartFrame,
             this.tags});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvResults.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvResults.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvResults.Location = new System.Drawing.Point(264, 5);
             this.dgvResults.Margin = new System.Windows.Forms.Padding(5);
             this.dgvResults.Name = "dgvResults";
@@ -951,6 +954,9 @@
             // 
             // general
             // 
+            this.general.Controls.Add(this.cmbTwinNrOfBlocks);
+            this.general.Controls.Add(this.label31);
+            this.general.Controls.Add(this.label32);
             this.general.Controls.Add(this.btnStartTwin);
             this.general.Controls.Add(this.txtTwinCompBins);
             this.general.Controls.Add(this.label22);
@@ -1026,6 +1032,35 @@
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 20);
             this.toolStripProgressBar1.Visible = false;
+            // 
+            // cmbTwinNrOfBlocks
+            // 
+            this.cmbTwinNrOfBlocks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTwinNrOfBlocks.FormattingEnabled = true;
+            this.cmbTwinNrOfBlocks.Location = new System.Drawing.Point(499, 25);
+            this.cmbTwinNrOfBlocks.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbTwinNrOfBlocks.Name = "cmbTwinNrOfBlocks";
+            this.cmbTwinNrOfBlocks.Size = new System.Drawing.Size(121, 24);
+            this.cmbTwinNrOfBlocks.TabIndex = 36;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(626, 28);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(220, 48);
+            this.label31.TabIndex = 35;
+            this.label31.Text = "the number of different blocks used, \r\ne.g. 1,2,4,9,16,25,36...\r\nMin:1 - Max: 400" +
+    "";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(416, 28);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(73, 16);
+            this.label32.TabIndex = 34;
+            this.label32.Text = "nrOfBlocks";
             // 
             // ShotDetector
             // 
@@ -1155,5 +1190,8 @@
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.ComboBox cmbSpeedup;
+        private System.Windows.Forms.ComboBox cmbTwinNrOfBlocks;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label32;
     }
 }

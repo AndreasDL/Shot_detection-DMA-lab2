@@ -34,6 +34,7 @@ namespace ShotDetector {
             this.factory = new MethodFactory();
             for (int i = 1; i <= 20; i++) {
                 this.cmbLocalHistNrOfBlocks.Items.Add(i * i);
+                this.cmbTwinNrOfBlocks.Items.Add(i * i);
             }
             cmbLocalHistNrOfBlocks.SelectedIndex = 2;
             cmbSpeedup.SelectedIndex = 0;
@@ -43,7 +44,7 @@ namespace ShotDetector {
             this.m_play = null;
             this.videoFileName = "";
             this.currRow = -1; //selected row in dgvResults
-
+            this.cmbTwinNrOfBlocks.SelectedIndex = 2;
         }
 
         //videofile
@@ -285,12 +286,14 @@ namespace ShotDetector {
         }
         private void StartTwinComp_Click(object sender, EventArgs e) {
             int binCount = Convert.ToInt32(txtTwinCompBins.Text);
-            int nrOfBlock = 9;
 
             if (binCount > 0 && binCount <= 256) {
+                int nrOfBlocks = Convert.ToInt32(cmbLocalHistNrOfBlocks.SelectedIndex) + 1;
+                nrOfBlocks *= nrOfBlocks;
+
                 ShotCollection shots = new ShotCollection(5);
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount, nrOfBlock));
+                DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount, nrOfBlocks));
 
                 RunMethod(scanner, "Twin Comparison Histogram");
             } else {
