@@ -100,6 +100,9 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.general = new System.Windows.Forms.TabPage();
+            this.cmbTwinNrOfBlocks = new System.Windows.Forms.ComboBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
             this.btnStartTwin = new System.Windows.Forms.Button();
             this.txtTwinCompBins = new System.Windows.Forms.MaskedTextBox();
             this.label22 = new System.Windows.Forms.Label();
@@ -108,9 +111,16 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.cmbTwinNrOfBlocks = new System.Windows.Forms.ComboBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.txtTwinAlfa = new System.Windows.Forms.MaskedTextBox();
+            this.txtTwinBeta = new System.Windows.Forms.MaskedTextBox();
+            this.txtTwinDelta = new System.Windows.Forms.MaskedTextBox();
+            this.txtTwinGamma = new System.Windows.Forms.MaskedTextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
             this.mnMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -954,6 +964,16 @@
             // 
             // general
             // 
+            this.general.Controls.Add(this.label38);
+            this.general.Controls.Add(this.label37);
+            this.general.Controls.Add(this.txtTwinDelta);
+            this.general.Controls.Add(this.txtTwinGamma);
+            this.general.Controls.Add(this.label35);
+            this.general.Controls.Add(this.label36);
+            this.general.Controls.Add(this.txtTwinBeta);
+            this.general.Controls.Add(this.txtTwinAlfa);
+            this.general.Controls.Add(this.label34);
+            this.general.Controls.Add(this.label33);
             this.general.Controls.Add(this.cmbTwinNrOfBlocks);
             this.general.Controls.Add(this.label31);
             this.general.Controls.Add(this.label32);
@@ -966,11 +986,41 @@
             this.general.Name = "general";
             this.general.Size = new System.Drawing.Size(1111, 187);
             this.general.TabIndex = 6;
-            this.general.Text = "General";
+            this.general.Text = "Twin Comparison";
             this.general.UseVisualStyleBackColor = true;
+            // 
+            // cmbTwinNrOfBlocks
+            // 
+            this.cmbTwinNrOfBlocks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTwinNrOfBlocks.FormattingEnabled = true;
+            this.cmbTwinNrOfBlocks.Location = new System.Drawing.Point(573, 25);
+            this.cmbTwinNrOfBlocks.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbTwinNrOfBlocks.Name = "cmbTwinNrOfBlocks";
+            this.cmbTwinNrOfBlocks.Size = new System.Drawing.Size(121, 24);
+            this.cmbTwinNrOfBlocks.TabIndex = 36;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(700, 28);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(220, 48);
+            this.label31.TabIndex = 35;
+            this.label31.Text = "the number of different blocks used, \r\ne.g. 1,2,4,9,16,25,36...\r\nMin:1 - Max: 400" +
+    "";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(490, 28);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(73, 16);
+            this.label32.TabIndex = 34;
+            this.label32.Text = "nrOfBlocks";
             // 
             // btnStartTwin
             // 
+            this.btnStartTwin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStartTwin.Enabled = false;
             this.btnStartTwin.Location = new System.Drawing.Point(993, 141);
             this.btnStartTwin.Margin = new System.Windows.Forms.Padding(4);
@@ -1033,34 +1083,99 @@
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 20);
             this.toolStripProgressBar1.Visible = false;
             // 
-            // cmbTwinNrOfBlocks
+            // label33
             // 
-            this.cmbTwinNrOfBlocks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbTwinNrOfBlocks.FormattingEnabled = true;
-            this.cmbTwinNrOfBlocks.Location = new System.Drawing.Point(499, 25);
-            this.cmbTwinNrOfBlocks.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cmbTwinNrOfBlocks.Name = "cmbTwinNrOfBlocks";
-            this.cmbTwinNrOfBlocks.Size = new System.Drawing.Size(121, 24);
-            this.cmbTwinNrOfBlocks.TabIndex = 36;
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(8, 147);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(30, 16);
+            this.label33.TabIndex = 37;
+            this.label33.Text = "alfa";
             // 
-            // label31
+            // label34
             // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(626, 28);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(220, 48);
-            this.label31.TabIndex = 35;
-            this.label31.Text = "the number of different blocks used, \r\ne.g. 1,2,4,9,16,25,36...\r\nMin:1 - Max: 400" +
-    "";
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(217, 147);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(35, 16);
+            this.label34.TabIndex = 38;
+            this.label34.Text = "beta";
             // 
-            // label32
+            // txtTwinAlfa
             // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(416, 28);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(73, 16);
-            this.label32.TabIndex = 34;
-            this.label32.Text = "nrOfBlocks";
+            this.txtTwinAlfa.Location = new System.Drawing.Point(103, 144);
+            this.txtTwinAlfa.Mask = "0.00";
+            this.txtTwinAlfa.Name = "txtTwinAlfa";
+            this.txtTwinAlfa.PromptChar = ' ';
+            this.txtTwinAlfa.Size = new System.Drawing.Size(100, 22);
+            this.txtTwinAlfa.TabIndex = 39;
+            this.txtTwinAlfa.Text = "150";
+            // 
+            // txtTwinBeta
+            // 
+            this.txtTwinBeta.Location = new System.Drawing.Point(295, 144);
+            this.txtTwinBeta.Mask = "0.00";
+            this.txtTwinBeta.Name = "txtTwinBeta";
+            this.txtTwinBeta.PromptChar = ' ';
+            this.txtTwinBeta.Size = new System.Drawing.Size(100, 22);
+            this.txtTwinBeta.TabIndex = 40;
+            this.txtTwinBeta.Text = "000";
+            // 
+            // txtTwinDelta
+            // 
+            this.txtTwinDelta.Location = new System.Drawing.Point(782, 144);
+            this.txtTwinDelta.Mask = "0.00";
+            this.txtTwinDelta.Name = "txtTwinDelta";
+            this.txtTwinDelta.PromptChar = ' ';
+            this.txtTwinDelta.Size = new System.Drawing.Size(100, 22);
+            this.txtTwinDelta.TabIndex = 44;
+            this.txtTwinDelta.Text = "200";
+            // 
+            // txtTwinGamma
+            // 
+            this.txtTwinGamma.Location = new System.Drawing.Point(576, 144);
+            this.txtTwinGamma.Mask = "0.00";
+            this.txtTwinGamma.Name = "txtTwinGamma";
+            this.txtTwinGamma.PromptChar = ' ';
+            this.txtTwinGamma.Size = new System.Drawing.Size(100, 22);
+            this.txtTwinGamma.TabIndex = 43;
+            this.txtTwinGamma.Text = "100";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(700, 147);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(38, 16);
+            this.label35.TabIndex = 42;
+            this.label35.Text = "delta";
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(486, 147);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(54, 16);
+            this.label36.TabIndex = 41;
+            this.label36.Text = "gamma";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(11, 114);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(334, 16);
+            this.label37.TabIndex = 45;
+            this.label37.Text = "Lower Threshold = alfa * mean difference + beta * stdev";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(483, 114);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(363, 16);
+            this.label38.TabIndex = 46;
+            this.label38.Text = "Upper Threshold = gamma * mean difference + delta * stdev";
             // 
             // ShotDetector
             // 
@@ -1193,5 +1308,15 @@
         private System.Windows.Forms.ComboBox cmbTwinNrOfBlocks;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.MaskedTextBox txtTwinAlfa;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.MaskedTextBox txtTwinDelta;
+        private System.Windows.Forms.MaskedTextBox txtTwinGamma;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.MaskedTextBox txtTwinBeta;
+        private System.Windows.Forms.Label label38;
     }
 }

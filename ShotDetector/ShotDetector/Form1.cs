@@ -193,7 +193,7 @@ namespace ShotDetector {
                         Thread.CurrentThread.IsBackground = true;
                         //get groundtruth
                         ShotCollection truth = new ShotCollection(groundTruthPath);
-                        ShotCollection results = this.results;// this.m_scan.getMethod().getShotCollection();
+                        ShotCollection results = this.results;
 
                         MessageBox.Show("Recall: " + results.calcRecall(truth) + " Precision: " + results.calcPrecision(truth));
                     }).Start();
@@ -286,6 +286,10 @@ namespace ShotDetector {
         }
         private void StartTwinComp_Click(object sender, EventArgs e) {
             int binCount = Convert.ToInt32(txtTwinCompBins.Text);
+            double alfa = Convert.ToDouble(txtTwinAlfa.Text);
+            double beta = Convert.ToDouble(txtTwinBeta.Text); ;
+            double gamma = Convert.ToDouble(txtTwinGamma.Text);
+            double delta = Convert.ToDouble(txtTwinDelta.Text);
 
             if (binCount > 0 && binCount <= 256) {
                 int nrOfBlocks = Convert.ToInt32(cmbLocalHistNrOfBlocks.SelectedIndex) + 1;
@@ -293,7 +297,7 @@ namespace ShotDetector {
 
                 ShotCollection shots = new ShotCollection(5);
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount, nrOfBlocks));
+                DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount, nrOfBlocks, alfa, beta,gamma, delta));
 
                 RunMethod(scanner, "Twin Comparison Histogram");
             } else {

@@ -117,6 +117,20 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         return 0;
     }
 
+    /* 
+     * Returns the 3 values of a pixel at position x,y
+     * x = the x position in PIXELS
+     * y = the y position in PIXELS
+     * frame => the frame
+    */
+    protected byte[] getPixel(int x, int y, byte[] frame) {
+        int position = y * m_stride + 3 * x;
+
+        byte[] pixel = { frame[position], frame[position + 1], frame[position + 2] };
+
+        return pixel;
+    }
+
     /// <summary>Put the detection code in this method, the method above is used to keep track of the framenumber and update the gui </summary>
     /// <param name="SampleTime">the time of the frame (if you want a frame count, then you must count in the method)</param>
     /// <param name="pBuffer">a pointer to the first byte of the image (each pixel has 3 bytes and the frame is m_strade wide so byte[m_stide*5 + 7*3] is the first component of pixel with y=5, x = 7</param>

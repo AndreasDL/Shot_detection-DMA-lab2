@@ -15,39 +15,37 @@ using System.IO;
 /// </summary>
 public class TwinComparison: aShotDetectionMethod {
 
-
     private List<int[]> previous_histograms;
     private List<int[]> current_histograms;
     private List<List<int[]>> allHistograms;
 
     private List<long> differences;
-    //private int lastFrame;
 
-    private int[] current_histogram;
-    private int[] previous_histogram;
-
+    private int nrOfBlocks;
     private int nrOfBins;
     private int divider;
+    private double alfa, beta, gamma, delta;
 
-    private int number, endCols, endRows, sizeCols, sizeRows, nrOfBlocks;
-
-
-    public TwinComparison(int _nrOfBins, int _nrOfBlocks, ShotCollection shots) : base(shots) {
+    //a = 1.5 ; b = 0 ; c = 1 : d = 2
+    //Lower Threshold = alfa * mean difference + beta * stdev
+    //Upper Threshold = gamma * mean difference + delta * stdev
+    public TwinComparison(int nrOfBins, int nrOfBlocks, ShotCollection shots, double alfa, double beta, double gamma, double delta)
+        : base(shots) {
+        this.nrOfBins = nrOfBins;
+        this.nrOfBlocks = nrOfBlocks;
+        this.alfa = alfa;
+        this.beta = beta;
+        this.gamma = gamma;
+        this.delta = delta;
+        
+        this.divider = (int)(Math.Ceiling(255.0 / nrOfBins));
         this.differences = new List<long>();
-        this.nrOfBins = _nrOfBins;
-        this.divider = (int)(Math.Ceiling(255.0 / nrOfBins)); 
-        this.previous_histograms = null;
-        this.current_histograms = null;
-        this.nrOfBlocks = _nrOfBlocks;
         this.allHistograms = new List<List<int[]>>();
+        this.previous_histograms = null;
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen) {
-
-        //Console.WriteLine(frameNumber);
-
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
-        previous_histogram = current_histogram;
 
         //////////////////////////////////////////
         ////// Copy IntPtr to byte array
@@ -56,30 +54,26 @@ public class TwinComparison: aShotDetectionMethod {
         byte[] current = new byte[(videoHeight * videoWidth) * 3];
         Marshal.Copy(pBuffer, current, 0, BufferLen);
 
-        this.number = (int)Math.Sqrt((double)nrOfBlocks);
-        this.endCols = videoWidth - (videoWidth % number);//Ignore last x pixels if they don't match
-        this.endRows = videoHeight - (videoHeight % number);
-        this.sizeCols = endCols / number;
-        this.sizeRows = endRows / number;
+        int number = (int)Math.Sqrt((double)nrOfBlocks);
+        int endCols = videoWidth - (videoWidth % number);//Ignore last x pixels if they don't match
+        int endRows = videoHeight - (videoHeight % number);
+        int sizeCols = endCols / number;
+        int sizeRows = endRows / number;
         previous_histograms = current_histograms;
         current_histograms = new List<int[]>();
-    
+
         //////////////////////////////////////////
         ////// Compute current histogram
         //////////////////////////////////////////  
 
-        for (int i = 0; i < endRows; i = i + sizeRows)
-        {
-            for (int j = 0; j < endCols; j = j + sizeCols)
-            {
+        for (int i = 0; i < endRows; i = i + sizeRows) {
+            for (int j = 0; j < endCols; j = j + sizeCols) {
                 // hist is the histogram of the current block
                 int[] hist = new int[nrOfBins * 3];
                 for (int k = 0; k < hist.Length; k++) { hist[k] = 0; }//hist entries are initialized to 0
 
-                for (int x = i; x < sizeRows + i; x++)
-                {
-                    for (int y = j; y < sizeCols + j; y++)
-                    {
+                for (int x = i; x < sizeRows + i; x++) {
+                    for (int y = j; y < sizeCols + j; y++) {
 
                         byte[] currPixel = getPixel(y, x, current);
                         hist[(int)(currPixel[0] / divider)]++;
@@ -95,47 +89,32 @@ public class TwinComparison: aShotDetectionMethod {
         }
         allHistograms.Add(current_histograms);
 
-
-        /// Add histogram to histogram list
-        //histograms.Add(current_histogram);
-
         /////////////////////////////////////////////////
         ////// Calculate differences between histograms
         /////////////////////////////////////////////////  
 
         //Only do this block of code, when the previous frame is filled in (starting from the second frame), to detect shots
-        if (frameNumber != 0)
-        {
+        if (frameNumber != 0) {
             long twoHistsDiff = 0;
 
-            for (int k = 0; k < current_histograms.Count; k++)
-            {
-                for (int i = 0; i < nrOfBins * 3 - 1; i++)
-                {
+            for (int k = 0; k < current_histograms.Count; k++) {
+                for (int i = 0; i < nrOfBins * 3 - 1; i++) {
                     twoHistsDiff += Math.Abs(current_histograms[k][i] - previous_histograms[k][i]);
                 }
             }
 
             differences.Add(twoHistsDiff);
 
-        }
-        else
-        {
+        } else {//hardcoded first shot starts at frame 0
             //first shot starts at frame 0
             return true;
         }
-        /*
-        if (frameNumber == lastFrame)
-        {
-            List<int> dummy = new List<int>();
-            Console.WriteLine("Will now process data");
-            dummy = processData();
-        }*/
 
+        //other frame are never true, they are only discovered after processing the data
         return false;
     }
 
-    public List<int> processData(){
+    public List<int> processData() {
         List<int> cutFrameNumbers = new List<int>();
 
         /////////////////////////////////////////////////
@@ -145,71 +124,48 @@ public class TwinComparison: aShotDetectionMethod {
         double mean = 0.0;
         double stdev = 0.0;
 
-        Console.Write("Calculating mean difference... ");
-        for (int i = 0; i < differences.Count; i++)
-        {
+        for (int i = 0; i < differences.Count; i++) {
             mean += differences.ElementAt(i);
         }
-        mean /= (1.0*differences.Count);
-        Console.WriteLine("Mean calculated: " + mean);
-
-        Console.Write("Calculating standard deviation... ");
-        for (int i = 0; i < differences.Count; i++)
-        {
-            stdev += Math.Pow((Math.Abs(mean-differences.ElementAt(i))*1.0),2);
+        mean /= (1.0 * differences.Count);
+        for (int i = 0; i < differences.Count; i++) {
+            stdev += Math.Pow((Math.Abs(mean - differences.ElementAt(i)) * 1.0), 2);
         }
         stdev /= ((differences.Count * 1.0) - 1.0);
         stdev = Math.Pow(stdev, 1.0 / 2.0);
-        Console.WriteLine("Calculated standard deviation: " + stdev);
 
         List<long> sorted = differences;
         sorted.OrderBy(l => l).ToList();
         double median = sorted.ElementAt(sorted.Count / 2);
 
-
         /////////////////////////////////////////////////
         ////// Determine cuts (hard and gradual)
         /////////////////////////////////////////////////
 
-        double thresh_low = 1.5 * mean;
-        
-        double thresh_high = mean + 2 * stdev;
-
-        long diffToStart = 0;
-        int startIndex = 0;
-        bool checkingtransition = false;
-
+        double thresh_low = alfa * mean + beta * stdev;
+        double thresh_high = gamma * mean + delta * stdev;
         long diffSum = 0;
 
-        for (int i = 0; i < differences.Count; i++)
-        {
+        for (int i = 0; i < differences.Count; i++) {
 
-            if (differences.ElementAt(i) > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))
-            {
-                Console.WriteLine("HARD");
+            if (differences.ElementAt(i) > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10)) {
+                //hard cut
                 cutFrameNumbers.Add(i + 1);
-            } else if (differences.ElementAt(i) > thresh_low && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))
-            {
-                Console.WriteLine("Possible soft cut...");
+            } else if (differences.ElementAt(i) > thresh_low && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10)) {
+                //possible soft cut
 
-                if (diffSum > thresh_high)
-                {
+                if (diffSum > thresh_high) {
 
-                    while (i < differences.Count && differences.ElementAt(i) >= thresh_low && differences.ElementAt(i) < thresh_high)
-                    {
+                    while (i < differences.Count && differences.ElementAt(i) >= thresh_low && differences.ElementAt(i) < thresh_high) {
                         diffSum += differences.ElementAt(i);
                         i++;
                     }
 
-                    if (differences.ElementAt(i) > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))
-                    {
+                    if (differences.ElementAt(i) > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10)) {
                         // Exited while loop because of hard cut.
-                        Console.WriteLine("HARD (WHILE)");
                         cutFrameNumbers.Add(i + 1);
-                    }
-                    else if (diffSum > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))
-                    {
-                        Console.WriteLine("SOFT");
+                    } else if (diffSum > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10)) {
+                        //soft cut
                         cutFrameNumbers.Add(i + 1);
                         diffSum = 0;
                     }
@@ -221,67 +177,7 @@ public class TwinComparison: aShotDetectionMethod {
 
         }
 
-        /*
-
-            for (int i = 0; i < differences.Count; i++)
-            {
-                if (differences.ElementAt(i) > thresh_high && !checkingtransition && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))    // We suppose a shot doesn't come in the next 10 frames.
-                {
-                    // (Hard) cut detected
-                    Console.WriteLine("HARD");
-                    cutFrameNumbers.Add(i + 1);
-                }
-                else if (differences.ElementAt(i) > thresh_low)
-                {
-                    if (!checkingtransition)
-                    {
-                        // Possible start of gradual cut
-                        checkingtransition = true;
-                        startIndex = i;
-                    }
-                    else
-                    {
-
-                        diffToStart = 0;
-                        Console.WriteLine("Possible soft cut");
-
-
-
-                        for (int k = 0; k < allHistograms.ElementAt(i).Count; k++)
-                        {
-                            for (int r = 0; r < nrOfBins * 3 - 1; r++)
-                            {
-                                diffToStart += Math.Abs(allHistograms.ElementAt(startIndex).ElementAt(k)[r] - allHistograms.ElementAt(i).ElementAt(k)[r]);
-
-                            }
-                        }
-
-                        Console.WriteLine(diffToStart + " >? " + thresh_high);
-
-                        if (diffToStart > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))
-                        {  // Maybe && i-5 > startIndex to make sure a gradual transition is long enough
-                            // Detect cut
-                            int stop = (i) - ((i) - startIndex) / 2 + 1;
-                            Console.WriteLine("SOFT");
-                            cutFrameNumbers.Add(stop);     // should be startindex.
-                            checkingtransition = false;
-
-                        }
-                        else if (diffToStart < thresh_low && (i - startIndex) >= 15)
-                        {
-                            // Discard cut
-                            checkingtransition = false;
-                        }
-
-                    }
-
-
-                }
-            }
-         * 
-         */
-
-        for(int i=0; i<cutFrameNumbers.Count; i++){
+        for (int i = 0; i < cutFrameNumbers.Count; i++) {
             Shot s = new Shot(cutFrameNumbers.ElementAt(i), shots.getShots().Count, null);
             shots.addShot(s);
         }
@@ -291,13 +187,5 @@ public class TwinComparison: aShotDetectionMethod {
 
 
 
-
-       private byte[] getPixel(int x, int y, byte[] frame) {
-        int position = y * m_stride + 3 * x;
-
-        byte[] pixel = { frame[position], frame[position + 1], frame[position + 2] };
-
-        return pixel;
-    }
 
 }

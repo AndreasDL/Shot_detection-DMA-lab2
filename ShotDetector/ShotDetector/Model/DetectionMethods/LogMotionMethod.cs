@@ -114,19 +114,6 @@ class LogMotionMethod : aShotDetectionMethod {
     }
 
 
-    /* 
-     * Returns the 3 values of a pixel at position x,y
-     * x = the x position in PIXELS
-     * y = the y position in PIXELS
-     * frame => the frame
-    */
-    private byte[] getPixel(int x, int y, byte[] frame) {
-        int position = y * m_stride + 3 * x;
-        byte[] pixel = { frame[position], frame[position + 1], frame[position + 2] };
-
-        return pixel;
-    }
-
     private long getDifference(int startX, int startY, int searchX, int searchY) {
         long diff = 0;
         for (int y = startY ; y < startY+subsize ; y++){

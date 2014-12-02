@@ -91,11 +91,4 @@ public class LocalHistogram: aShotDetectionMethod {
         }
     }
 
-    private byte[] getPixel(int x, int y, byte[] frame) {
-        int position = y * m_stride + 3 * x;
-
-        byte[] pixel = { frame[position], frame[position + 1], frame[position + 2] };
-
-        return pixel;
-    }
 }
