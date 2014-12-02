@@ -25,28 +25,22 @@ public class MethodFactory {
         return method;
     }
 
-    public aShotDetectionMethod getAutoLogMotionMethod(ShotCollection shots,IFrameObserver fo, int subSize, int windowSize) {
+    public aShotDetectionMethod getAutoLogMotionMethod(ShotCollection shots,IFrameObserver fo, int subSize, int windowSize, int speedup) {
         shots.addParameter(subSize);
         shots.addParameter(windowSize);
-        aShotDetectionMethod method = new AutoLogMotionMethod(subSize, windowSize, shots);
+        shots.addParameter(speedup);
+        aShotDetectionMethod method = new AutoLogMotionMethod(subSize, windowSize,speedup, shots);
         method.addFrameObserver(fo);
         return method;
     }
 
-    public aShotDetectionMethod getLogMotionMethod(ShotCollection shots, IFrameObserver fo, int subSize, int windowSize, int threshold, double fraction) {
+    public aShotDetectionMethod getLogMotionMethod(ShotCollection shots, IFrameObserver fo, int subSize, int windowSize, int threshold, double fraction, int speedup) {
         shots.addParameter(subSize);
         shots.addParameter(windowSize);
         shots.addParameter(threshold);
         shots.addParameter(fraction);
-        aShotDetectionMethod method = new LogMotionMethod(subSize, windowSize, shots, fraction, threshold);
-        method.addFrameObserver(fo);
-        return method;
-    }
-
-    public aShotDetectionMethod getSimpleMotion(ShotCollection shots, IFrameObserver fo, int subsize, int windowSize) {
-        shots.addParameter(subsize);
-        shots.addParameter(windowSize);
-        aShotDetectionMethod method = new SimpleMotionMethod(subsize, windowSize, shots);
+        shots.addParameter(speedup);
+        aShotDetectionMethod method = new LogMotionMethod(subSize, windowSize,speedup, shots, fraction, threshold);
         method.addFrameObserver(fo);
         return method;
     }

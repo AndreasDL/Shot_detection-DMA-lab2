@@ -17,13 +17,15 @@ public class AutoLogMotionMethod: aShotDetectionMethod {
     private int windowSize; //size of the search window in SUBBLOCKS
     private long avgDiff;
     private int lastShot;
+    private int speedup;
 
-    public AutoLogMotionMethod(int _subsize, int _windowSize, ShotCollection shots)
+    public AutoLogMotionMethod(int _subsize, int _windowSize,int speedup, ShotCollection shots)
         : base(shots) {
         this.subsize = _subsize;
         this.windowSize = _windowSize * _subsize; //save the window size in pixels
         this.current = null;
         this.previous = null;
+        this.speedup = speedup;
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen) {
@@ -41,21 +43,21 @@ public class AutoLogMotionMethod: aShotDetectionMethod {
 
     private bool _DetectShot() {
         bool isShot = false;
-
+        
         if (previous != null) {
             //init
             int offset = windowSize / 4;
             int[] offsetX = { 0, -offset, 0, offset, -offset, offset, -offset, 0, offset }; //start with center block, because it always exists, no checks required for init
             int[] offsetY = { 0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
             long currDiff = 0;
-            
-            for (int y = 0; y < videoHeight; y += subsize) {
-                for (int x = 0; x < videoWidth; x += subsize) {
+
+            for (int y = 0; y < videoHeight; y += speedup*subsize) {
+                for (int x = 0; x < videoWidth; x += speedup*subsize) {
                     //init
                     int searchX = x, searchY = y;
                     int bestoffset = 0;
                     long bestDifference = 0;
-                    byte[] avg = getAvg(x, y, current);
+                    offset = windowSize / 4;
 
                     //find best match using log search
                     while (offset > 1) {
@@ -63,8 +65,8 @@ public class AutoLogMotionMethod: aShotDetectionMethod {
                         //find best difference
                         //init
                         bestoffset = 0;
-                        bestDifference = getAbsDifferencePixel(avg, getAvg(x + offsetX[0],y + offsetY[0],previous));
-                        
+                        bestDifference = getDifference(x, y, searchX, searchY);
+
                         //loop
                         int i = 1;
                         while (i < 9 && bestDifference != 0) { //stop if difference is zero
@@ -72,8 +74,9 @@ public class AutoLogMotionMethod: aShotDetectionMethod {
                             int tempY = searchY + offsetY[i];
 
                             if (tempX > 0 && tempX < videoWidth - windowSize && tempY > 0 && tempY < videoHeight - windowSize) {
+
                                 //new diff
-                                long diff = getAbsDifferencePixel(avg, getAvg(tempX, tempY, previous));
+                                long diff = getDifference(x, y, tempX, tempY);
 
                                 //better?
                                 if (diff < bestDifference) {
@@ -90,22 +93,22 @@ public class AutoLogMotionMethod: aShotDetectionMethod {
 
                         //new offset
                         offset /= 2;
-                        offsetX = new int[] {0, -offset, 0, offset, -offset, offset, -offset, 0, offset };
-                        offsetY = new int[] {0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
+                        offsetX = new int[] { 0, -offset, 0, offset, -offset, offset, -offset, 0, offset };
+                        offsetY = new int[] { 0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
                     }
 
-                    currDiff += getDifference(x, y, searchX, searchY);
+                    currDiff += bestDifference;
                 }
             }
 
 
-            if (currDiff > 5 * avgDiff && frameNumber > lastShot + 10) {
+            if (currDiff > 3 * avgDiff && frameNumber > lastShot + 10) {
                 isShot = true;
                 lastShot = frameNumber;
                 avgDiff = currDiff;
             }
 
-            avgDiff = (int) ((avgDiff * 9 + currDiff ) / 10);
+            avgDiff = (int) ((avgDiff * 7 + currDiff * 3 ) / 10);
 
 
             return isShot;

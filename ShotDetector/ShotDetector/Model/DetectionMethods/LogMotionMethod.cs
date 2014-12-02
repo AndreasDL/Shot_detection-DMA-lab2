@@ -15,34 +15,30 @@ class LogMotionMethod : aShotDetectionMethod {
     private int lastShot;
     private int threshold;
     private double fraction;
+    private int speedup;
 
-    public LogMotionMethod(int _subsize, int _windowSize, ShotCollection shots, double fraction, int threshold)
+    public LogMotionMethod(int _subsize, int _windowSize,int speedup, ShotCollection shots, double fraction, int threshold)
         : base(shots) {
         this.subsize = _subsize;
-        this.windowSize = _windowSize * _subsize; //save the window size in pixels
+        this.windowSize = _windowSize; //save the window size in pixels
         this.current = null;
         this.previous = null;
         this.fraction = fraction;
         this.threshold = threshold;
+        this.speedup = speedup;
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen) {
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
-        if (frameNumber >= lastShot + 10) {
-            //move through
-            previous = current;
+        //move through
+        previous = current;
 
-            //new frame
-            current = new byte[(videoHeight * videoWidth) * 3];
-            Marshal.Copy(pBuffer, current, 0, BufferLen);
-        }
+        //new frame
+        current = new byte[(videoHeight * videoWidth) * 3];
+        Marshal.Copy(pBuffer, current, 0, BufferLen);
 
-        if (frameNumber > lastShot + 10) {
-            return _DetectShot();
-        } else {
-            return false;
-        }
+        return _DetectShot();
     }
 
     private bool _DetectShot() {
@@ -55,13 +51,13 @@ class LogMotionMethod : aShotDetectionMethod {
             int[] offsetX = { 0, -offset, 0, offset, -offset, offset, -offset, 0, offset }; //start with center block, because it always exists, no checks required for init
             int[] offsetY = { 0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
             
-            for (int y = 0; y < videoHeight; y += subsize) {
-                for (int x = 0; x < videoWidth; x += subsize) {
+            for (int y = 0; y < videoHeight; y += speedup*subsize) {
+                for (int x = 0; x < videoWidth; x += speedup*subsize) {
                     //init
                     int searchX = x, searchY = y;
                     int bestoffset = 0;
                     long bestDifference = 0;
-                    byte[] avg = getAvg(x, y, current); //use averages for the motion estimation since that it a LOT faster and has almost the same results
+                    offset = windowSize / 4;
 
                     //find best match using log search
                     while (offset > 1) {
@@ -69,8 +65,8 @@ class LogMotionMethod : aShotDetectionMethod {
                         //find best difference
                         //init
                         bestoffset = 0;
-                        bestDifference = getAbsDifferencePixel(avg, getAvg(x + offsetX[0],y + offsetY[0],previous));
-                        
+                        bestDifference = getDifference(x,y,searchX,searchY);
+
                         //loop
                         int i = 1;
                         while (i < 9 && bestDifference != 0) { //stop if difference is zero
@@ -78,8 +74,9 @@ class LogMotionMethod : aShotDetectionMethod {
                             int tempY = searchY + offsetY[i];
 
                             if (tempX > 0 && tempX < videoWidth - windowSize && tempY > 0 && tempY < videoHeight - windowSize) {
+                                
                                 //new diff
-                                long diff = getAbsDifferencePixel(avg, getAvg(tempX, tempY, previous));
+                                long diff = getDifference(x,y,tempX,tempY);
 
                                 //better?
                                 if (diff < bestDifference) {
@@ -100,8 +97,8 @@ class LogMotionMethod : aShotDetectionMethod {
                         offsetY = new int[] {0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
                     }
 
-                    if (getDifference(x, y, searchX, searchY)> threshold) {
-                        TooFarCount+=3;
+                    if ( (bestDifference *1.0) / (1.0*subsize*subsize)  > threshold) {
+                        TooFarCount+=3;//divide by mstride, which is 3*the pixels count, avoid multiplication
                     }
                 }
             }
@@ -150,7 +147,7 @@ class LogMotionMethod : aShotDetectionMethod {
  * curr = the average of the subblock in the current frame
 */
     private long getAbsDifferencePixel(byte[] old, byte[] curr) {
-        return Math.Abs(curr[0] - old[0]) + Math.Abs(curr[1] - old[1]) + Math.Abs(curr[2] - old[2]);
+        return Math.Abs( (int)curr[0] - (int)old[0]) + Math.Abs( (int)curr[1] - (int)old[1]) + Math.Abs((int)curr[2] - (int)old[2]);
     }
 
     /*
