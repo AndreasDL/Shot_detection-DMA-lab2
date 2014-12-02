@@ -68,9 +68,10 @@ public class MethodFactory {
         return method;
     }
 
-    public aShotDetectionMethod getTwinComparisonMethod(ShotCollection shots, IFrameObserver fo,int nrOfBins) {
+    public aShotDetectionMethod getTwinComparisonMethod(ShotCollection shots, IFrameObserver fo,int nrOfBins, int nrOfBLock) {
         shots.addParameter(nrOfBins);
-        aShotDetectionMethod method = new TwinComparison(nrOfBins, shots);
+        shots.addParameter(nrOfBLock);
+        aShotDetectionMethod method = new TwinComparison(nrOfBins, nrOfBLock, shots);
         method.addFrameObserver(fo);
         return method;
     }

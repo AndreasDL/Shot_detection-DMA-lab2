@@ -284,11 +284,12 @@ namespace ShotDetector {
         }
         private void StartTwinComp_Click(object sender, EventArgs e) {
             int binCount = Convert.ToInt32(txtTwinCompBins.Text);
+            int nrOfBlock = 9;
 
             if (binCount > 0 && binCount <= 256) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount));
+                DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount, nrOfBlock));
 
                 RunMethod(scanner, "Twin Comparison Histogram");
             } else {
@@ -343,7 +344,13 @@ namespace ShotDetector {
 
                 //wait for completion
                 scanner.WaitUntilDone();
-                this.results = scanner.getMethod().getShotCollection();//replaced with this one , which also contains the parameters
+                aShotDetectionMethod method = scanner.getMethod();
+
+                //if twin => do some extra stuff
+                if (method is TwinComparison) {
+                    this.toolStripStatusLabel1.Text = methodName + " Shot Detection (" + methodName + ") Processing data ...";
+                    ((TwinComparison)method).processData();
+                }
 
                 //feedback
                 sw.Stop();
@@ -351,6 +358,7 @@ namespace ShotDetector {
                 this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds ... Gathering frames";
 
                 //get frameShots
+                this.results = method.getShotCollection();//replaced with this one , which also contains the parameters
                 scanner = new DxScan(videoFileName, new GrabFrameMethods(this.results));
                 scanner.loopOverFrames(this.results);
                 dgvResults.FirstDisplayedCell = dgvResults.Rows[0].Cells[0];
@@ -516,6 +524,5 @@ namespace ShotDetector {
             txtMotionFraction.Enabled = !checkBox1.Checked;
             txtMotionThres.Enabled = !checkBox1.Checked;
         }
-
     }
 }

@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.ofdBrowse = new System.Windows.Forms.OpenFileDialog();
             this.mnMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,6 +77,14 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.FastMotion = new System.Windows.Forms.TabPage();
+            this.btnStartFastMotion = new System.Windows.Forms.Button();
+            this.txtFastMotionWindowSize = new System.Windows.Forms.MaskedTextBox();
+            this.txtFastMotionSubSize = new System.Windows.Forms.MaskedTextBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
             this.global = new System.Windows.Forms.TabPage();
             this.txtGlobalFraction = new System.Windows.Forms.MaskedTextBox();
             this.txtGlobalBinCount = new System.Windows.Forms.MaskedTextBox();
@@ -101,14 +109,6 @@
             this.txtTwinCompBins = new System.Windows.Forms.MaskedTextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
-            this.FastMotion = new System.Windows.Forms.TabPage();
-            this.btnStartFastMotion = new System.Windows.Forms.Button();
-            this.txtFastMotionWindowSize = new System.Windows.Forms.MaskedTextBox();
-            this.txtFastMotionSubSize = new System.Windows.Forms.MaskedTextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -124,10 +124,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.pixel.SuspendLayout();
             this.motion.SuspendLayout();
+            this.FastMotion.SuspendLayout();
             this.global.SuspendLayout();
             this.local.SuspendLayout();
             this.general.SuspendLayout();
-            this.FastMotion.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -143,7 +143,7 @@
             this.fileToolStripMenuItem});
             this.mnMenu.Location = new System.Drawing.Point(0, 0);
             this.mnMenu.Name = "mnMenu";
-            this.mnMenu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.mnMenu.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
             this.mnMenu.Size = new System.Drawing.Size(1153, 24);
             this.mnMenu.TabIndex = 3;
             this.mnMenu.Text = "menuStrip1";
@@ -208,16 +208,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.panel1.Location = new System.Drawing.Point(4, 4);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1174, 398);
+            this.panel1.Size = new System.Drawing.Size(1173, 396);
             this.panel1.TabIndex = 4;
             // 
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnStart.Location = new System.Drawing.Point(4, 409);
-            this.btnStart.Margin = new System.Windows.Forms.Padding(4);
+            this.btnStart.Location = new System.Drawing.Point(4, 407);
+            this.btnStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(100, 28);
             this.btnStart.TabIndex = 5;
@@ -229,8 +229,8 @@
             // 
             this.btnPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnPause.Enabled = false;
-            this.btnPause.Location = new System.Drawing.Point(112, 409);
-            this.btnPause.Margin = new System.Windows.Forms.Padding(4);
+            this.btnPause.Location = new System.Drawing.Point(112, 407);
+            this.btnPause.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(100, 28);
             this.btnPause.TabIndex = 7;
@@ -260,7 +260,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer1.Panel2MinSize = 70;
             this.splitContainer1.Size = new System.Drawing.Size(1129, 666);
-            this.splitContainer1.SplitterDistance = 443;
+            this.splitContainer1.SplitterDistance = 441;
             this.splitContainer1.TabIndex = 21;
             // 
             // tabControl1
@@ -279,7 +279,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1119, 213);
+            this.tabControl1.Size = new System.Drawing.Size(1119, 216);
             this.tabControl1.TabIndex = 9;
             // 
             // annotations
@@ -297,7 +297,7 @@
             this.annotations.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.annotations.Name = "annotations";
             this.annotations.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.annotations.Size = new System.Drawing.Size(1111, 184);
+            this.annotations.Size = new System.Drawing.Size(1111, 187);
             this.annotations.TabIndex = 1;
             this.annotations.Text = "Annotations";
             this.annotations.UseVisualStyleBackColor = true;
@@ -306,7 +306,7 @@
             // 
             this.label19.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(5, 151);
+            this.label19.Location = new System.Drawing.Point(5, 154);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(154, 16);
             this.label19.TabIndex = 13;
@@ -316,7 +316,7 @@
             // 
             this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(455, 151);
+            this.label21.Location = new System.Drawing.Point(455, 154);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(51, 16);
             this.label21.TabIndex = 2;
@@ -330,7 +330,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(5, 6);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(251, 132);
+            this.pictureBox1.Size = new System.Drawing.Size(251, 135);
             this.pictureBox1.TabIndex = 12;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -338,7 +338,7 @@
             // txtSearch
             // 
             this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSearch.Location = new System.Drawing.Point(522, 148);
+            this.txtSearch.Location = new System.Drawing.Point(523, 150);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(196, 22);
@@ -350,7 +350,7 @@
             // 
             this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(269, 151);
+            this.label20.Location = new System.Drawing.Point(269, 154);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(173, 16);
             this.label20.TabIndex = 1;
@@ -360,7 +360,7 @@
             // 
             this.btnCalc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCalc.Enabled = false;
-            this.btnCalc.Location = new System.Drawing.Point(830, 145);
+            this.btnCalc.Location = new System.Drawing.Point(829, 147);
             this.btnCalc.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCalc.Name = "btnCalc";
             this.btnCalc.Size = new System.Drawing.Size(168, 28);
@@ -372,7 +372,7 @@
             // btnSearch
             // 
             this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSearch.Location = new System.Drawing.Point(724, 146);
+            this.btnSearch.Location = new System.Drawing.Point(724, 149);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(100, 28);
@@ -385,7 +385,7 @@
             // 
             this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExport.Enabled = false;
-            this.btnExport.Location = new System.Drawing.Point(1003, 146);
+            this.btnExport.Location = new System.Drawing.Point(1003, 149);
             this.btnExport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(100, 28);
@@ -406,18 +406,18 @@
             this.shotNumber,
             this.StartFrame,
             this.tags});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvResults.DefaultCellStyle = dataGridViewCellStyle1;
-            this.dgvResults.Location = new System.Drawing.Point(264, 7);
-            this.dgvResults.Margin = new System.Windows.Forms.Padding(4);
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvResults.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvResults.Location = new System.Drawing.Point(352, 9);
+            this.dgvResults.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.dgvResults.Name = "dgvResults";
-            this.dgvResults.Size = new System.Drawing.Size(844, 131);
+            this.dgvResults.Size = new System.Drawing.Size(844, 133);
             this.dgvResults.TabIndex = 9;
             this.dgvResults.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.cellDoubleClick);
             this.dgvResults.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridChanged);
@@ -454,7 +454,7 @@
             this.pixel.Location = new System.Drawing.Point(4, 25);
             this.pixel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pixel.Name = "pixel";
-            this.pixel.Size = new System.Drawing.Size(1111, 184);
+            this.pixel.Size = new System.Drawing.Size(1111, 186);
             this.pixel.TabIndex = 2;
             this.pixel.Text = "Pixel";
             this.pixel.UseVisualStyleBackColor = true;
@@ -485,7 +485,7 @@
             // 
             this.btnStartPixel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStartPixel.Enabled = false;
-            this.btnStartPixel.Location = new System.Drawing.Point(1014, 142);
+            this.btnStartPixel.Location = new System.Drawing.Point(1013, 142);
             this.btnStartPixel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnStartPixel.Name = "btnStartPixel";
             this.btnStartPixel.Size = new System.Drawing.Size(75, 28);
@@ -550,7 +550,7 @@
             this.motion.Location = new System.Drawing.Point(4, 25);
             this.motion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.motion.Name = "motion";
-            this.motion.Size = new System.Drawing.Size(1111, 184);
+            this.motion.Size = new System.Drawing.Size(1111, 186);
             this.motion.TabIndex = 3;
             this.motion.Text = "Motion";
             this.motion.UseVisualStyleBackColor = true;
@@ -558,7 +558,8 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(577, 121);
+            this.label28.Location = new System.Drawing.Point(769, 149);
+            this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(35, 16);
             this.label28.TabIndex = 23;
@@ -569,7 +570,8 @@
             this.checkBox1.AutoSize = true;
             this.checkBox1.Checked = true;
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(627, 119);
+            this.checkBox1.Location = new System.Drawing.Point(836, 146);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(287, 36);
             this.checkBox1.TabIndex = 22;
@@ -581,7 +583,8 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(709, 36);
+            this.label27.Location = new System.Drawing.Point(945, 44);
+            this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(285, 32);
             this.label27.TabIndex = 21;
@@ -591,31 +594,32 @@
             // txtMotionThres
             // 
             this.txtMotionThres.Enabled = false;
-            this.txtMotionThres.Location = new System.Drawing.Point(646, 33);
-            this.txtMotionThres.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtMotionThres.Location = new System.Drawing.Point(861, 41);
+            this.txtMotionThres.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.txtMotionThres.Mask = "000000";
             this.txtMotionThres.Name = "txtMotionThres";
             this.txtMotionThres.PromptChar = ' ';
-            this.txtMotionThres.Size = new System.Drawing.Size(57, 22);
+            this.txtMotionThres.Size = new System.Drawing.Size(75, 22);
             this.txtMotionThres.TabIndex = 20;
             this.txtMotionThres.Text = "4000";
             // 
             // txtMotionFraction
             // 
             this.txtMotionFraction.Enabled = false;
-            this.txtMotionFraction.Location = new System.Drawing.Point(646, 78);
-            this.txtMotionFraction.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtMotionFraction.Location = new System.Drawing.Point(861, 96);
+            this.txtMotionFraction.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.txtMotionFraction.Mask = "0.000";
             this.txtMotionFraction.Name = "txtMotionFraction";
             this.txtMotionFraction.PromptChar = ' ';
-            this.txtMotionFraction.Size = new System.Drawing.Size(57, 22);
+            this.txtMotionFraction.Size = new System.Drawing.Size(75, 22);
             this.txtMotionFraction.TabIndex = 19;
             this.txtMotionFraction.Text = "0500";
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(709, 81);
+            this.label26.Location = new System.Drawing.Point(945, 100);
+            this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(200, 32);
             this.label26.TabIndex = 18;
@@ -624,7 +628,8 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(577, 81);
+            this.label25.Location = new System.Drawing.Point(769, 100);
+            this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(51, 16);
             this.label25.TabIndex = 17;
@@ -633,7 +638,8 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(577, 36);
+            this.label24.Location = new System.Drawing.Point(769, 44);
+            this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(63, 16);
             this.label24.TabIndex = 16;
@@ -665,8 +671,8 @@
             // 
             this.btnStartMotion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStartMotion.Enabled = false;
-            this.btnStartMotion.Location = new System.Drawing.Point(1022, 141);
-            this.btnStartMotion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnStartMotion.Location = new System.Drawing.Point(1363, 174);
+            this.btnStartMotion.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnStartMotion.Name = "btnStartMotion";
             this.btnStartMotion.Size = new System.Drawing.Size(75, 28);
             this.btnStartMotion.TabIndex = 13;
@@ -712,6 +718,100 @@
             this.label8.TabIndex = 9;
             this.label8.Text = "subSize";
             // 
+            // FastMotion
+            // 
+            this.FastMotion.Controls.Add(this.btnStartFastMotion);
+            this.FastMotion.Controls.Add(this.txtFastMotionWindowSize);
+            this.FastMotion.Controls.Add(this.txtFastMotionSubSize);
+            this.FastMotion.Controls.Add(this.label29);
+            this.FastMotion.Controls.Add(this.label30);
+            this.FastMotion.Controls.Add(this.label31);
+            this.FastMotion.Controls.Add(this.label32);
+            this.FastMotion.Location = new System.Drawing.Point(4, 25);
+            this.FastMotion.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FastMotion.Name = "FastMotion";
+            this.FastMotion.Size = new System.Drawing.Size(1111, 186);
+            this.FastMotion.TabIndex = 7;
+            this.FastMotion.Text = "Simple Motion";
+            this.FastMotion.UseVisualStyleBackColor = true;
+            // 
+            // btnStartFastMotion
+            // 
+            this.btnStartFastMotion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStartFastMotion.Enabled = false;
+            this.btnStartFastMotion.Location = new System.Drawing.Point(1351, 176);
+            this.btnStartFastMotion.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.btnStartFastMotion.Name = "btnStartFastMotion";
+            this.btnStartFastMotion.Size = new System.Drawing.Size(100, 34);
+            this.btnStartFastMotion.TabIndex = 22;
+            this.btnStartFastMotion.Text = "Run";
+            this.btnStartFastMotion.UseVisualStyleBackColor = true;
+            this.btnStartFastMotion.Click += new System.EventHandler(this.StartFastMotion_Click);
+            // 
+            // txtFastMotionWindowSize
+            // 
+            this.txtFastMotionWindowSize.Location = new System.Drawing.Point(140, 129);
+            this.txtFastMotionWindowSize.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtFastMotionWindowSize.Mask = "0";
+            this.txtFastMotionWindowSize.Name = "txtFastMotionWindowSize";
+            this.txtFastMotionWindowSize.PromptChar = ' ';
+            this.txtFastMotionWindowSize.Size = new System.Drawing.Size(132, 22);
+            this.txtFastMotionWindowSize.TabIndex = 21;
+            this.txtFastMotionWindowSize.Text = "2";
+            // 
+            // txtFastMotionSubSize
+            // 
+            this.txtFastMotionSubSize.Location = new System.Drawing.Point(140, 30);
+            this.txtFastMotionSubSize.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.txtFastMotionSubSize.Mask = "00";
+            this.txtFastMotionSubSize.Name = "txtFastMotionSubSize";
+            this.txtFastMotionSubSize.PromptChar = ' ';
+            this.txtFastMotionSubSize.Size = new System.Drawing.Size(132, 22);
+            this.txtFastMotionSubSize.TabIndex = 20;
+            this.txtFastMotionSubSize.Text = "8";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(295, 134);
+            this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(340, 48);
+            this.label29.TabIndex = 19;
+            this.label29.Text = "The size of the searchWindow, expressed in subblocks, \r\nhigher for longer searche" +
+    "s\r\nMin 1 - Max: 4";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(295, 33);
+            this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(279, 48);
+            this.label30.TabIndex = 18;
+            this.label30.Text = "the length of the edge of the subblock in pixels\r\nhigher for less accurate motion" +
+    " searching\r\nMin: 1 - Max: 32";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(20, 134);
+            this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(78, 16);
+            this.label31.TabIndex = 17;
+            this.label31.Text = "windowSize";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(20, 33);
+            this.label32.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(56, 16);
+            this.label32.TabIndex = 16;
+            this.label32.Text = "subSize";
+            // 
             // global
             // 
             this.global.Controls.Add(this.txtGlobalFraction);
@@ -724,7 +824,7 @@
             this.global.Location = new System.Drawing.Point(4, 25);
             this.global.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.global.Name = "global";
-            this.global.Size = new System.Drawing.Size(1111, 184);
+            this.global.Size = new System.Drawing.Size(1111, 186);
             this.global.TabIndex = 4;
             this.global.Text = "Global Hist";
             this.global.UseVisualStyleBackColor = true;
@@ -755,8 +855,8 @@
             // 
             this.btnStartGlobalHist.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStartGlobalHist.Enabled = false;
-            this.btnStartGlobalHist.Location = new System.Drawing.Point(1021, 142);
-            this.btnStartGlobalHist.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnStartGlobalHist.Location = new System.Drawing.Point(1361, 175);
+            this.btnStartGlobalHist.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnStartGlobalHist.Name = "btnStartGlobalHist";
             this.btnStartGlobalHist.Size = new System.Drawing.Size(75, 28);
             this.btnStartGlobalHist.TabIndex = 20;
@@ -815,7 +915,7 @@
             this.local.Location = new System.Drawing.Point(4, 25);
             this.local.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.local.Name = "local";
-            this.local.Size = new System.Drawing.Size(1111, 184);
+            this.local.Size = new System.Drawing.Size(1111, 186);
             this.local.TabIndex = 5;
             this.local.Text = "Local Hist";
             this.local.UseVisualStyleBackColor = true;
@@ -875,8 +975,8 @@
             // 
             this.btnStartLocalHistogram.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStartLocalHistogram.Enabled = false;
-            this.btnStartLocalHistogram.Location = new System.Drawing.Point(1022, 143);
-            this.btnStartLocalHistogram.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnStartLocalHistogram.Location = new System.Drawing.Point(1363, 176);
+            this.btnStartLocalHistogram.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnStartLocalHistogram.Name = "btnStartLocalHistogram";
             this.btnStartLocalHistogram.Size = new System.Drawing.Size(75, 28);
             this.btnStartLocalHistogram.TabIndex = 27;
@@ -929,7 +1029,7 @@
             this.general.Location = new System.Drawing.Point(4, 25);
             this.general.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.general.Name = "general";
-            this.general.Size = new System.Drawing.Size(1111, 184);
+            this.general.Size = new System.Drawing.Size(1111, 187);
             this.general.TabIndex = 6;
             this.general.Text = "General";
             this.general.UseVisualStyleBackColor = true;
@@ -937,9 +1037,10 @@
             // btnStartTwin
             // 
             this.btnStartTwin.Enabled = false;
-            this.btnStartTwin.Location = new System.Drawing.Point(1016, 144);
+            this.btnStartTwin.Location = new System.Drawing.Point(993, 141);
+            this.btnStartTwin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnStartTwin.Name = "btnStartTwin";
-            this.btnStartTwin.Size = new System.Drawing.Size(75, 23);
+            this.btnStartTwin.Size = new System.Drawing.Size(100, 28);
             this.btnStartTwin.TabIndex = 32;
             this.btnStartTwin.Text = "run";
             this.btnStartTwin.UseVisualStyleBackColor = true;
@@ -974,101 +1075,12 @@
             this.label23.TabIndex = 29;
             this.label23.Text = "binCount";
             // 
-            // FastMotion
-            // 
-            this.FastMotion.Controls.Add(this.btnStartFastMotion);
-            this.FastMotion.Controls.Add(this.txtFastMotionWindowSize);
-            this.FastMotion.Controls.Add(this.txtFastMotionSubSize);
-            this.FastMotion.Controls.Add(this.label29);
-            this.FastMotion.Controls.Add(this.label30);
-            this.FastMotion.Controls.Add(this.label31);
-            this.FastMotion.Controls.Add(this.label32);
-            this.FastMotion.Location = new System.Drawing.Point(4, 25);
-            this.FastMotion.Name = "FastMotion";
-            this.FastMotion.Size = new System.Drawing.Size(1111, 184);
-            this.FastMotion.TabIndex = 7;
-            this.FastMotion.Text = "Simple Motion";
-            this.FastMotion.UseVisualStyleBackColor = true;
-            // 
-            // btnStartFastMotion
-            // 
-            this.btnStartFastMotion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStartFastMotion.Enabled = false;
-            this.btnStartFastMotion.Location = new System.Drawing.Point(1013, 143);
-            this.btnStartFastMotion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnStartFastMotion.Name = "btnStartFastMotion";
-            this.btnStartFastMotion.Size = new System.Drawing.Size(75, 28);
-            this.btnStartFastMotion.TabIndex = 22;
-            this.btnStartFastMotion.Text = "Run";
-            this.btnStartFastMotion.UseVisualStyleBackColor = true;
-            this.btnStartFastMotion.Click += new System.EventHandler(this.StartFastMotion_Click);
-            // 
-            // txtFastMotionWindowSize
-            // 
-            this.txtFastMotionWindowSize.Location = new System.Drawing.Point(105, 105);
-            this.txtFastMotionWindowSize.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtFastMotionWindowSize.Mask = "0";
-            this.txtFastMotionWindowSize.Name = "txtFastMotionWindowSize";
-            this.txtFastMotionWindowSize.PromptChar = ' ';
-            this.txtFastMotionWindowSize.Size = new System.Drawing.Size(100, 22);
-            this.txtFastMotionWindowSize.TabIndex = 21;
-            this.txtFastMotionWindowSize.Text = "2";
-            // 
-            // txtFastMotionSubSize
-            // 
-            this.txtFastMotionSubSize.Location = new System.Drawing.Point(105, 24);
-            this.txtFastMotionSubSize.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtFastMotionSubSize.Mask = "00";
-            this.txtFastMotionSubSize.Name = "txtFastMotionSubSize";
-            this.txtFastMotionSubSize.PromptChar = ' ';
-            this.txtFastMotionSubSize.Size = new System.Drawing.Size(100, 22);
-            this.txtFastMotionSubSize.TabIndex = 20;
-            this.txtFastMotionSubSize.Text = "8";
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(221, 109);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(340, 48);
-            this.label29.TabIndex = 19;
-            this.label29.Text = "The size of the searchWindow, expressed in subblocks, \r\nhigher for longer searche" +
-    "s\r\nMin 1 - Max: 4";
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(221, 27);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(279, 48);
-            this.label30.TabIndex = 18;
-            this.label30.Text = "the length of the edge of the subblock in pixels\r\nhigher for less accurate motion" +
-    " searching\r\nMin: 1 - Max: 32";
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(15, 109);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(78, 16);
-            this.label31.TabIndex = 17;
-            this.label31.Text = "windowSize";
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(15, 27);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(56, 16);
-            this.label32.TabIndex = 16;
-            this.label32.Text = "subSize";
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 711);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 712);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
             this.statusStrip1.Size = new System.Drawing.Size(1153, 22);
@@ -1090,14 +1102,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1153, 733);
+            this.ClientSize = new System.Drawing.Size(1153, 734);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.mnMenu);
             this.DoubleBuffered = true;
             this.MainMenuStrip = this.mnMenu;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(1063, 100);
+            this.MinimumSize = new System.Drawing.Size(1063, 101);
             this.Name = "ShotDetector";
             this.Text = "ShotDetector";
             this.mnMenu.ResumeLayout(false);
@@ -1115,14 +1127,14 @@
             this.pixel.PerformLayout();
             this.motion.ResumeLayout(false);
             this.motion.PerformLayout();
+            this.FastMotion.ResumeLayout(false);
+            this.FastMotion.PerformLayout();
             this.global.ResumeLayout(false);
             this.global.PerformLayout();
             this.local.ResumeLayout(false);
             this.local.PerformLayout();
             this.general.ResumeLayout(false);
             this.general.PerformLayout();
-            this.FastMotion.ResumeLayout(false);
-            this.FastMotion.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
