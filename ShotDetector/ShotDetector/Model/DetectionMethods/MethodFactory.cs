@@ -43,10 +43,10 @@ public class MethodFactory {
         return method;
     }
 
-    public aShotDetectionMethod getFastMotion(ShotCollection shots, IFrameObserver fo, int subsize, int windowSize) {
+    public aShotDetectionMethod getSimpleMotion(ShotCollection shots, IFrameObserver fo, int subsize, int windowSize) {
         shots.addParameter(subsize);
         shots.addParameter(windowSize);
-        aShotDetectionMethod method = new FastMotionMethod(subsize, windowSize, shots);
+        aShotDetectionMethod method = new SimpleMotionMethod(subsize, windowSize, shots);
         method.addFrameObserver(fo);
         return method;
     }

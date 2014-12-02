@@ -271,10 +271,10 @@
             this.tabControl1.Controls.Add(this.annotations);
             this.tabControl1.Controls.Add(this.pixel);
             this.tabControl1.Controls.Add(this.motion);
+            this.tabControl1.Controls.Add(this.FastMotion);
             this.tabControl1.Controls.Add(this.global);
             this.tabControl1.Controls.Add(this.local);
             this.tabControl1.Controls.Add(this.general);
-            this.tabControl1.Controls.Add(this.FastMotion);
             this.tabControl1.Location = new System.Drawing.Point(5, 2);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
@@ -987,7 +987,7 @@
             this.FastMotion.Name = "FastMotion";
             this.FastMotion.Size = new System.Drawing.Size(1111, 184);
             this.FastMotion.TabIndex = 7;
-            this.FastMotion.Text = "FastMotion";
+            this.FastMotion.Text = "Simple Motion";
             this.FastMotion.UseVisualStyleBackColor = true;
             // 
             // btnStartFastMotion

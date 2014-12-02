@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 /// <summary>
 /// This method uses motion estimation to detect shots
 /// </summary>
-public class FastMotionMethod : aShotDetectionMethod{
+public class SimpleMotionMethod : aShotDetectionMethod{
     private byte[] current; //current frame
     private int subsize;    //size of a subblock
     private int windowSize; //size of the search window in SUBBLOCKS
@@ -20,7 +20,7 @@ public class FastMotionMethod : aShotDetectionMethod{
     private int currDiff;
     private int lastShot;
 
-    public FastMotionMethod(int _subsize, int _windowSize,ShotCollection shots):base(shots) {
+    public SimpleMotionMethod(int _subsize, int _windowSize,ShotCollection shots):base(shots) {
         this.subsize = _subsize;
         this.windowSize = _windowSize;
         this.current = null;

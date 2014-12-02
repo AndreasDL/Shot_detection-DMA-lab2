@@ -302,7 +302,7 @@ namespace ShotDetector {
             if (subsize >= 1 && subsize <= 32 && windowsize >= 1 && windowsize <= 4) {
                 ShotCollection shots = new ShotCollection();
                 shots.addObserver(this);
-                DxScan scanner = new DxScan(videoFileName, factory.getFastMotion(shots, this, subsize, windowsize));
+                DxScan scanner = new DxScan(videoFileName, factory.getSimpleMotion(shots, this, subsize, windowsize));
                 RunMethod(scanner, "Fast Motion");
             } else {
                 MessageBox.Show("Please check your input parameters");
