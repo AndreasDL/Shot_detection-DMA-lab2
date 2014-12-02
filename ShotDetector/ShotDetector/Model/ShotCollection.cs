@@ -11,17 +11,17 @@ using System.Xml;
 public class ShotCollection{
     private List<Shot> shots; //list of the shots
     private List<IShotObserver> observers; //list of the observers
-    private int method;
-    private List<Object> parameters;
-    private long lastFrame;
+    private Dictionary<String, Object> parameters;
     private String videoFileName;
+    private int methodNumber;
 
-    public ShotCollection() {
+    public ShotCollection(int methodNumber) {
         this.shots = new List<Shot>();
         this.observers = new List<IShotObserver>();
-        this.parameters = new List<Object>();
+        this.parameters = new Dictionary<String, object>();
+        this.methodNumber = methodNumber;
     }
-    public ShotCollection(string fileName):this() { 
+    public ShotCollection(string fileName):this(0) { 
         XmlDocument doc = new XmlDocument();
         doc.Load(fileName);
 
@@ -34,16 +34,10 @@ public class ShotCollection{
         } 
     }
 
-    public void setMethod(int method) {
-        this.method = method;
-    }
-
-    public void addParameter(Object parameter) {
-        parameters.Add(parameter);
+    public void addParameter(String name,Object parameter) {
+        parameters.Add(name,parameter);
     }
     public void setLastFrame(long frameCount) {
-        //fix for the last shot
-        lastFrame = frameCount;
         shots.Add(new Shot((int)frameCount , shots.Count));
     }
 
@@ -62,22 +56,30 @@ public class ShotCollection{
         file.Value = videoFileName;
         root.Attributes.Append(file);
         doc.AppendChild(root);
-
-        //method number
+        
         XmlNode method = doc.CreateElement("method");
         XmlAttribute nr = doc.CreateAttribute("nr");
-        nr.Value = Convert.ToString(this.method + 1);
+        nr.Value = Convert.ToString(methodNumber);
         method.Attributes.Append(nr);
+
+
         //method name
         XmlAttribute methodName = doc.CreateAttribute("methodName");
-        methodName.Value = MethodFactory.METHODS[this.method];
+        methodName.Value = MethodFactory.METHODS[this.methodNumber - 1];
         method.Attributes.Append(methodName);
         
         //params
-        for (int i = 0; i < parameters.Count; i++) {
-            XmlNode param = doc.CreateElement("param" + i);
-            param.InnerText = Convert.ToString(this.parameters[i]);
+        int pnr = 0;
+        foreach(KeyValuePair<String,Object> entry in parameters){
+            XmlNode param = doc.CreateElement("param" + pnr);
+            param.InnerText = Convert.ToString(entry.Value);
+
+            XmlAttribute paramName = doc.CreateAttribute("name");
+            paramName.Value = entry.Key;
+            param.Attributes.Append(paramName);
+
             method.AppendChild(param);
+            pnr++;
         }
         root.AppendChild(method);
 

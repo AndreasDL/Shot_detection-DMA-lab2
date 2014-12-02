@@ -16,7 +16,6 @@ using DirectShowLib;
 /// This method compares pixels to detect shots
 /// </summary>
 public class PixelMethod : aShotDetectionMethod {
-
     private byte[] current;
     private byte[] previous;
     private int delta2;

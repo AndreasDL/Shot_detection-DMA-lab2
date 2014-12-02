@@ -15,9 +15,8 @@ class LogMotionMethod : aShotDetectionMethod {
     private int lastShot;
     private int threshold;
     private double fraction;
-    private int speedup;
 
-    public LogMotionMethod(int _subsize, int _windowSize,int speedup, ShotCollection shots, double fraction, int threshold)
+    public LogMotionMethod(int _subsize, int _windowSize, ShotCollection shots, double fraction, int threshold)
         : base(shots) {
         this.subsize = _subsize;
         this.windowSize = _windowSize; //save the window size in pixels
@@ -25,7 +24,6 @@ class LogMotionMethod : aShotDetectionMethod {
         this.previous = null;
         this.fraction = fraction;
         this.threshold = threshold;
-        this.speedup = speedup;
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen) {
@@ -51,8 +49,8 @@ class LogMotionMethod : aShotDetectionMethod {
             int[] offsetX = { 0, -offset, 0, offset, -offset, offset, -offset, 0, offset }; //start with center block, because it always exists, no checks required for init
             int[] offsetY = { 0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
             
-            for (int y = 0; y < videoHeight; y += speedup*subsize) {
-                for (int x = 0; x < videoWidth; x += speedup*subsize) {
+            for (int y = 0; y < videoHeight; y += subsize) {
+                for (int x = 0; x < videoWidth; x += subsize) {
                     //init
                     int searchX = x, searchY = y;
                     int bestoffset = 0;

@@ -209,7 +209,7 @@ namespace ShotDetector {
             double fraction = Convert.ToDouble(txtPixelFraction.Text);
 
             if (distance > 0 && distance <= 768 && fraction > 0 && fraction <= 1) {
-                ShotCollection shots = new ShotCollection();
+                ShotCollection shots = new ShotCollection(1);
                 shots.addObserver(this);//make sure the datagridview gets updated
                 DxScan scanner = new DxScan(videoFileName, factory.getPixelMethod(shots, this, distance, fraction));
 
@@ -223,7 +223,7 @@ namespace ShotDetector {
             int windowsize = Convert.ToInt32(txtMotionWindowSize.Text);
             int speedup = Convert.ToInt32(cmbSpeedup.SelectedIndex) + 1;
 
-            ShotCollection shots = new ShotCollection();
+            ShotCollection shots = new ShotCollection(2);
             shots.addObserver(this);
 
             aShotDetectionMethod method = null;
@@ -239,7 +239,7 @@ namespace ShotDetector {
 
                     if (distance >= 1 && distance <= 768 && fraction >= 0 && fraction <= 1) {
                         paramsFailed = false;
-                        method = factory.getLogMotionMethod(shots, this, subsize, windowsize, distance, fraction,speedup);
+                        method = factory.getLogMotionMethod(shots, this, subsize, windowsize, distance, fraction);
                     }
                 }
             }
@@ -256,7 +256,7 @@ namespace ShotDetector {
             double fraction = Convert.ToDouble(txtGlobalFraction.Text);
 
             if (binCount > 0 && binCount <= 256 && fraction > 0 && fraction <= 1) {
-                ShotCollection shots = new ShotCollection();
+                ShotCollection shots = new ShotCollection(3);
                 shots.addObserver(this);//make sure the datagridview gets updated
                 DxScan scanner = new DxScan(videoFileName, factory.getGlobalHistogramMethod(shots, this, binCount, fraction));
 
@@ -274,7 +274,7 @@ namespace ShotDetector {
                 int nrOfBlocks = Convert.ToInt32(cmbLocalHistNrOfBlocks.SelectedIndex) + 1;
                 nrOfBlocks *= nrOfBlocks;
 
-                ShotCollection shots = new ShotCollection();
+                ShotCollection shots = new ShotCollection(4);
                 shots.addObserver(this);//make sure the datagridview gets updated
                 DxScan scanner = new DxScan(videoFileName, factory.getLocalHistogramMethod(shots, this, binCount, fraction, nrOfBlocks));
 
@@ -288,7 +288,7 @@ namespace ShotDetector {
             int nrOfBlock = 9;
 
             if (binCount > 0 && binCount <= 256) {
-                ShotCollection shots = new ShotCollection();
+                ShotCollection shots = new ShotCollection(5);
                 shots.addObserver(this);//make sure the datagridview gets updated
                 DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount, nrOfBlock));
 
@@ -301,7 +301,6 @@ namespace ShotDetector {
         private void RunMethod(DxScan scanner, String methodName) {
             if (this.results == null
                 || MessageBox.Show("Running this method will clear the results. Are you sure you cant to continue ?", "Are you sure", MessageBoxButtons.YesNoCancel) == DialogResult.Yes) {
-                this.results = new ShotCollection();
 
                 //disable other start buttons
                 btnStartGlobalHist.Enabled = false;
@@ -315,7 +314,7 @@ namespace ShotDetector {
 
                 //cleanup
                 dgvResults.Rows.Clear();
-                this.results = new ShotCollection(); //temp used while video is playing
+                this.results = new ShotCollection(-1); //temp used while video is playing
 
                 //notify user
                 this.toolStripStatusLabel1.Text = "Shot Detection (" + methodName + ") Running ...";
@@ -346,7 +345,7 @@ namespace ShotDetector {
                 this.toolStripStatusLabel1.Text = methodName + " Shot Detection Completed in " + time / 1000.0 + " seconds ... Gathering frames";
 
                 //get frameShots
-                this.results = method.getShotCollection();//replaced with this one , which also contains the parameters
+                this.results = method.getShotCollection();//replaced with this one , which also contains the parameters &method number etc
                 scanner = new DxScan(videoFileName, new GrabFrameMethods(this.results));
                 scanner.loopOverFrames(this.results);
                 if (this.results.getShots().Count > 0) {
@@ -505,6 +504,7 @@ namespace ShotDetector {
         private void checkBox1_CheckedChanged(object sender, EventArgs e) {
             txtMotionFraction.Enabled = !checkBox1.Checked;
             txtMotionThres.Enabled = !checkBox1.Checked;
+            cmbSpeedup.Enabled = checkBox1.Checked;
         }
     }
 }

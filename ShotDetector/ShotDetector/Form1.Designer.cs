@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.ofdBrowse = new System.Windows.Forms.OpenFileDialog();
             this.mnMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -399,14 +399,14 @@
             this.shotNumber,
             this.StartFrame,
             this.tags});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvResults.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvResults.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvResults.Location = new System.Drawing.Point(264, 5);
             this.dgvResults.Margin = new System.Windows.Forms.Padding(5);
             this.dgvResults.Name = "dgvResults";
@@ -556,9 +556,9 @@
             this.label30.AutoSize = true;
             this.label30.Location = new System.Drawing.Point(219, 127);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(228, 16);
+            this.label30.Size = new System.Drawing.Size(228, 32);
             this.label30.TabIndex = 26;
-            this.label30.Text = "higher speedup will skip more blocks";
+            this.label30.Text = "higher speedup will skip more blocks\r\nOnly in combination with auto mode";
             // 
             // label29
             // 
@@ -572,6 +572,7 @@
             // cmbSpeedup
             // 
             this.cmbSpeedup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSpeedup.Enabled = false;
             this.cmbSpeedup.FormattingEnabled = true;
             this.cmbSpeedup.Items.AddRange(new object[] {
             "1",
@@ -1008,17 +1009,17 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 708);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 712);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1153, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(1153, 22);
             this.statusStrip1.TabIndex = 22;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 21);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
             // toolStripProgressBar1
             // 
