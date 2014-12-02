@@ -173,64 +173,115 @@ public class TwinComparison: aShotDetectionMethod {
         ////// Determine cuts (hard and gradual)
         /////////////////////////////////////////////////
 
-        double thresh_low = Math.max(mean, median);// 1.5 * mean;
+        double thresh_low = 1.5 * mean;
         
-        double thresh_high = mean + 0.5 * stdev;
+        double thresh_high = mean + 2 * stdev;
 
         long diffToStart = 0;
         int startIndex = 0;
         bool checkingtransition = false;
-        
+
+        long diffSum = 0;
+
         for (int i = 0; i < differences.Count; i++)
         {
-            if (differences.ElementAt(i) > thresh_high && !checkingtransition && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count-1) >= 10) )    // We suppose a shot doesn't come in the next 10 frames.
+
+            if (differences.ElementAt(i) > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))
             {
-                // (Hard) cut detected
                 Console.WriteLine("HARD");
-                cutFrameNumbers.Add(i+1);
-            }
-            else if (differences.ElementAt(i) > thresh_low)
+                cutFrameNumbers.Add(i + 1);
+            } else if (differences.ElementAt(i) > thresh_low && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))
             {
-                if(!checkingtransition){
-                // Possible start of gradual cut
-                    checkingtransition = true;
-                    startIndex = i;
-                } else {
+                Console.WriteLine("Possible soft cut...");
 
-                    diffToStart = 0;
-                    Console.WriteLine("Possible soft cut");
+                if (diffSum > thresh_high)
+                {
 
-                 
-                                        
-                    for (int k = 0; k < allHistograms.ElementAt(i).Count; k++)
+                    while (i < differences.Count && differences.ElementAt(i) >= thresh_low && differences.ElementAt(i) < thresh_high)
                     {
-                        for (int r = 0; r < nrOfBins * 3 - 1; r++)
-                        {
-                            diffToStart += Math.Abs(allHistograms.ElementAt(startIndex).ElementAt(k)[r] - allHistograms.ElementAt(i).ElementAt(k)[r]);
-
-                        }
+                        diffSum += differences.ElementAt(i);
+                        i++;
                     }
 
-                    Console.WriteLine(diffToStart + " >? " + thresh_high);
-
-                    if(diffToStart > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count -1)>= 10))
-                    {  // Maybe && i-5 > startIndex to make sure a gradual transition is long enough
-                        // Detect cut
-                        int stop = (i) - ((i) - startIndex) / 2 +1;
+                    if (differences.ElementAt(i) > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))
+                    {
+                        // Exited while loop because of hard cut.
+                        Console.WriteLine("HARD (WHILE)");
+                        cutFrameNumbers.Add(i + 1);
+                    }
+                    else if (diffSum > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))
+                    {
                         Console.WriteLine("SOFT");
-                        cutFrameNumbers.Add(stop);     // should be startindex.
-                        checkingtransition = false;
-
-                    } else if(diffToStart < thresh_low && (i - startIndex) >= 15){
-                        // Discard cut
-                        checkingtransition = false;
+                        cutFrameNumbers.Add(i + 1);
+                        diffSum = 0;
                     }
 
                 }
 
-
             }
+
+
         }
+
+        /*
+
+            for (int i = 0; i < differences.Count; i++)
+            {
+                if (differences.ElementAt(i) > thresh_high && !checkingtransition && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))    // We suppose a shot doesn't come in the next 10 frames.
+                {
+                    // (Hard) cut detected
+                    Console.WriteLine("HARD");
+                    cutFrameNumbers.Add(i + 1);
+                }
+                else if (differences.ElementAt(i) > thresh_low)
+                {
+                    if (!checkingtransition)
+                    {
+                        // Possible start of gradual cut
+                        checkingtransition = true;
+                        startIndex = i;
+                    }
+                    else
+                    {
+
+                        diffToStart = 0;
+                        Console.WriteLine("Possible soft cut");
+
+
+
+                        for (int k = 0; k < allHistograms.ElementAt(i).Count; k++)
+                        {
+                            for (int r = 0; r < nrOfBins * 3 - 1; r++)
+                            {
+                                diffToStart += Math.Abs(allHistograms.ElementAt(startIndex).ElementAt(k)[r] - allHistograms.ElementAt(i).ElementAt(k)[r]);
+
+                            }
+                        }
+
+                        Console.WriteLine(diffToStart + " >? " + thresh_high);
+
+                        if (diffToStart > thresh_high && (cutFrameNumbers.Count == 0 || i - cutFrameNumbers.ElementAt(cutFrameNumbers.Count - 1) >= 10))
+                        {  // Maybe && i-5 > startIndex to make sure a gradual transition is long enough
+                            // Detect cut
+                            int stop = (i) - ((i) - startIndex) / 2 + 1;
+                            Console.WriteLine("SOFT");
+                            cutFrameNumbers.Add(stop);     // should be startindex.
+                            checkingtransition = false;
+
+                        }
+                        else if (diffToStart < thresh_low && (i - startIndex) >= 15)
+                        {
+                            // Discard cut
+                            checkingtransition = false;
+                        }
+
+                    }
+
+
+                }
+            }
+         * 
+         */
 
         for(int i=0; i<cutFrameNumbers.Count; i++){
             Shot s = new Shot(cutFrameNumbers.ElementAt(i), shots.getShots().Count, null);
