@@ -37,16 +37,18 @@ public class LocalHistogram: aShotDetectionMethod {
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen){
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
-
+		// The number of blocks is assumed as a power of a certain integer number
         this.number = (int)Math.Sqrt((double)nrOfBlocks);
-        this.endCols = videoWidth - (videoWidth % number);//Ignore last x pixels if they don't match
+		//If pixels sizes don't match they are left apart from the computation
+        this.endCols = videoWidth - (videoWidth % number);
         this.endRows = videoHeight - (videoHeight % number);
         this.sizeCols = endCols / number;
         this.sizeRows = endRows / number;
 
         byte[] current = new byte[(videoHeight * videoWidth) * 3];
         Marshal.Copy(pBuffer, current, 0, BufferLen);
-
+		
+		// Update of the list of histograms to compare
         previous_histograms = current_histograms;
         current_histograms = new List<int[]>();
 
@@ -60,7 +62,7 @@ public class LocalHistogram: aShotDetectionMethod {
 
                 for (int x = i; x < sizeRows + i; x++) {
                     for (int y = j; y < sizeCols + j; y++) {
-
+						//Calculating values of the current histogram respect to a block 
                         byte[] currPixel = getPixel(y, x, current);
                         hist[(int)(currPixel[0] / divider)]++;
                         hist[(int)(currPixel[1] / divider) + 1]++;//nrOfBins]++;
@@ -75,6 +77,7 @@ public class LocalHistogram: aShotDetectionMethod {
 
         if (frameNumber != 0) {
             double twoHistsDiff = 0;
+			//Calculating the difference between the two histograms' lists
             for (int k = 0; k < current_histograms.Count; k++) {
                 for (int i = 0; i < nrOfBins * 3 - 1; i++) {
                     twoHistsDiff += Math.Abs(current_histograms[k][i] - previous_histograms[k][i]);
