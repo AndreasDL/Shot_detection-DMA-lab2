@@ -36,9 +36,12 @@ namespace ShotDetector {
                 this.cmbLocalHistNrOfBlocks.Items.Add(i * i);
                 this.cmbTwinNrOfBlocks.Items.Add(i * i);
             }
-            cmbSpeedup.SelectedIndex = 0;
             cmbTwinNrOfBlocks.SelectedIndex = 2;
             cmbLocalHistNrOfBlocks.SelectedIndex = 2;
+
+            for (int i = 1; i <= 10; i++)
+                this.cmbSpeedup.Items.Add(i);
+            cmbSpeedup.SelectedIndex = 0;
 
             this.tabControl1.SelectedIndex = 1;
             this.currRow = -1; //selected row in dgvResults
@@ -243,7 +246,7 @@ namespace ShotDetector {
 
                     if (distance >= 1 && distance <= 768 && fraction >= 0 && fraction <= 1) {
                         paramsFailed = false;
-                        method = MethodFactory.getLogMotionMethod(shots, this, subsize, windowsize, distance, fraction);
+                        method = MethodFactory.getLogMotionMethod(shots, this, subsize, windowsize, distance, fraction,speedup);
                     }
                 }
             }
@@ -521,7 +524,7 @@ namespace ShotDetector {
         private void checkBox1_CheckedChanged(object sender, EventArgs e) {
             txtMotionFraction.Enabled = !checkBox1.Checked;
             txtMotionThres.Enabled = !checkBox1.Checked;
-            cmbSpeedup.Enabled = checkBox1.Checked;
+            //cmbSpeedup.Enabled = checkBox1.Checked;
         }
     }
 }

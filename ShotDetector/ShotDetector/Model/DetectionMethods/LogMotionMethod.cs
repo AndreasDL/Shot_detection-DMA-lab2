@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 /// <summary>
 /// This method uses a logaritmic motion search to detect shots
 /// </summary>
-class LogMotionMethod : aShotDetectionMethod {
+class LogMotionMethod: aShotDetectionMethod {
     private byte[] current;   //current frame
     private byte[] previous;  //previous frame
     private int subsize;      //size of a subblock
@@ -17,6 +17,7 @@ class LogMotionMethod : aShotDetectionMethod {
     private int lastShot;     //frame number of the last detected shot
     private int threshold;    //used threshold
     private double fraction;  //used fraction
+    private int speedup;
 
 
     /// <summary>
@@ -24,19 +25,20 @@ class LogMotionMethod : aShotDetectionMethod {
     /// it tries to avoid parameters by keeping track of the average differences and when the difference > X* average then a shot is detected.
     /// This method is simple, yet produces good results.
     /// </summary>
-    /// <param name="_subsize">the width/height of a subblock</param>
-    /// <param name="_windowSize">the size of the search window</param>
+    /// <param name="subsize">the width/height of a subblock</param>
+    /// <param name="windowSize">the size of the search window</param>
     /// <param name="shots">the collection to store the shots in</param>
     /// <param name="fraction">fraction of blocks above the threshold</param>
     /// <param name="threshold">the threshold to generate a hit</param>
-    public LogMotionMethod(int _subsize, int _windowSize, ShotCollection shots, double fraction, int threshold)
+    public LogMotionMethod(int subsize, int windowSize, ShotCollection shots, double fraction, int threshold, int speedup)
         : base(shots) {
-        this.subsize = _subsize;
-        this.windowSize = _windowSize;
+        this.subsize = subsize;
+        this.windowSize = windowSize;
         this.current = null;
         this.previous = null;
         this.fraction = fraction;
         this.threshold = threshold;
+        this.speedup = speedup;
     }
 
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen) {
@@ -53,11 +55,8 @@ class LogMotionMethod : aShotDetectionMethod {
         int TooFarCount = 0;
 
         if (previous != null) { //if there is a previous block to compare
-
-            long currDiff = 0; //difference between previous and current frame kept for the whole frame
-
-            for (int y = 0; y < videoHeight; y += subsize) {
-                for (int x = 0; x < videoWidth; x += subsize) {
+            for (int y = 0; y < videoHeight; y += speedup * subsize) {
+                for (int x = 0; x < videoWidth; x += speedup * subsize) {
 
                     //init                   
                     int offset = windowSize / 4; //reset the offset
@@ -108,13 +107,13 @@ class LogMotionMethod : aShotDetectionMethod {
                         offsetY = new int[] { 0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
                     }
 
-                    if ( (bestDifference *1.0) / (1.0*subsize*subsize)  > threshold) {
-                        TooFarCount+=3;//divide by mstride, which is 3*the pixels count, avoid multiplication
+                    if ((bestDifference * speedup) / (1.0 * subsize * subsize) > threshold) {
+                        TooFarCount += 3;//divide by mstride, which is 3*the pixels count, avoid multiplication
                     }
                 }
             }
 
-            if (TooFarCount / m_stride > fraction && frameNumber > lastShot + 10) {
+            if ((speedup * TooFarCount) / m_stride > fraction && frameNumber > lastShot + 10) {
                 isShot = true;
                 lastShot = frameNumber;
             }

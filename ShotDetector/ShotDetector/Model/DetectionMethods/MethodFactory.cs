@@ -31,12 +31,12 @@ public class MethodFactory {
         return method;
     }
 
-    public static aShotDetectionMethod getLogMotionMethod(ShotCollection shots, IFrameObserver fo, int subSize, int windowSize, int threshold, double fraction) {
+    public static aShotDetectionMethod getLogMotionMethod(ShotCollection shots, IFrameObserver fo, int subSize, int windowSize, int threshold, double fraction, int speedup) {
         shots.addParameter("subSize",subSize);
         shots.addParameter("winSize",windowSize);
         shots.addParameter("threshold",threshold);
         shots.addParameter("fraction",fraction);
-        aShotDetectionMethod method = new LogMotionMethod(subSize, windowSize, shots, fraction, threshold);
+        aShotDetectionMethod method = new LogMotionMethod(subSize, windowSize, shots, fraction, threshold, speedup);
         method.addFrameObserver(fo);
         return method;
     }
