@@ -5,21 +5,34 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-
+/// <summary>
+/// This method uses a logaritmic motion search to detect shots
+/// </summary>
 class LogMotionMethod : aShotDetectionMethod {
-    private byte[] current; //current frame
-    private byte[] previous;
-    private int subsize;    //size of a subblock
-    private int windowSize; //size of the search window in SUBBLOCKS
+    private byte[] current;   //current frame
+    private byte[] previous;  //previous frame
+    private int subsize;      //size of a subblock
+    private int windowSize;   //size of the search window in SUBBLOCKS
 
-    private int lastShot;
-    private int threshold;
-    private double fraction;
+    private int lastShot;     //frame number of the last detected shot
+    private int threshold;    //used threshold
+    private double fraction;  //used fraction
 
+
+    /// <summary>
+    /// This method uses a logaritmic motion estimation to detect shots, 
+    /// it tries to avoid parameters by keeping track of the average differences and when the difference > X* average then a shot is detected.
+    /// This method is simple, yet produces good results.
+    /// </summary>
+    /// <param name="_subsize">the width/height of a subblock</param>
+    /// <param name="_windowSize">the size of the search window</param>
+    /// <param name="shots">the collection to store the shots in</param>
+    /// <param name="fraction">fraction of blocks above the threshold</param>
+    /// <param name="threshold">the threshold to generate a hit</param>
     public LogMotionMethod(int _subsize, int _windowSize, ShotCollection shots, double fraction, int threshold)
         : base(shots) {
         this.subsize = _subsize;
-        this.windowSize = _windowSize; //save the window size in pixels
+        this.windowSize = _windowSize;
         this.current = null;
         this.previous = null;
         this.fraction = fraction;
@@ -36,45 +49,43 @@ class LogMotionMethod : aShotDetectionMethod {
         current = new byte[(videoHeight * videoWidth) * 3];
         Marshal.Copy(pBuffer, current, 0, BufferLen);
 
-        return _DetectShot();
-    }
-
-    private bool _DetectShot() {
         bool isShot = false;
         int TooFarCount = 0;
 
-        if (previous != null) {
-            //init
-            int offset = windowSize / 4;
-            int[] offsetX = { 0, -offset, 0, offset, -offset, offset, -offset, 0, offset }; //start with center block, because it always exists, no checks required for init
-            int[] offsetY = { 0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
-            
+        if (previous != null) { //if there is a previous block to compare
+
+            long currDiff = 0; //difference between previous and current frame kept for the whole frame
+
             for (int y = 0; y < videoHeight; y += subsize) {
                 for (int x = 0; x < videoWidth; x += subsize) {
-                    //init
-                    int searchX = x, searchY = y;
+
+                    //init                   
+                    int offset = windowSize / 4; //reset the offset
+                    //start with center block, because it always exists, no checks required for init
+                    int[] offsetX = { 0, -offset, 0, offset, -offset, offset, -offset, 0, offset };
+                    int[] offsetY = { 0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
+
+                    int searchX = x, searchY = y; //first offset == 0
                     int bestoffset = 0;
-                    long bestDifference = 0;
-                    offset = windowSize / 4;
+                    long bestDifference = 0; //best found match has bestDifference difference :)
 
                     //find best match using log search
                     while (offset > 1) {
 
                         //find best difference
-                        //init
-                        bestoffset = 0;
-                        bestDifference = getDifference(x,y,searchX,searchY);
+                        bestoffset = 0; //index 0 is chosen as start index
+                        bestDifference = getDifference(x, y, searchX, searchY);
 
                         //loop
                         int i = 1;
-                        while (i < 9 && bestDifference != 0) { //stop if difference is zero
-                            int tempX = searchX + offsetX[i];
+                        while (i < 9 && bestDifference != 0) { //stop if difference is zero, speedup :D
+                            int tempX = searchX + offsetX[i]; //new candidate
                             int tempY = searchY + offsetY[i];
 
+                            //if the candidate is within the frame
                             if (tempX > 0 && tempX < videoWidth - windowSize && tempY > 0 && tempY < videoHeight - windowSize) {
-                                
                                 //new diff
-                                long diff = getDifference(x,y,tempX,tempY);
+                                long diff = getDifference(x, y, tempX, tempY);
 
                                 //better?
                                 if (diff < bestDifference) {
@@ -82,6 +93,8 @@ class LogMotionMethod : aShotDetectionMethod {
                                     bestoffset = i;
                                 }
                             }
+
+                            //next
                             i++;
                         }
 
@@ -91,8 +104,8 @@ class LogMotionMethod : aShotDetectionMethod {
 
                         //new offset
                         offset /= 2;
-                        offsetX = new int[] {0, -offset, 0, offset, -offset, offset, -offset, 0, offset };
-                        offsetY = new int[] {0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
+                        offsetX = new int[] { 0, -offset, 0, offset, -offset, offset, -offset, 0, offset };
+                        offsetY = new int[] { 0, -offset, -offset, -offset, 0, 0, offset, offset, offset };
                     }
 
                     if ( (bestDifference *1.0) / (1.0*subsize*subsize)  > threshold) {
@@ -114,54 +127,33 @@ class LogMotionMethod : aShotDetectionMethod {
     }
 
 
+    /// <summary>
+    /// returns the absolute difference between two subblocks
+    /// </summary>
+    /// <param name="startX">upper left x coordinate of the first block </param>
+    /// <param name="startY">upper left y coordinate of the first block</param>
+    /// <param name="searchX">upper left x coordinate of the second block</param>
+    /// <param name="searchY">upper left y coordinate of the second block</param>
+    /// <returns>the sommation of differences between all pixel values</returns>
     private long getDifference(int startX, int startY, int searchX, int searchY) {
         long diff = 0;
-        for (int y = startY ; y < startY+subsize ; y++){
+        for (int y = startY; y < startY + subsize; y++) {
             for (int x = startX; x < startX + subsize; x++) {
-                diff+= getAbsDifferencePixel(getPixel(searchX,searchY,current),getPixel(startX,startY,previous));
+                diff += getAbsDifferencePixel(getPixel(searchX, searchY, current), getPixel(startX, startY, previous));
             }
         }
-
         return diff;
     }
 
 
-    /*
- * Returns the difference of each pixel component between two pixels, this is used to determine the closest match between subblocks
- * old = the average of the subblock in the previous frame
- * curr = the average of the subblock in the current frame
-*/
+    /// <summary>
+    /// Returns the difference of each pixel component between two pixels, this is used to determine the closest match between subblocks
+    /// </summary>
+    /// <param name="old">the average of the subblock in the previous frame</param>
+    /// <param name="curr">the average of the subblock in the current frame</param>
+    /// <returns>the difference of each pixel component between two pixels, this is used to determine the closest match between subblocks</returns>
     private long getAbsDifferencePixel(byte[] old, byte[] curr) {
-        return Math.Abs( (int)curr[0] - (int)old[0]) + Math.Abs( (int)curr[1] - (int)old[1]) + Math.Abs((int)curr[2] - (int)old[2]);
-    }
-
-    /*
- * Return the average pixel values of a subblock starting at position _x ; _y
- * _x = the x position in PIXELS
- * _y = the y position in PIXELS
- * frame: the frame
- * subsize = the subsize, the size of the subblock
-*/
-    private byte[] getAvg(int _x, int _y, byte[] frame) {
-        uint[] pixel = { 0, 0, 0 };
-        uint pixelCount = 0;
-
-        for (int y = _y; y < _y + subsize; y++) {
-            for (int x = _x; x < _x + subsize; x++) {
-                byte[] currPixel = getPixel(x, y, frame);
-                pixel[0] += currPixel[0];
-                pixel[1] += currPixel[1];
-                pixel[2] += currPixel[2];
-
-                pixelCount++;
-            }
-        }
-        pixel[0] /= pixelCount;
-        pixel[1] /= pixelCount;
-        pixel[2] /= pixelCount;
-
-        byte[] pixelAsByte = { (byte)pixel[0], (byte)pixel[1], (byte)pixel[2] };
-        return pixelAsByte;
+        return Math.Abs(curr[0] - old[0]) + Math.Abs(curr[1] - old[1]) + Math.Abs(curr[2] - old[2]);
     }
 
 }

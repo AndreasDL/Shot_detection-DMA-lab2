@@ -26,6 +26,7 @@ public class Shot {
         this.frameShot = frameShot;
     }
 
+    // constructor without bitmap
     public Shot(int startFrame, int shotNumber): this(startFrame, shotNumber, null){}
 
     /// <summary>
@@ -51,10 +52,18 @@ public class Shot {
         return startFrame;
     }
 
+    /// <summary>
+    /// return the number of the shot
+    /// </summary>
+    /// <returns>number of the shot</returns>
     public int getShotNumber() {
         return shotNumber;
     }
 
+    /// <summary>
+    /// returns the tag string
+    /// </summary>
+    /// <returns>a string that holds all the tags, separated with a ';'</returns>
     public String getTagString() {
         String s = "";
         foreach (String tag in this.tags) {
@@ -64,15 +73,27 @@ public class Shot {
         return s;
     }
 
+    /// <summary>
+    /// get a new tag string e.g. when it is changed in gui
+    /// </summary>
+    /// <param name="tags">the tag string, formatted as follows: tag1;tag2;tag3; ...</param>
     public void setTagString(String tags) {
         tags = tags.Replace("\n","");//remove newlines
         this.tags = new List<String>(tags.Split(';'));
     }
 
+    /// <summary>
+    /// return the frame that represents the shot
+    /// </summary>
+    /// <returns>the bitmap</returns>
     public Bitmap getFrameShot() {
         return this.frameShot;
     }
 
+    /// <summary>
+    /// save a bitmap
+    /// </summary>
+    /// <param name="frameShot">the bitmap</param>
     public void setBitmap(Bitmap frameShot) {
         this.frameShot = frameShot;
     }

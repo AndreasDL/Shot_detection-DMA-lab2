@@ -58,12 +58,18 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         this.shots = shots;
     }
 
+    /// <summary>
+    /// Add an observer that is notified when a new shot is found
+    /// </summary>
+    /// <param name="observer">the observer</param>
     public void addFrameObserver(IFrameObserver observer) {
         if (observer != null) {
             obs.Add(observer);
         }
     }
-
+    /// <summary>
+    /// Called to notify all observers
+    /// </summary>
     private void notifyObservers() {
         foreach (IFrameObserver observer in obs) {
             observer.updateProgress(frameNumber);
@@ -101,12 +107,6 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
     public int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){
         //call the method
         if (DetectShot(SampleTime, pBuffer, BufferLen)) {
-
-            /*
-            IntPtr temp = Marshal.AllocHGlobal(BufferLen);
-            CopyMemory(temp,pBuffer, (uint)BufferLen);
-            Bitmap frameShot = new Bitmap(this.videoWidth, this.videoHeight, -m_stride, PixelFormat.Format24bppRgb, (IntPtr)(temp.ToInt32() + BufferLen - m_stride) );
-            */
             Shot s = new Shot(frameNumber, shots.getShots().Count);//, frameShot);
             shots.addShot(s);
         }
@@ -117,12 +117,13 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
         return 0;
     }
 
-    /* 
-     * Returns the 3 values of a pixel at position x,y
-     * x = the x position in PIXELS
-     * y = the y position in PIXELS
-     * frame => the frame
-    */
+    /// <summary>
+    /// Returns the 3 values of a pixel at position x,y
+    /// </summary>
+    /// <param name="x">the x position in PIXELS</param>
+    /// <param name="y">the y position in PIXELS</param>
+    /// <param name="frame">the framebuffer to use </param>
+    /// <returns>the pixel in byte[]: {comp1,comp2,comp3}</returns>
     protected byte[] getPixel(int x, int y, byte[] frame) {
         int position = y * m_stride + 3 * x;
 

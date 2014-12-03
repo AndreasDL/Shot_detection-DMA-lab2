@@ -24,54 +24,37 @@ namespace ShotDetector {
         private DxPlay m_play;
 
         private string videoFileName;
-        private MethodFactory factory;
         private ShotCollection results;
         private long frameCount;
         private int currRow;
 
         public ShotDetector() {
             InitializeComponent();
-            this.factory = new MethodFactory();
+
+            //init comboboxes
             for (int i = 1; i <= 20; i++) {
                 this.cmbLocalHistNrOfBlocks.Items.Add(i * i);
                 this.cmbTwinNrOfBlocks.Items.Add(i * i);
             }
-            cmbLocalHistNrOfBlocks.SelectedIndex = 2;
             cmbSpeedup.SelectedIndex = 0;
-            this.frameCount = 0;
+            cmbTwinNrOfBlocks.SelectedIndex = 2;
+            cmbLocalHistNrOfBlocks.SelectedIndex = 2;
+
             this.tabControl1.SelectedIndex = 1;
+            this.currRow = -1; //selected row in dgvResults
+
+            this.frameCount = 0;
             this.results = null;
             this.m_play = null;
             this.videoFileName = "";
-            this.currRow = -1; //selected row in dgvResults
-            this.cmbTwinNrOfBlocks.SelectedIndex = 2;
         }
 
-        //videofile
-        private void browseFile(object sender, EventArgs e) {
-            ofdBrowse.InitialDirectory = "C:\\";
-            ofdBrowse.Filter = "video files (*.avi)|*.avi";
-            ofdBrowse.FilterIndex = 2;
 
-            if (ofdBrowse.ShowDialog() == DialogResult.OK) {
-                videoFileName = ofdBrowse.FileName;
-                dgvResults.Rows.Clear();
-                btnStart.Enabled = true;
-
-                btnStartPixel.Enabled = true;
-                btnStartMotion.Enabled = true;
-                btnStartLocalHistogram.Enabled = true;
-                btnStartGlobalHist.Enabled = true;
-                btnStartTwin.Enabled = true;
-
-                start_Click(sender, e);
-            }
-        }
         private void Quit_Click(object sender, EventArgs e) {
             Application.Exit();
         }
 
-        //Start - Stop - Rewind
+        //Start - Stop
         private void start_Click(object sender, EventArgs e) {
             if (videoFileName == "") {
                 browseFile(sender, e);//will start the playing
@@ -203,6 +186,26 @@ namespace ShotDetector {
                 MessageBox.Show("Video hasn't started yet, press Start to start playing!");
             }
         }
+        //videofile
+        private void browseFile(object sender, EventArgs e) {
+            ofdBrowse.InitialDirectory = "C:\\";
+            ofdBrowse.Filter = "video files (*.avi)|*.avi";
+            ofdBrowse.FilterIndex = 2;
+
+            if (ofdBrowse.ShowDialog() == DialogResult.OK) {
+                videoFileName = ofdBrowse.FileName;
+                dgvResults.Rows.Clear();
+                btnStart.Enabled = true;
+
+                btnStartPixel.Enabled = true;
+                btnStartMotion.Enabled = true;
+                btnStartLocalHistogram.Enabled = true;
+                btnStartGlobalHist.Enabled = true;
+                btnStartTwin.Enabled = true;
+
+                start_Click(sender, e);
+            }
+        }
 
         //start methods
         private void startPixel_Click(object sender, EventArgs e) {
@@ -212,7 +215,7 @@ namespace ShotDetector {
             if (distance > 0 && distance <= 768 && fraction > 0 && fraction <= 1) {
                 ShotCollection shots = new ShotCollection(1);
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getPixelMethod(shots, this, distance, fraction));
+                DxScan scanner = new DxScan(videoFileName, MethodFactory.getPixelMethod(shots, this, distance, fraction));
 
                 RunMethod(scanner, "Pixel");
             } else {
@@ -233,14 +236,14 @@ namespace ShotDetector {
             if (subsize >= 1 && subsize <= 256 && windowsize >= 1 && windowsize < 32) {
                 if (checkBox1.Checked) {//auto
                     paramsFailed = false;
-                    method = factory.getAutoLogMotionMethod(shots, this, subsize, windowsize,speedup);
+                    method = MethodFactory.getAutoLogMotionMethod(shots, this, subsize, windowsize,speedup);
                 } else { //not auto
                     int distance = Convert.ToInt32(txtMotionThres.Text);
                     double fraction = Convert.ToDouble(txtMotionFraction.Text);
 
                     if (distance >= 1 && distance <= 768 && fraction >= 0 && fraction <= 1) {
                         paramsFailed = false;
-                        method = factory.getLogMotionMethod(shots, this, subsize, windowsize, distance, fraction);
+                        method = MethodFactory.getLogMotionMethod(shots, this, subsize, windowsize, distance, fraction);
                     }
                 }
             }
@@ -259,7 +262,7 @@ namespace ShotDetector {
             if (binCount > 0 && binCount <= 256 && fraction > 0 && fraction <= 1) {
                 ShotCollection shots = new ShotCollection(3);
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getGlobalHistogramMethod(shots, this, binCount, fraction));
+                DxScan scanner = new DxScan(videoFileName, MethodFactory.getGlobalHistogramMethod(shots, this, binCount, fraction));
 
                 RunMethod(scanner, "Global Histogram");
             } else {
@@ -277,7 +280,7 @@ namespace ShotDetector {
 
                 ShotCollection shots = new ShotCollection(4);
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getLocalHistogramMethod(shots, this, binCount, fraction, nrOfBlocks));
+                DxScan scanner = new DxScan(videoFileName, MethodFactory.getLocalHistogramMethod(shots, this, binCount, fraction, nrOfBlocks));
 
                 RunMethod(scanner, "Local Histogram");
             } else {
@@ -297,14 +300,14 @@ namespace ShotDetector {
 
                 ShotCollection shots = new ShotCollection(5);
                 shots.addObserver(this);//make sure the datagridview gets updated
-                DxScan scanner = new DxScan(videoFileName, factory.getTwinComparisonMethod(shots, this, binCount, nrOfBlocks, alfa, beta,gamma, delta));
+                DxScan scanner = new DxScan(videoFileName, MethodFactory.getTwinComparisonMethod(shots, this, binCount, nrOfBlocks, alfa, beta,gamma, delta));
 
                 RunMethod(scanner, "Twin Comparison Histogram");
             } else {
                 MessageBox.Show("Please check your input parameters");
             }
         }
-
+        //run the method
         private void RunMethod(DxScan scanner, String methodName) {
             if (this.results == null
                 || MessageBox.Show("Running this method will clear the results. Are you sure you cant to continue ?", "Are you sure", MessageBoxButtons.YesNoCancel) == DialogResult.Yes) {
@@ -353,7 +356,7 @@ namespace ShotDetector {
 
                 //get frameShots
                 this.results = method.getShotCollection();//replaced with this one , which also contains the parameters &method number etc
-                scanner = new DxScan(videoFileName, new GrabFrameMethods(this.results));
+                scanner = new DxScan(videoFileName,  new GrabFrameMethods(this.results));
                 scanner.loopOverFrames(this.results);
                 if (this.results.getShots().Count > 0) {
                     dgvResults.FirstDisplayedCell = dgvResults.Rows[0].Cells[0];
@@ -381,7 +384,8 @@ namespace ShotDetector {
 
             }
         }
-        //progressbar
+        
+        //progressbar that show progress of a method
         delegate void ProgressCallback(long frameNumber);
         public void updateProgress(long frameNumber) {
             if (this.dgvResults.InvokeRequired) {
@@ -391,8 +395,9 @@ namespace ShotDetector {
                 this.toolStripProgressBar1.Value = Convert.ToInt32(100 * frameNumber / frameCount);
             }
         }
-
-        //datagrids
+        
+        //datagrid
+        //double click => play shot
         private void cellDoubleClick(object sender, DataGridViewCellEventArgs e) {
             long startFrame = (long)(Convert.ToInt32(dgvResults.Rows[e.RowIndex].Cells[1].Value));//startframe
             long stopFrame = m_play.getFrameCount();
@@ -420,19 +425,7 @@ namespace ShotDetector {
             btnPause.Enabled = true;
             m_State = State.Stopped;
         }
-        private void resultSelectedIndexChanged(object sender, EventArgs e) {
-            int newRow = this.dgvResults.CurrentRow.Index;
-
-            if (newRow != this.currRow && dgvResults.RowCount > 0) {//only if the row changed
-                Shot s = this.results.getShot(newRow);
-
-                //update the picture if it exists
-                if (s.getFrameShot() != null)
-                    this.pictureBox1.Image = new Bitmap(s.getFrameShot(), new Size(this.pictureBox1.Width, this.pictureBox1.Height));
-
-                this.currRow = newRow;
-            }
-        }
+        //search for tags
         private void searchTag(object sender, EventArgs e) {
 
             if (this.results != null) {
@@ -448,7 +441,7 @@ namespace ShotDetector {
                 }
             }
         }
-        //update gui
+        //update gui when new shot is detected
         delegate void UpdateGridCallback(Shot shot);
         public void updateList(Shot shot) {
             //updates the datagrid view
@@ -487,6 +480,22 @@ namespace ShotDetector {
             }
         }
 
+        //picturebox
+        //show the frames that corresponds with the selected shot
+        private void resultSelectedIndexChanged(object sender, EventArgs e) {
+            int newRow = this.dgvResults.CurrentRow.Index;
+
+            if (newRow != this.currRow && dgvResults.RowCount > 0) {//only if the row changed
+                Shot s = this.results.getShot(newRow);
+
+                //update the picture if it exists
+                if (s.getFrameShot() != null)
+                    this.pictureBox1.Image = new Bitmap(s.getFrameShot(), new Size(this.pictureBox1.Width, this.pictureBox1.Height));
+
+                this.currRow = newRow;
+            }
+        }
+        //export picture
         private void pictureBox1_Click(object sender, EventArgs e) {
             if (pictureBox1.Image != null) {
                 String outputPath = "";
@@ -508,6 +517,7 @@ namespace ShotDetector {
             }
         }
 
+        //speedup only for auto mode
         private void checkBox1_CheckedChanged(object sender, EventArgs e) {
             txtMotionFraction.Enabled = !checkBox1.Checked;
             txtMotionThres.Enabled = !checkBox1.Checked;

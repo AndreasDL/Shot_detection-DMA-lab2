@@ -73,7 +73,6 @@
   <ItemGroup>
     <Compile Include="DxPlay.cs" />
     <Compile Include="DxScan.cs" />
-    <Compile Include="Model\DetectionMethods\EmptyMethod.cs" />
     <Compile Include="Model\DetectionMethods\GrabFrames.cs" />
     <Compile Include="Model\DetectionMethods\AutoLogMotionMethod.cs" />
     <Compile Include="Model\DetectionMethods\LogMotionMethod.cs" />

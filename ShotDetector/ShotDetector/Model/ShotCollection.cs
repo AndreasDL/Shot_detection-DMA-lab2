@@ -15,12 +15,21 @@ public class ShotCollection{
     private String videoFileName;
     private int methodNumber;
 
+    /// <summary>
+    /// create a new shotCollection
+    /// </summary>
+    /// <param name="methodNumber">identifier of the method</param>
     public ShotCollection(int methodNumber) {
         this.shots = new List<Shot>();
         this.observers = new List<IShotObserver>();
         this.parameters = new Dictionary<String, object>();
         this.methodNumber = methodNumber;
     }
+
+    /// <summary>
+    /// loads a shotcollection from disk
+    /// </summary>
+    /// <param name="fileName">path of the xml file</param>
     public ShotCollection(string fileName):this(0) { 
         XmlDocument doc = new XmlDocument();
         doc.Load(fileName);
@@ -33,14 +42,27 @@ public class ShotCollection{
             addShot(new Shot(Convert.ToInt32(line), i));
         } 
     }
-
+     /// <summary>
+     /// adds a parameter to the shotcollection
+     /// </summary>
+     /// <param name="name">name of the parameter</param>
+     /// <param name="parameter">the value of the parameter</param>
     public void addParameter(String name,Object parameter) {
         parameters.Add(name,parameter);
     }
+
+    /// <summary>
+    /// manually set the last frame, needed for the end frame of the last shot
+    /// </summary>
+    /// <param name="frameCount"></param>
     public void setLastFrame(long frameCount) {
         shots.Add(new Shot((int)frameCount , shots.Count));
     }
 
+    /// <summary>
+    /// set the name of the video file
+    /// </summary>
+    /// <param name="videoFileName">path of the video file</param>
     public void setfile(string videoFileName) {
         this.videoFileName = videoFileName;
     }
@@ -223,6 +245,11 @@ public class ShotCollection{
         shots.Clear();
     }
 
+    /// <summary>
+    /// search shots for tags
+    /// </summary>
+    /// <param name="tag">the tag to look for</param>
+    /// <returns>a list of shots that match the tag</returns>
     public List<Shot> searchShots(string tag) {
         List<Shot> results = new List<Shot>();
 
