@@ -95,7 +95,7 @@ public abstract class aShotDetectionMethod: SampleGrabber, ISampleGrabberCB {
 
     /// <summary> this function is called for each frame </summary>
     /// <param name="SampleTime">the time of the frame (if you want a frame count, then you must count in the method)</param>
-    /// <param name="pBuffer">a pointer to the first byte of the image (each pixel has 3 bytes and the frame is m_strade wide so byte[m_stide*5 + 7*3] is the first component of pixel with y=5, x = 7</param>
+    /// <param name="pBuffer">a pointer to the first byte of the image (each pixel has 3 bytes and the frame is m_stride wide so byte[m_stide*5 + 7*3] is the first component of pixel with y=5, x = 7</param>
     /// <param name="bufferLen>number of bytes in pBuffer</param>
     /// <returns>error code if zero then it's all ok</returns>
     public int BufferCB(double SampleTime, IntPtr pBuffer, int BufferLen){

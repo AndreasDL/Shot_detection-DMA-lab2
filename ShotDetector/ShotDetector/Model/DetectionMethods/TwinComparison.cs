@@ -77,8 +77,8 @@ public class TwinComparison: aShotDetectionMethod {
 
                         byte[] currPixel = getPixel(y, x, current);
                         hist[(int)(currPixel[0] / divider)]++;
-                        hist[(int)(currPixel[1] / divider) + nrOfBins]++;
-                        hist[(int)(currPixel[2] / divider) + 2 * nrOfBins]++;
+                        hist[(int)(currPixel[1] / divider) + 1]++;//+ nrOfBins]++;
+                        hist[(int)(currPixel[2] / divider) + +2]++;//2 * nrOfBins]++;
 
                     }
                 }

@@ -26,7 +26,8 @@ public class LocalHistogram: aShotDetectionMethod {
     public LocalHistogram(double _threshold, int _nrOfBins, int _nrOfBlocks,ShotCollection shots): base(shots) {
         this.threshold = _threshold;
         this.nrOfBins = _nrOfBins;
-        this.divider = (int)(Math.Ceiling(255.0 / nrOfBins));
+        //this.divider = (int)(Math.Ceiling(255.0 / nrOfBins));
+        this.divider = 255 / nrOfBins;
         this.nrOfBlocks = _nrOfBlocks;
 
         this.previous_histograms = null;
@@ -62,8 +63,8 @@ public class LocalHistogram: aShotDetectionMethod {
 
                         byte[] currPixel = getPixel(y, x, current);
                         hist[(int)(currPixel[0] / divider)]++;
-                        hist[(int)(currPixel[1] / divider) + nrOfBins]++;
-                        hist[(int)(currPixel[2] / divider) + 2 * nrOfBins]++;
+                        hist[(int)(currPixel[1] / divider) + 1]++;//nrOfBins]++;
+                        hist[(int)(currPixel[2] / divider) + 2]++;//2 * nrOfBins]++;
 
                     }
                 }

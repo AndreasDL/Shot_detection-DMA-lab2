@@ -27,22 +27,28 @@ public class GlobalHistogramMethod: aShotDetectionMethod, ISampleGrabberCB {
     public GlobalHistogramMethod(double _threshold, int _nrOfBins,ShotCollection shots): base(shots) {
         this.threshold = _threshold;
         this.nrOfBins = _nrOfBins;
-        this.divider = 255 / nrOfBins;
+        this.divider = 255 / nrOfBins;  // Every pixel value (0 <-> 255) will be divided by this divider to place it in the correct bin.
         this.current_histogram = null;
         this.previous_histogram = null;
     }
 
+    /// <summary> this function is called for each frame </summary>
+    /// <param name="SampleTime">the time of the frame (if you want a frame count, then you must count in the method)</param>
+    /// <param name="pBuffer">a pointer to the first byte of the image (each pixel has 3 bytes and the frame is m_stride wide so byte[m_stide*5 + 7*3] is the first component of pixel with y=5, x = 7</param>
+    /// <param name="bufferLen>number of bytes in pBuffer</param>
+    /// <returns>error code (if zero then everything is ok)</returns>
     public override bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen) {
         Debug.Assert(IntPtr.Size == 4, "Change all instances of IntPtr.ToInt32 to .ToInt64");
 
+        // hand over histogram to previous histogram
         previous_histogram = current_histogram;
 
         // Compute current histogram
         byte[] current = new byte[(videoHeight * videoWidth) * 3];
         Marshal.Copy(pBuffer, current, 0, BufferLen);
-
         current_histogram = new int[nrOfBins * 3];           // We choose to combine the histogram of R, G and B values in 1 large array
-        for (int i = 0; i < 3*nrOfBins; i++) {
+
+        for (int i = 0; i < 3*nrOfBins; i++) {               // Initialize all bins of the histogram to zero
             current_histogram[i] = 0;
         }
 
