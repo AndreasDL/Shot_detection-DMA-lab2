@@ -58,8 +58,8 @@ public class PixelMethod : aShotDetectionMethod {
             }
 
             // If more than delta3 percent of the pixels reached the threshold: a shot is detected.
-            if (threshReached * 3.0 / (BufferLen * 1.0) > (delta3) //bufferlen = videoWidth * videoHeight * 3
-                && frameNumber > lastShot + 10)  //ignore bursts
+            if ( (threshReached * 3.0) / (BufferLen * 1.0) > (delta3) //bufferlen = videoWidth * videoHeight * 3
+                )//&& frameNumber > lastShot + 10)  //ignore bursts
             {
                 lastShot = frameNumber;
                 return true;

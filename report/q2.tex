@@ -1,0 +1,11 @@
+\section[A table documenting the different parameters used, as well as explanatory notes
+regarding the definition and the range of these different parameters. Also, add a
+rationale for the different parameter settings used (this is, how did you restrict the
+parameter settings to a meaningful subset?).]{}The parameters used in exercise 5 are depicted in Table \ref{tab:twinparameters} in Appendix \ref{app:q2}. The parameters can be divided in 2 categories: Local Histogram and Twin Comparison. For the Local Histogram parameters, the number of blocks determines in how many blocks the frame will be divided. The number of blocks equals the number of histograms computed in one frame. Its value should be a number of which the square root is an integer (1, 4, 9, 16, 25, ...). The number of bins determines how many color values will be grouped in one bin. When the number of bins is 32, the number of values grouped in one bin will be 8 (= 256/32). The effect of changing the parameters listed in Table \ref{tab:twinparameters} will be addressed in the next question. 
+
+The Twin Comparison parameters define the lower and the higher threshold. The upper and lower parameters are computed as follows:
+\begin{center}
+$lower \: threshold = alpha\times mean + beta\times stdev$\\$
+higher \: threshold = gamma\times mean + delta\times stdev$
+\end{center}
+As the formula states, these thresholds depend on the average difference between frames in the video, and their standard deviation. This makes the thresholds adaptive: less 'turbulent' sequences will have lower thresholds, because of their lower mean difference. Their is no real restriction on the parameters, but experiments show that the parameters given in Table \ref{tab:twinparameters} yield satisfiable results. The effects of changing the parameters are discussed in the next question. Note that even tough these parameters yield satisfying results, further optimization could not be performed. Since that would require a huge set of video sequences in order to make the optimization scientifically correct. \\

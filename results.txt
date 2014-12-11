@@ -1,0 +1,31 @@
+pixel - star wars
+recall: 74%
+precision 75%
+
+motion - star wars
+recall: 90%
+precision: 61%
+
+global historgram -  star wars
+recall: 83%
+precision: 62%
+
+local histogram - star wars
+recall: 82%
+precision: 85%
+
+auto motion - star wars (no speedup)
+recall: 84%
+precision: 78%
+
+auto motion - star wars (speedup = 10)
+recall: 57%
+precision: 65%
+
+twin comparison - csi
+recall: 92%
+precision: 94%
+
+auto motion - csi (speedup = 10)
+recall: 96%
+precision: 90%

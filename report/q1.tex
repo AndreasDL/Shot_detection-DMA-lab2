@@ -1,0 +1,57 @@
+\section[Pseudo-code and explanatory notes for the video shot detection method implemented
+in Exercise 5.]{}\label{Q1}
+The implemented method for exercise 5 is the Twin Comparison method\footnote{Based on 'Dissolve Detection Based On Twin-Comparison With Curve Fitting' by Yu et al.}. This method is based on the differences between the local histograms of subsequent frames. If the difference exceeds an upper threshold, this is seen as a hard cut. When the difference does not exceed the upper threshold, but exceeds a lower threshold, this frame is seen as the start of a possible soft cut. From then on, the differences of the next frames will be cumulatively summed. If this sum exceeds the higher threshold before a single frame-to-frame difference is lower than the lower threshold, a soft cut is detected.
+\vspace{1em}
+\begin{lstlisting}[frame=single]
+bool DetectShot(double SampleTime, IntPtr pBuffer, int BufferLen){
+	
+	previous_histograms = current_histograms //save prev calculations
+	List<int[]> current_histograms = new List<int[]>() //space for current
+	
+	for(every block){
+        int[] local_histogram = new int[number of Bins * 3] //*3 for R, G and B
+        
+        for(every pixel in the block)
+            // Increment histogram bin relative to R, G, B pixel value
+            local histogram[corresponding red/green/blue bin]++;
+        current_histograms.Add(local_histogram)
+	}
+	
+	// Calculate difference between 2 histograms
+	for(all histograms)
+	    for(every bin in histogram)
+	        difference = absolute value(previous bin value - current bin value)   
+
+    Add difference to list of all differences of entire video
+}
+// If all frames played (all differences calculated), process data:
+List<int> processData(){
+    Calculate mean of all differences
+    Calculate standard deviation of all differences
+    
+    // Start detecting cuts based on Twin Comparison
+    List<int> listOfShots = new List<int>()
+    higher threshold = alfa * mean + beta * stdev
+    lower threshold = gamma * mean + delta * stdev
+    for(all differences){
+        differenceSum = 0;
+        if(difference > higher threshold){
+            add current framenumber to lisOfShots
+        }else if(difference > lower threshold){
+            int transitionLength = 0
+            while(!last frame && difference > lower threshold && difference < higher threshold){
+                differenceSum += difference
+                increment framenumber (select next difference) 
+                increment transitionLength
+            }
+            
+            if(difference > higher threshold && last cut not within 10 frames)
+                add current framenumber to lisOfShots // Hard cut detected
+            else if(differenceSum > higher threshold && transitionlength >= 10){
+                add current framenumber to listOfShots // Soft cut detected
+        }
+    }
+    return listOfShots
+}
+\end{lstlisting}
+\\

@@ -1,0 +1,36 @@
+\section[An answer, with explanation, to the following questions:]{}
+
+\subsection[Can a clear winner be found among all different video shot detection methods and parameter settings?]{}
+All methods have their up- and downsides. However, the Twin comparison is the winner for the simple reason that is capable of detecting fades. This method has a recall of 92\% and a precision of 94\%. This is not perfect, since twin comparison does not detect most dissolves. Note that the auto motion, even though it was not designed for the CSI sequence, still provides good results with 96\% recall and 90\% precision. However since the motion is very slow for high resolution frames, a speedup of 10 was used during the execution, this means that only 1 in 10 subblocks was processed.
+\\
+\subsection[For the clear winner found, or for the video shot detection method that you would use in practice:]{}
+\subsubsection[How would you further improve this method in terms of precision?]{}
+The problem here is that the thresholds are more or less fixed (they rely on the mean difference and standard deviation in the sequence), while each video and each shot has its own characteristics. Some shots contain a lot of motion, while others move more slowly, thus the accuracy and precision of a static threshold has an upper limit. In an experimental approach to solve this, the motion method was extended with an additional auto mode, that keeps an average of the difference of the frames. In order to avoid a second passing through the frames, the average is approximated in real time with following formula: $AvgDiff = AvgDiff * X + currDiff * Y$ with the requirement: $X+Y = 1$. A higher X means that the video is less sensitive for quick changes in the sequence.
+
+This provided higher precision (78\% compared to 61\%), but a slightly lower recall (only 84\% instead of 90\%) for the motion estimation technique. This technique was not applied to the twin comparison, but it is expected to receive the same results, especially when multiple sequences are used.
+\\
+\subsubsection[How would you further improve this method in terms of processing speed?]{}
+The easiest way to speedup the algorithms is to consider a small subset of the frame. The delivered source code applies this for the motion estimation. A speedup of 5 means that only 1 in 5 subblocks is processed. The results of high resolution video sequences, such as the CSI sequence were not or very little affected by this speedup. However the impact on low resolution sequences, e.g. the star wars sequence, was much more dramatically. The results also indicated that the auto mode responded better to the speedup of low resolution sequences, due to the dynamic character of the auto mode.
+
+This could also be applied to the twin comparison method, where only a few sub blocks in each region are processed to speedup the execution. Even though the technique was not applied to the twin comparison method, similar results of the motion method are expected. Additionally executing the algorithm in parallel, could significantly speedup the execution, since it would use the full potential of the different cores that most laptops have.
+\\
+\subsection[What is the obvious shortcoming in practical scenarios, that the different video
+shot detection methods have in common, and how would you deal with this?]{}
+The first problem is the detection of fades in a sequence, the fades are not (always) detected by the simple algorithms. The Twin Comparison method provides a solution, but still has difficulties with the detection of dissolves. To detect these transitions, more complex algorithms are needed. 
+
+Another problem was that some detection algorithms detect in bursts (a shot is detected multiple times). To solve this, detections within 10 frames of the previous shot are ignored.
+
+To conclude, it is believed that even the most complex algorithms are not perfect, thus it would be advisable for the user to manually correct the detected shots in his video. The process would then be semi-supervised, first the user would upload the video and then a shot detection algorithms would be preformed. Once ready, the user can annotate and correct the shots. 
+\\
+\subsection[Given a video sequence produced by a wearable computing device like Google Glass (a/o), what issues does a method for video shot detection need to overcome?]{}
+The shot detection can either happen online (in real time) or offline. Given the limitations of wearables, such as limited processing power and battery life, it would be advisable to run the shot detection in server farms where these limitations are neglected. One could consider the low resolution of the camera of wearables. Even though it is true that the resolution of video sequences produced by wearable computing devices usually is a bit lower than the average digital camera, but that is not the biggest problem. On the contrary, the lower resolution reduces the computing time of the shot detection. The downside might be that the results could be less accurate.
+
+Another problem might be the limited color depth of the wearable's camera, which determines the amount of bits used to encode the color of a single pixel. Limited color depth will result in less distinguishable colors, which might cause problems for the shot detection: new colors in fades could have less difference and therefore the fade might not be detected. 
+
+However, the greatest problem would be the instability of the camera, video sequences recorded with wearables are usually not very stable. The result of this is a 'motion pollution' that might confuse shot detection algorithms, e.g. the pixel algorithm would find a lot of difference between the pixels, caused by this motion.
+\\
+\subsection[Why is it important to add meta data to video content?]{}
+The Internet contains vast amounts of video content, this content is more valueable if it can be found by a search. In order to make this vast amount of video content searcheable, tags and annotations are needed. Searching a video of e.g. a car is very hard without this meta data. The computer system has no clue as to what videos contain a car. Apart from searching, meta data are also used for organizing and categorizing the content.
+\\
+\subsection[Given the annotation and retrieval functionality of the application written, what are some of the (engineering/user) problems that you foresee when you would deploy this application in the real world?]{}
+Scalability: to search a large collection of video clips you need storage for the content and annotations. The annotations themselves should be accessible without too much overhead. You would also need semantics to link different synonyms together, one might tag an object as a \emph{car} while someone else might call it an \emph{automobile}. It is quite obvious that, since these words are related, the result of a search operation for the tag \emph{car} should contain both the results for \emph{car} and \emph{automobile}.

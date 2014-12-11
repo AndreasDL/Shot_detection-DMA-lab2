@@ -1,0 +1,20 @@
+\section[A comparative discussion of the computational complexity of each video shot detection method, taking into account different parameter settings. Provide information about the PC configuration used in order to put the time measurements in context.]{}
+
+\subsection{Configuration}
+A detailed setup is found in Section \ref{q4:setup} of Appendix \ref{app:q4}. The used video sequence is, unless stated different, \emph{return\_jedi\_trailer\_cuts-only.avi}, that has a resolution of 352x176 pixels, a total of 1736 frames that run with a framespeed of 25 frames/second for 69 seconds.
+\\
+\subsection{Pixel method}
+The shot detection has no parameters that influence the complexity or timing of the algorithm in any way and executes the star wars sequence with a delay of 6.93 ms/frame. 
+\\
+\subsection{Motion method}
+The motion estimation has 2 parameters that both influence the timing, the size of a sub block and the search window. A larger sub block size results in less motion estimations, but each motion estimation takes longer since the difference is determined by calculating the absolute difference for each pixel inside the subblock. The search window also influences the execution time: a larger search window, means that more iterations of the logarithmic motion estimation are needed. Table \ref{execMotion} in Appendix \ref{app:q4} gives the processing times of the algorithm for different sub sizes and search window sizes. Generally speaking, one trend can be seen: a greater search window results in slower execution time while the influence of the subsize is negligable.
+\\
+\subsection{Global histogram}
+The global histogram only has one parameter that influences the execution time: the bin count. A higher bin counts means that some additional processing is needed. Table \ref{execGlobal} in Appendix \ref{app:q4} shows the different execution times: it is clear that the binCount has very little or no influence on the execution time.
+\\
+\subsection{Local histogram}
+The local histogram divides the frame in different regions and then executes the global histogram method on each region. It has 2 parameters that influence the execution times: the number of regions and the binCount. As shown in the global histogram method, the bin count has a negligible influence on the execution time. Thus only the difference in regions is considered and the binCount is set to 32 for all executions. The results  in Table \ref{execLocal} of Appendix \ref{app:q4} show that the influence of the region count on the execution time is also very little.
+\\
+\subsection{Twin Comparison}
+The execution times of the Twin Comparison method are shown in Table \ref{twincomp} in Appendix \ref{app:q4}. These times show the same trend as the local histogram methods. This is normal, since the twin comparison method is an extension of the local histogram method.
+\\
